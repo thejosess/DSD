@@ -41,11 +41,17 @@ division_1_svc(int arg1, int arg2,  struct svc_req *rqstp)
 t_array *
 sumavectores_1_svc(t_array a, t_array b, int n,  struct svc_req *rqstp)
 {
-	static t_array  result;
+	static t_array  result;	//static OJO
+	result.t_array_val = malloc(n);
 
-	/*
-	 * insert server code here
-	 */
+	for(int i = 0; i < n; i++)
+	{
+		result.t_array_val[i] = a.t_array_val[i] + b.t_array_val[i];
+		printf("sumando");
+		printf("%d",result.t_array_val[i]);
+		printf("%d",a.t_array_val[i]);
+		printf("%d",b.t_array_val[i]);
+	}
 
 	return &result;
 }
