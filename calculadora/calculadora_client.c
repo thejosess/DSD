@@ -5,7 +5,8 @@
  */
 
 #include "calculadora.h"
-
+#include <unistd.h>
+#include <stdio.h>
 
 void
 calprog_1(char *host, int entero1, char operador, int entero2)
@@ -32,6 +33,7 @@ calprog_1(char *host, int entero1, char operador, int entero2)
 		}
 		else
 		{
+			printf("\nEl resultado es:\n");
 			printf("%lf \n", *result_1);
 		}
 		break;
@@ -42,6 +44,7 @@ calprog_1(char *host, int entero1, char operador, int entero2)
 		}
 		else
 		{
+			printf("\nEl resultado es:\n");
 			printf("%lf \n", *result_1);
 		}
 		break;
@@ -53,6 +56,7 @@ calprog_1(char *host, int entero1, char operador, int entero2)
 		}
 		else
 		{
+			printf("\nEl resultado es:\n");
 			printf("%lf \n", *result_1);
 		}
 		break;
@@ -63,6 +67,7 @@ calprog_1(char *host, int entero1, char operador, int entero2)
 		}
 		else
 		{
+			printf("\nEl resultado es:\n");
 			printf("%lf \n", *result_1);
 		}
 		break;
@@ -76,18 +81,36 @@ calprog_1(char *host, int entero1, char operador, int entero2)
 
 int main (int argc, char *argv[])
 {
+	const int num_operaciones = 4;
 	char *host;
-	int entero1, entero2;
-	char operador;
+	int entero1, entero2,opcion;
+	char operador, ch;
+
+	char caracter[1];
 
 	if (argc != 5) {
-		printf ("usage: %s <server_host> <entero> <operador> <entero>\n", argv[0]);
+		printf ("usage: %s <server_host>\n", argv[0]);
 		exit (1);
 	}
 	host = argv[1];
-	entero1 = atoi(argv[2]);
-	operador = (char) argv[3][0];
-	entero2 = atoi(argv[4]);
+
+	printf("CALCULADORA\n");
+	printf("************\n");
+	printf("Seleccione una opcion:\n1.Operaciones con enteros\n2.Operaciones con vectores\n\n");
+	scanf("%d",&opcion);
+
+	switch (opcion)
+	{
+	case 1:
+		printf("\nIntroduce dos enteros separados por un espacio: \n");
+		scanf("%d %d", &entero1, &entero2);
+		printf("\nIntroduce el operador:\n");
+		scanf(" %c",&operador);
+		break;
+	
+	default:
+		break;
+	}
 
 	calprog_1 (host,entero1,operador,entero2);
 exit (0);

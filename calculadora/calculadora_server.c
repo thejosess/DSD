@@ -11,9 +11,6 @@ suma_1_svc(int arg1, int arg2,  struct svc_req *rqstp)
 {
 	static double  result;
 	result = arg1 + arg2;
-	printf("%d \n",arg1);
-	printf("%d \n",arg2);
-	printf("%lf \n",result);
 	return &result;
 }
 
