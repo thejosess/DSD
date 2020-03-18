@@ -6,6 +6,17 @@
 #include "calculadora.h"
 
 bool_t
+xdr_t_array (XDR *xdrs, t_array *objp)
+{
+	register int32_t *buf;
+
+	 if (!xdr_array (xdrs, (char **)&objp->t_array_val, (u_int *) &objp->t_array_len, ~0,
+		sizeof (double), (xdrproc_t) xdr_double))
+		 return FALSE;
+	return TRUE;
+}
+
+bool_t
 xdr_suma_1_argument (XDR *xdrs, suma_1_argument *objp)
 {
 	 if (!xdr_int (xdrs, &objp->arg1))
@@ -41,6 +52,18 @@ xdr_division_1_argument (XDR *xdrs, division_1_argument *objp)
 	 if (!xdr_int (xdrs, &objp->arg1))
 		 return FALSE;
 	 if (!xdr_int (xdrs, &objp->arg2))
+		 return FALSE;
+	return TRUE;
+}
+
+bool_t
+xdr_sumavectores_1_argument (XDR *xdrs, sumavectores_1_argument *objp)
+{
+	 if (!xdr_t_array (xdrs, &objp->a))
+		 return FALSE;
+	 if (!xdr_t_array (xdrs, &objp->b))
+		 return FALSE;
+	 if (!xdr_int (xdrs, &objp->n))
 		 return FALSE;
 	return TRUE;
 }

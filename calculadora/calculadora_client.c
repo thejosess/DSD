@@ -84,11 +84,14 @@ int main (int argc, char *argv[])
 	const int num_operaciones = 4;
 	char *host;
 	int entero1, entero2,opcion;
-	char operador, ch;
-
+	char operador;
 	char caracter[1];
 
-	if (argc != 5) {
+	int tam;
+	int elemento;
+
+
+	if (argc != 2) {
 		printf ("usage: %s <server_host>\n", argv[0]);
 		exit (1);
 	}
@@ -107,6 +110,45 @@ int main (int argc, char *argv[])
 		printf("\nIntroduce el operador:\n");
 		scanf(" %c",&operador);
 		break;
+
+	case 2:
+
+		printf("\nIntroduce el tamaño de los vectores(han de ser iguales) :\n");
+		scanf("%d",&tam);
+
+		t_array v1,v2;
+
+		v1.t_array_len = tam;
+		v1.t_array_val = malloc(v1.t_array_len);
+
+		v2.t_array_len = tam;
+		v2.t_array_val = malloc(v2.t_array_len);
+
+		for(int i = 0; i < v1.t_array_len; i++){
+			printf("\nIntroduce elemento i al vector 1:\n");
+			scanf("%lf",&v1.t_array_val[i]);
+			
+		}
+
+		
+		for(int i = 0; i < v2.t_array_len; i++){
+			printf("\nIntroduce elemento i al vector 2:\n");
+			scanf("%lf",&v2.t_array_val[i]);
+		}
+		//calprog_2 (host,v1,v2,tam);
+
+		for(int i = 0; i < v1.t_array_len; i++){
+			printf("\nElemento:\n");
+			printf("%lf",v1.t_array_val[i]);
+		}
+
+		for(int i = 0; i < v2.t_array_len; i++){
+			printf("\nElemento:\n");
+			printf("%lf",v2.t_array_val[i]);
+		}
+
+		break;
+		
 	
 	default:
 		break;
@@ -114,7 +156,7 @@ int main (int argc, char *argv[])
 
 	if(operador == '/' && entero2 == 0)
 		printf("No se puede dividir entre cero");
-
-	calprog_1 (host,entero1,operador,entero2);
+	else
+		calprog_1 (host,entero1,operador,entero2);
 exit (0);
 }

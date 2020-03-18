@@ -40,6 +40,12 @@ _division_1 (division_1_argument *argp, struct svc_req *rqstp)
 	return (division_1_svc(argp->arg1, argp->arg2, rqstp));
 }
 
+static t_array *
+_sumavectores_1 (sumavectores_1_argument *argp, struct svc_req *rqstp)
+{
+	return (sumavectores_1_svc(argp->a, argp->b, argp->n, rqstp));
+}
+
 static void
 calprog_1(struct svc_req *rqstp, register SVCXPRT *transp)
 {
@@ -48,6 +54,7 @@ calprog_1(struct svc_req *rqstp, register SVCXPRT *transp)
 		resta_1_argument resta_1_arg;
 		multiplicacion_1_argument multiplicacion_1_arg;
 		division_1_argument division_1_arg;
+		sumavectores_1_argument sumavectores_1_arg;
 	} argument;
 	char *result;
 	xdrproc_t _xdr_argument, _xdr_result;
@@ -80,6 +87,12 @@ calprog_1(struct svc_req *rqstp, register SVCXPRT *transp)
 		_xdr_argument = (xdrproc_t) xdr_division_1_argument;
 		_xdr_result = (xdrproc_t) xdr_double;
 		local = (char *(*)(char *, struct svc_req *)) _division_1;
+		break;
+
+	case sumaVectores:
+		_xdr_argument = (xdrproc_t) xdr_sumavectores_1_argument;
+		_xdr_result = (xdrproc_t) xdr_t_array;
+		local = (char *(*)(char *, struct svc_req *)) _sumavectores_1;
 		break;
 
 	default:

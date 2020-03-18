@@ -76,3 +76,21 @@ division_1(int arg1, int arg2,  CLIENT *clnt)
 	}
 	return (&clnt_res);
 }
+
+t_array *
+sumavectores_1(t_array a, t_array b, int n,  CLIENT *clnt)
+{
+	sumavectores_1_argument arg;
+	static t_array clnt_res;
+
+	memset((char *)&clnt_res, 0, sizeof(clnt_res));
+	arg.a = a;
+	arg.b = b;
+	arg.n = n;
+	if (clnt_call (clnt, sumaVectores, (xdrproc_t) xdr_sumavectores_1_argument, (caddr_t) &arg,
+		(xdrproc_t) xdr_t_array, (caddr_t) &clnt_res,
+		TIMEOUT) != RPC_SUCCESS) {
+		return (NULL);
+	}
+	return (&clnt_res);
+}

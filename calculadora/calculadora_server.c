@@ -6,7 +6,7 @@
 
 #include "calculadora.h"
 
-double *
+double*
 suma_1_svc(int arg1, int arg2,  struct svc_req *rqstp)
 {
 	static double  result;
@@ -35,5 +35,17 @@ division_1_svc(int arg1, int arg2,  struct svc_req *rqstp)
 {
 	static double  result;
 	result = (arg1 + 0.0) / arg2;	//obtendriamos los decimales ya que es un double con el 0.0
+	return &result;
+}
+
+t_array *
+sumavectores_1_svc(t_array a, t_array b, int n,  struct svc_req *rqstp)
+{
+	static t_array  result;
+
+	/*
+	 * insert server code here
+	 */
+
 	return &result;
 }
