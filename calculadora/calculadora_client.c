@@ -112,6 +112,9 @@ int main (int argc, char *argv[])
 		break;
 	}
 
+	if(operador == '/' && entero2 == 0)
+		printf("No se puede dividir entre cero");
+
 	calprog_1 (host,entero1,operador,entero2);
 exit (0);
 }
