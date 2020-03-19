@@ -8,70 +8,117 @@
 #include <unistd.h>
 #include <stdio.h>
 
-void
-calprog_1(char *host, int entero1, char operador, int entero2)
-{
+
+void operaciones_basicas(char *host, int entero1, int entero2, char operador){
+
 	CLIENT *clnt;
 	double  *result_1;
-	int num1 = entero1;
-	int num2 = entero2;
 
 #ifndef	DEBUG
+clnt = clnt_create (host, CALPROG, DIRVER, "udp");
+if (clnt == NULL) {
+	clnt_pcreateerror (host);
+	exit (1);
+}
+#endif	/* DEBUG */
+
+	switch(operador)
+		{
+		case '+':
+			result_1 = suma_1(entero1, entero2, clnt);
+			if (result_1 == (double *) NULL) {
+				clnt_perror (clnt, "call failed");
+			}
+			else
+			{
+				printf("\nEl resultado es:\n");
+				printf("%lf \n", *result_1);
+			}
+			break;
+		case '-':
+			result_1 = resta_1(entero1, entero2, clnt);
+			if (result_1 == (double *) NULL) {
+				clnt_perror (clnt, "call failed");
+			}
+			else
+			{
+				printf("\nEl resultado es:\n");
+				printf("%lf \n", *result_1);
+			}
+			break;
+
+		case 'x':
+			result_1 = multiplicacion_1(entero1, entero2, clnt);
+			if (result_1 == (double *) NULL) {
+				clnt_perror (clnt, "call failed");
+			}
+			else
+			{
+				printf("\nEl resultado es:\n");
+				printf("%lf \n", *result_1);
+			}
+			break;
+		case '/':
+			result_1 = division_1(entero1, entero2, clnt);
+			if (result_1 == (double *) NULL) {
+				clnt_perror (clnt, "call failed");
+			}
+			else
+			{
+				printf("\nEl resultado es:\n");
+				printf("%lf \n", *result_1);
+			}
+			break;
+		}
+
+
+#ifndef	DEBUG
+	clnt_destroy (clnt);
+#endif	 /* DEBUG */
+
+}
+
+void operaciones_vectores(char *host, t_array v1, t_array v2, int n){
+	
+	CLIENT *clnt;
+	t_array  *result_2;  
+
+	#ifndef	DEBUG
 	clnt = clnt_create (host, CALPROG, DIRVER, "udp");
 	if (clnt == NULL) {
 		clnt_pcreateerror (host);
 		exit (1);
 	}
-#endif	/* DEBUG */
+	#endif	/* DEBUG */
 
-	switch (operador)
-	{
-	case '+':
-		result_1 = suma_1(num1, num2, clnt);
-		if (result_1 == (double *) NULL) {
-			clnt_perror (clnt, "call failed");
+		/*for(int i = 0; i < v1.t_array_len; i++){
+			printf("\nElemento:\n");
+			printf("%lf",v1.t_array_val[i]);
 		}
-		else
-		{
-			printf("\nEl resultado es:\n");
-			printf("%lf \n", *result_1);
-		}
-		break;
-	case '-':
-		result_1 = resta_1(num1, num2, clnt);
-		if (result_1 == (double *) NULL) {
-			clnt_perror (clnt, "call failed");
-		}
-		else
-		{
-			printf("\nEl resultado es:\n");
-			printf("%lf \n", *result_1);
-		}
-		break;
 
-	case 'x':
-		result_1 = multiplicacion_1(num1, num2, clnt);
-		if (result_1 == (double *) NULL) {
+		for(int i = 0; i < v2.t_array_len; i++){
+			printf("\nElemento:\n");
+			printf("%lf",v2.t_array_val[i]);
+		} */
+
+
+		result_2 = malloc(v2.t_array_len);
+		result_2 = sumavectores_1(v1, v2, v2.t_array_len, clnt);
+		if (result_2 == (t_array *) NULL) 
 			clnt_perror (clnt, "call failed");
-		}
 		else
 		{
 			printf("\nEl resultado es:\n");
-			printf("%lf \n", *result_1);
+			for(int i = 0; i < result_2->t_array_len; i++){
+			printf("\nElemento:\n");
+			printf("%lf",result_2->t_array_val[i]);
+			}
+			printf("\n");
 		}
-		break;
-	case '/':
-		result_1 = division_1(num1, num2, clnt);
-		if (result_1 == (double *) NULL) {
-			clnt_perror (clnt, "call failed");
-		}
-		else
-		{
-			printf("\nEl resultado es:\n");
-			printf("%lf \n", *result_1);
-		}
-		break;
-	}
+
+		free(v1.t_array_val);
+		free(v2.t_array_val);
+		free(result_2->t_array_val);	
 
 #ifndef	DEBUG
 	clnt_destroy (clnt);
@@ -79,17 +126,17 @@ calprog_1(char *host, int entero1, char operador, int entero2)
 }
 
 
+
 int main (int argc, char *argv[])
 {
-	const int num_operaciones = 4;
 	char *host;
+
 	int entero1, entero2,opcion;
 	char operador;
 	char caracter[1];
 
 	int tam;
 	int elemento;
-
 
 	if (argc != 2) {
 		printf ("usage: %s <server_host>\n", argv[0]);
@@ -104,59 +151,46 @@ int main (int argc, char *argv[])
 
 	switch (opcion)
 	{
-	case 1:
-		printf("\nIntroduce dos enteros separados por un espacio: \n");
-		scanf("%d %d", &entero1, &entero2);
-		printf("\nIntroduce el operador:\n");
-		scanf(" %c",&operador);
+		case 1:
+			printf("\nIntroduce dos enteros separados por un espacio: \n");
+			scanf("%d %d", &entero1, &entero2);
+			printf("\nIntroduce el operador:\n");
+			scanf(" %c",&operador);
+
+			if(operador == '/' && entero2 == 0)
+			{
+				printf("No se puede dividir entre cero");
+				exit(1);
+			}
+			else
+				operaciones_basicas(host,entero1,entero2,operador);
 		break;
+		case 2:
+			printf("\nIntroduce el tamaño de los vectores(han de ser iguales) :\n");
+			scanf("%d",&tam);
 
-	case 2:
+			t_array v1,v2,v3;
 
-		printf("\nIntroduce el tamaño de los vectores(han de ser iguales) :\n");
-		scanf("%d",&tam);
+			v1.t_array_len = tam;
+			v1.t_array_val = malloc(v1.t_array_len);
 
-		t_array v1,v2;
+			v2.t_array_len = tam;
+			v2.t_array_val = malloc(v2.t_array_len);
 
-		v1.t_array_len = tam;
-		v1.t_array_val = malloc(v1.t_array_len);
+			for(int i = 0; i < v1.t_array_len; i++){
+				printf("\nIntroduce elemento i al vector 1:\n");
+				scanf("%lf",&v1.t_array_val[i]);
+				
+			}
 
-		v2.t_array_len = tam;
-		v2.t_array_val = malloc(v2.t_array_len);
+			for(int i = 0; i < v2.t_array_len; i++){
+				printf("\nIntroduce elemento i al vector 2:\n");
+				scanf("%lf",&v2.t_array_val[i]);
+			}
 
-		for(int i = 0; i < v1.t_array_len; i++){
-			printf("\nIntroduce elemento i al vector 1:\n");
-			scanf("%lf",&v1.t_array_val[i]);
-			
-		}
-
-		
-		for(int i = 0; i < v2.t_array_len; i++){
-			printf("\nIntroduce elemento i al vector 2:\n");
-			scanf("%lf",&v2.t_array_val[i]);
-		}
-		//calprog_2 (host,v1,v2,tam);
-
-		for(int i = 0; i < v1.t_array_len; i++){
-			printf("\nElemento:\n");
-			printf("%lf",v1.t_array_val[i]);
-		}
-
-		for(int i = 0; i < v2.t_array_len; i++){
-			printf("\nElemento:\n");
-			printf("%lf",v2.t_array_val[i]);
-		}
-
-		break;
-		
-	
-	default:
-		break;
+			operaciones_vectores(host,v1,v2,v2.t_array_len);
 	}
 
-	if(operador == '/' && entero2 == 0)
-		printf("No se puede dividir entre cero");
-	else
-		calprog_1 (host,entero1,operador,entero2);
+
 exit (0);
 }
