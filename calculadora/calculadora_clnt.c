@@ -148,3 +148,105 @@ divisionvectores_1(t_array a, t_array b, int n,  CLIENT *clnt)
 	}
 	return (&clnt_res);
 }
+
+funcion *
+sumafunciones_1(funcion f1, funcion f2,  CLIENT *clnt)
+{
+	sumafunciones_1_argument arg;
+	static funcion clnt_res;
+
+	memset((char *)&clnt_res, 0, sizeof(clnt_res));
+	arg.f1 = f1;
+	arg.f2 = f2;
+	if (clnt_call (clnt, sumaFunciones, (xdrproc_t) xdr_sumafunciones_1_argument, (caddr_t) &arg,
+		(xdrproc_t) xdr_funcion, (caddr_t) &clnt_res,
+		TIMEOUT) != RPC_SUCCESS) {
+		return (NULL);
+	}
+	return (&clnt_res);
+}
+
+funcion *
+restafunciones_1(funcion f1, funcion f2,  CLIENT *clnt)
+{
+	restafunciones_1_argument arg;
+	static funcion clnt_res;
+
+	memset((char *)&clnt_res, 0, sizeof(clnt_res));
+	arg.f1 = f1;
+	arg.f2 = f2;
+	if (clnt_call (clnt, restaFunciones, (xdrproc_t) xdr_restafunciones_1_argument, (caddr_t) &arg,
+		(xdrproc_t) xdr_funcion, (caddr_t) &clnt_res,
+		TIMEOUT) != RPC_SUCCESS) {
+		return (NULL);
+	}
+	return (&clnt_res);
+}
+
+funcion *
+multiplicacionfunciones_1(funcion f1, funcion f2,  CLIENT *clnt)
+{
+	multiplicacionfunciones_1_argument arg;
+	static funcion clnt_res;
+
+	memset((char *)&clnt_res, 0, sizeof(clnt_res));
+	arg.f1 = f1;
+	arg.f2 = f2;
+	if (clnt_call (clnt, multiplicacionFunciones, (xdrproc_t) xdr_multiplicacionfunciones_1_argument, (caddr_t) &arg,
+		(xdrproc_t) xdr_funcion, (caddr_t) &clnt_res,
+		TIMEOUT) != RPC_SUCCESS) {
+		return (NULL);
+	}
+	return (&clnt_res);
+}
+
+funcion *
+divisionfunciones_1(funcion f1, funcion f2,  CLIENT *clnt)
+{
+	divisionfunciones_1_argument arg;
+	static funcion clnt_res;
+
+	memset((char *)&clnt_res, 0, sizeof(clnt_res));
+	arg.f1 = f1;
+	arg.f2 = f2;
+	if (clnt_call (clnt, divisionFunciones, (xdrproc_t) xdr_divisionfunciones_1_argument, (caddr_t) &arg,
+		(xdrproc_t) xdr_funcion, (caddr_t) &clnt_res,
+		TIMEOUT) != RPC_SUCCESS) {
+		return (NULL);
+	}
+	return (&clnt_res);
+}
+
+funcion *
+derivadafunciones_1(funcion f1, funcion f2,  CLIENT *clnt)
+{
+	derivadafunciones_1_argument arg;
+	static funcion clnt_res;
+
+	memset((char *)&clnt_res, 0, sizeof(clnt_res));
+	arg.f1 = f1;
+	arg.f2 = f2;
+	if (clnt_call (clnt, derivadaFunciones, (xdrproc_t) xdr_derivadafunciones_1_argument, (caddr_t) &arg,
+		(xdrproc_t) xdr_funcion, (caddr_t) &clnt_res,
+		TIMEOUT) != RPC_SUCCESS) {
+		return (NULL);
+	}
+	return (&clnt_res);
+}
+
+funcion *
+integralfunciones_1(funcion f1, funcion f2,  CLIENT *clnt)
+{
+	integralfunciones_1_argument arg;
+	static funcion clnt_res;
+
+	memset((char *)&clnt_res, 0, sizeof(clnt_res));
+	arg.f1 = f1;
+	arg.f2 = f2;
+	if (clnt_call (clnt, integralFunciones, (xdrproc_t) xdr_integralfunciones_1_argument, (caddr_t) &arg,
+		(xdrproc_t) xdr_funcion, (caddr_t) &clnt_res,
+		TIMEOUT) != RPC_SUCCESS) {
+		return (NULL);
+	}
+	return (&clnt_res);
+}

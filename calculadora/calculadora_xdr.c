@@ -17,6 +17,20 @@ xdr_t_array (XDR *xdrs, t_array *objp)
 }
 
 bool_t
+xdr_funcion (XDR *xdrs, funcion *objp)
+{
+	register int32_t *buf;
+
+	 if (!xdr_double (xdrs, &objp->x2))
+		 return FALSE;
+	 if (!xdr_double (xdrs, &objp->x))
+		 return FALSE;
+	 if (!xdr_double (xdrs, &objp->valor))
+		 return FALSE;
+	return TRUE;
+}
+
+bool_t
 xdr_suma_1_argument (XDR *xdrs, suma_1_argument *objp)
 {
 	 if (!xdr_int (xdrs, &objp->arg1))
@@ -100,6 +114,66 @@ xdr_divisionvectores_1_argument (XDR *xdrs, divisionvectores_1_argument *objp)
 	 if (!xdr_t_array (xdrs, &objp->b))
 		 return FALSE;
 	 if (!xdr_int (xdrs, &objp->n))
+		 return FALSE;
+	return TRUE;
+}
+
+bool_t
+xdr_sumafunciones_1_argument (XDR *xdrs, sumafunciones_1_argument *objp)
+{
+	 if (!xdr_funcion (xdrs, &objp->f1))
+		 return FALSE;
+	 if (!xdr_funcion (xdrs, &objp->f2))
+		 return FALSE;
+	return TRUE;
+}
+
+bool_t
+xdr_restafunciones_1_argument (XDR *xdrs, restafunciones_1_argument *objp)
+{
+	 if (!xdr_funcion (xdrs, &objp->f1))
+		 return FALSE;
+	 if (!xdr_funcion (xdrs, &objp->f2))
+		 return FALSE;
+	return TRUE;
+}
+
+bool_t
+xdr_multiplicacionfunciones_1_argument (XDR *xdrs, multiplicacionfunciones_1_argument *objp)
+{
+	 if (!xdr_funcion (xdrs, &objp->f1))
+		 return FALSE;
+	 if (!xdr_funcion (xdrs, &objp->f2))
+		 return FALSE;
+	return TRUE;
+}
+
+bool_t
+xdr_divisionfunciones_1_argument (XDR *xdrs, divisionfunciones_1_argument *objp)
+{
+	 if (!xdr_funcion (xdrs, &objp->f1))
+		 return FALSE;
+	 if (!xdr_funcion (xdrs, &objp->f2))
+		 return FALSE;
+	return TRUE;
+}
+
+bool_t
+xdr_derivadafunciones_1_argument (XDR *xdrs, derivadafunciones_1_argument *objp)
+{
+	 if (!xdr_funcion (xdrs, &objp->f1))
+		 return FALSE;
+	 if (!xdr_funcion (xdrs, &objp->f2))
+		 return FALSE;
+	return TRUE;
+}
+
+bool_t
+xdr_integralfunciones_1_argument (XDR *xdrs, integralfunciones_1_argument *objp)
+{
+	 if (!xdr_funcion (xdrs, &objp->f1))
+		 return FALSE;
+	 if (!xdr_funcion (xdrs, &objp->f2))
 		 return FALSE;
 	return TRUE;
 }

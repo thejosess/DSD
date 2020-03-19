@@ -97,3 +97,75 @@ divisionvectores_1_svc(t_array a, t_array b, int n,  struct svc_req *rqstp)
 
 	return &result;
 }
+
+funcion *
+sumafunciones_1_svc(funcion f1, funcion f2,  struct svc_req *rqstp)
+{
+	static funcion result;
+
+	result.x2 = f1.x2 + f2.x2;
+	result.x = f1.x + f2.x;
+	result.valor = f1.valor + f2.valor;
+
+	return &result;
+}
+
+funcion *
+restafunciones_1_svc(funcion f1, funcion f2,  struct svc_req *rqstp)
+{
+	static funcion result;
+
+	result.x2 = f1.x2 - f2.x2;
+	result.x = f1.x - f2.x;
+	result.valor = f1.valor - f2.valor;
+
+	return &result;
+}
+
+funcion *
+multiplicacionfunciones_1_svc(funcion f1, funcion f2,  struct svc_req *rqstp)
+{
+	static funcion result;
+
+	result.x2 = f1.x2 * f2.x2;
+	result.x = f1.x * f2.x;
+	result.valor = f1.valor * f2.valor;
+
+	return &result;
+}
+
+funcion *
+divisionfunciones_1_svc(funcion f1, funcion f2,  struct svc_req *rqstp)
+{
+	static funcion result;
+
+	result.x2 = f1.x2 / f2.x2;
+	result.x = f1.x / f2.x;
+	result.valor = f1.valor / f2.valor;
+
+	return &result;
+}
+
+funcion *
+derivadafunciones_1_svc(funcion f1, funcion f2,  struct svc_req *rqstp)
+{
+	static funcion  result;
+
+	/*
+	 * insert server code here
+	 */
+
+	return &result;
+}
+
+funcion *
+integralfunciones_1_svc(funcion f1, funcion f2,  struct svc_req *rqstp)
+{
+	static funcion  result;
+
+	/*
+	 * insert server code here
+	 */
+
+	return &result;
+}

@@ -19,6 +19,13 @@ typedef struct {
 	double *t_array_val;
 } t_array;
 
+struct funcion {
+	double x2;
+	double x;
+	double valor;
+};
+typedef struct funcion funcion;
+
 struct suma_1_argument {
 	int arg1;
 	int arg2;
@@ -71,6 +78,42 @@ struct divisionvectores_1_argument {
 };
 typedef struct divisionvectores_1_argument divisionvectores_1_argument;
 
+struct sumafunciones_1_argument {
+	funcion f1;
+	funcion f2;
+};
+typedef struct sumafunciones_1_argument sumafunciones_1_argument;
+
+struct restafunciones_1_argument {
+	funcion f1;
+	funcion f2;
+};
+typedef struct restafunciones_1_argument restafunciones_1_argument;
+
+struct multiplicacionfunciones_1_argument {
+	funcion f1;
+	funcion f2;
+};
+typedef struct multiplicacionfunciones_1_argument multiplicacionfunciones_1_argument;
+
+struct divisionfunciones_1_argument {
+	funcion f1;
+	funcion f2;
+};
+typedef struct divisionfunciones_1_argument divisionfunciones_1_argument;
+
+struct derivadafunciones_1_argument {
+	funcion f1;
+	funcion f2;
+};
+typedef struct derivadafunciones_1_argument derivadafunciones_1_argument;
+
+struct integralfunciones_1_argument {
+	funcion f1;
+	funcion f2;
+};
+typedef struct integralfunciones_1_argument integralfunciones_1_argument;
+
 #define CALPROG 0x20000002
 #define DIRVER 1
 
@@ -99,6 +142,24 @@ extern  t_array * multiplicacionvectores_1_svc(t_array , t_array , int , struct 
 #define divisionVectores 8
 extern  t_array * divisionvectores_1(t_array , t_array , int , CLIENT *);
 extern  t_array * divisionvectores_1_svc(t_array , t_array , int , struct svc_req *);
+#define sumaFunciones 9
+extern  funcion * sumafunciones_1(funcion , funcion , CLIENT *);
+extern  funcion * sumafunciones_1_svc(funcion , funcion , struct svc_req *);
+#define restaFunciones 10
+extern  funcion * restafunciones_1(funcion , funcion , CLIENT *);
+extern  funcion * restafunciones_1_svc(funcion , funcion , struct svc_req *);
+#define multiplicacionFunciones 11
+extern  funcion * multiplicacionfunciones_1(funcion , funcion , CLIENT *);
+extern  funcion * multiplicacionfunciones_1_svc(funcion , funcion , struct svc_req *);
+#define divisionFunciones 12
+extern  funcion * divisionfunciones_1(funcion , funcion , CLIENT *);
+extern  funcion * divisionfunciones_1_svc(funcion , funcion , struct svc_req *);
+#define derivadaFunciones 13
+extern  funcion * derivadafunciones_1(funcion , funcion , CLIENT *);
+extern  funcion * derivadafunciones_1_svc(funcion , funcion , struct svc_req *);
+#define integralFunciones 14
+extern  funcion * integralfunciones_1(funcion , funcion , CLIENT *);
+extern  funcion * integralfunciones_1_svc(funcion , funcion , struct svc_req *);
 extern int calprog_1_freeresult (SVCXPRT *, xdrproc_t, caddr_t);
 
 #else /* K&R C */
@@ -126,6 +187,24 @@ extern  t_array * multiplicacionvectores_1_svc();
 #define divisionVectores 8
 extern  t_array * divisionvectores_1();
 extern  t_array * divisionvectores_1_svc();
+#define sumaFunciones 9
+extern  funcion * sumafunciones_1();
+extern  funcion * sumafunciones_1_svc();
+#define restaFunciones 10
+extern  funcion * restafunciones_1();
+extern  funcion * restafunciones_1_svc();
+#define multiplicacionFunciones 11
+extern  funcion * multiplicacionfunciones_1();
+extern  funcion * multiplicacionfunciones_1_svc();
+#define divisionFunciones 12
+extern  funcion * divisionfunciones_1();
+extern  funcion * divisionfunciones_1_svc();
+#define derivadaFunciones 13
+extern  funcion * derivadafunciones_1();
+extern  funcion * derivadafunciones_1_svc();
+#define integralFunciones 14
+extern  funcion * integralfunciones_1();
+extern  funcion * integralfunciones_1_svc();
 extern int calprog_1_freeresult ();
 #endif /* K&R C */
 
@@ -133,6 +212,7 @@ extern int calprog_1_freeresult ();
 
 #if defined(__STDC__) || defined(__cplusplus)
 extern  bool_t xdr_t_array (XDR *, t_array*);
+extern  bool_t xdr_funcion (XDR *, funcion*);
 extern  bool_t xdr_suma_1_argument (XDR *, suma_1_argument*);
 extern  bool_t xdr_resta_1_argument (XDR *, resta_1_argument*);
 extern  bool_t xdr_multiplicacion_1_argument (XDR *, multiplicacion_1_argument*);
@@ -141,9 +221,16 @@ extern  bool_t xdr_sumavectores_1_argument (XDR *, sumavectores_1_argument*);
 extern  bool_t xdr_restvectores_1_argument (XDR *, restvectores_1_argument*);
 extern  bool_t xdr_multiplicacionvectores_1_argument (XDR *, multiplicacionvectores_1_argument*);
 extern  bool_t xdr_divisionvectores_1_argument (XDR *, divisionvectores_1_argument*);
+extern  bool_t xdr_sumafunciones_1_argument (XDR *, sumafunciones_1_argument*);
+extern  bool_t xdr_restafunciones_1_argument (XDR *, restafunciones_1_argument*);
+extern  bool_t xdr_multiplicacionfunciones_1_argument (XDR *, multiplicacionfunciones_1_argument*);
+extern  bool_t xdr_divisionfunciones_1_argument (XDR *, divisionfunciones_1_argument*);
+extern  bool_t xdr_derivadafunciones_1_argument (XDR *, derivadafunciones_1_argument*);
+extern  bool_t xdr_integralfunciones_1_argument (XDR *, integralfunciones_1_argument*);
 
 #else /* K&R C */
 extern bool_t xdr_t_array ();
+extern bool_t xdr_funcion ();
 extern bool_t xdr_suma_1_argument ();
 extern bool_t xdr_resta_1_argument ();
 extern bool_t xdr_multiplicacion_1_argument ();
@@ -152,6 +239,12 @@ extern bool_t xdr_sumavectores_1_argument ();
 extern bool_t xdr_restvectores_1_argument ();
 extern bool_t xdr_multiplicacionvectores_1_argument ();
 extern bool_t xdr_divisionvectores_1_argument ();
+extern bool_t xdr_sumafunciones_1_argument ();
+extern bool_t xdr_restafunciones_1_argument ();
+extern bool_t xdr_multiplicacionfunciones_1_argument ();
+extern bool_t xdr_divisionfunciones_1_argument ();
+extern bool_t xdr_derivadafunciones_1_argument ();
+extern bool_t xdr_integralfunciones_1_argument ();
 
 #endif /* K&R C */
 

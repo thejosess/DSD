@@ -78,6 +78,17 @@ if (clnt == NULL) {
 
 }
 
+void mostrar_vector(t_array *v1){
+	printf("\nEl resultado es:\n");
+	printf("[ ");
+	for(int i = 0; i < v1->t_array_len; i++){
+	printf("%lf",v1->t_array_val[i]);
+	printf(", ");
+	}
+	printf("]");
+	printf("\n");
+}
+
 void operaciones_vectores(char *host, t_array v1, t_array v2, int n, char operador){
 	
 	CLIENT *clnt;
@@ -91,80 +102,45 @@ void operaciones_vectores(char *host, t_array v1, t_array v2, int n, char operad
 	}
 	#endif	/* DEBUG */
 
-		/*for(int i = 0; i < v1.t_array_len; i++){
-			printf("\nElemento:\n");
-			printf("%lf",v1.t_array_val[i]);
-		}
-
-		for(int i = 0; i < v2.t_array_len; i++){
-			printf("\nElemento:\n");
-			printf("%lf",v2.t_array_val[i]);
-		} */
-
+		result_2 = malloc(v2.t_array_len);
+		result_2 = sumavectores_1(v1, v2, v2.t_array_len, clnt);
 
 		switch (operador)
 		{
 		case '+':
-			result_2 = malloc(v2.t_array_len);
-			result_2 = sumavectores_1(v1, v2, v2.t_array_len, clnt);
+			
 			if (result_2 == (t_array *) NULL) 
 				clnt_perror (clnt, "call failed");
 			else
 			{
-				printf("\nEl resultado es:\n");
-				for(int i = 0; i < result_2->t_array_len; i++){
-				printf("\nElemento:\n");
-				printf("%lf",result_2->t_array_val[i]);
-				}
-				printf("\n");
+				mostrar_vector(result_2);
 			}
 			break;
 
 		case '-':
-			result_2 = malloc(v2.t_array_len);
-			result_2 = restvectores_1(v1, v2, v2.t_array_len, clnt);
 			if (result_2 == (t_array *) NULL) 
 				clnt_perror (clnt, "call failed");
 			else
 			{
-				printf("\nEl resultado es:\n");
-				for(int i = 0; i < result_2->t_array_len; i++){
-				printf("\nElemento:\n");
-				printf("%lf",result_2->t_array_val[i]);
-				}
-				printf("\n");
+				mostrar_vector(result_2);
 			}
 			break;
 		
 		case 'x':
-			result_2 = malloc(v2.t_array_len);
-			result_2 = multiplicacionvectores_1(v1, v2, v2.t_array_len, clnt);
 			if (result_2 == (t_array *) NULL) 
 				clnt_perror (clnt, "call failed");
 			else
 			{
-				printf("\nEl resultado es:\n");
-				for(int i = 0; i < result_2->t_array_len; i++){
-				printf("\nElemento:\n");
-				printf("%lf",result_2->t_array_val[i]);
-				}
-				printf("\n");
+				mostrar_vector(result_2);
 			}
 			break;
 
 		case '/':
-			result_2 = malloc(v2.t_array_len);
-			result_2 = divisionvectores_1(v1, v2, v2.t_array_len, clnt);
 			if (result_2 == (t_array *) NULL) 
 				clnt_perror (clnt, "call failed");
 			else
 			{
-				printf("\nEl resultado es:\n");
-				for(int i = 0; i < result_2->t_array_len; i++){
-				printf("\nElemento:\n");
-				printf("%lf",result_2->t_array_val[i]);
-				}
-				printf("\n");
+				mostrar_vector(result_2);
 			}
 			break;
 		}
@@ -178,7 +154,107 @@ void operaciones_vectores(char *host, t_array v1, t_array v2, int n, char operad
 #endif	 /* DEBUG */
 }
 
+void operaciones_funciones_basicas(char *host, funcion f1, funcion f2, char operador)
+{
+	CLIENT *clnt;
+	funcion  *result_3;  
 
+	#ifndef	DEBUG
+	clnt = clnt_create (host, CALPROG, DIRVER, "udp");
+	if (clnt == NULL) {
+		clnt_pcreateerror (host);
+		exit (1);
+	}
+	#endif	/* DEBUG */
+
+		switch (operador)
+		{
+		case '+':
+			
+			result_3 = sumafunciones_1(f1, f2, clnt);
+			if (result_3 == (funcion *) NULL) {
+				clnt_perror (clnt, "call failed");
+			}
+			else
+			{
+				mostrar_funcionP(result_3);
+			}
+			break;
+
+		case '-':
+			result_3 = restafunciones_1(f1, f2, clnt);
+			if (result_3 == (funcion *) NULL) {
+				clnt_perror (clnt, "call failed");
+			}
+			else
+			{
+				mostrar_funcionP(result_3);
+			}
+			break;
+
+		
+		case 'x':
+			result_3 = multiplicacionfunciones_1(f1, f2, clnt);
+			if (result_3 == (funcion *) NULL) {
+				clnt_perror (clnt, "call failed");
+			}
+			else
+			{
+				mostrar_funcionP(result_3);
+			}
+			break;
+
+
+		case '/':
+			result_3 = divisionfunciones_1(f1, f2, clnt);
+			if (result_3 == (funcion *) NULL) {
+				clnt_perror (clnt, "call failed");
+			}
+			else
+			{
+				mostrar_funcionP(result_3);
+			}
+			break;
+
+		}
+
+#ifndef	DEBUG
+	clnt_destroy (clnt);
+#endif	 /* DEBUG */
+}
+
+funcion leer_funcion(){
+	funcion f1;
+
+	printf("\nIntroduce el valor de la x^2:\n");
+	scanf("%lf",&f1.x2);
+	printf("\nIntroduce el valor de la x^1:\n");
+	scanf("%lf",&f1.x);
+	printf("\nIntroduce exponente de la x^0:\n");
+	scanf("%lf",&f1.valor);
+
+	return f1;
+}
+
+void mostrar_funcionP(funcion* f1){
+	printf("Funcion resultante: ");
+	printf("%lf",f1->x2);
+	printf("X^2 + ");
+	printf("%lf",f1->x);
+	printf("X + ");
+	printf("%lf",f1->valor);
+	printf("\n");
+}
+
+void mostrar_funcion(funcion f1){
+	printf("Funcion: ");
+	printf("%lf",f1.x2);
+	printf("X^2 + ");
+	printf("%lf",f1.x);
+	printf("X + ");
+	printf("%lf",f1.valor);
+	printf("\n");
+}
 
 int main (int argc, char *argv[])
 {
@@ -199,7 +275,7 @@ int main (int argc, char *argv[])
 
 	printf("CALCULADORA\n");
 	printf("************\n");
-	printf("Seleccione una opcion:\n1.Operaciones con enteros\n2.Operaciones con vectores\n\n");
+	printf("Seleccione una opcion:\n1.Operaciones con enteros\n2.Operaciones con vectores\n3.Operacion con funciones\n\n");
 	scanf("%d",&opcion);
 
 	switch (opcion)
@@ -238,14 +314,44 @@ int main (int argc, char *argv[])
 				
 			}
 
+			//se podria hacer con un bucle pero creo que asi es mas claro y la idea de la practica no es perder el tiempo en programacion y centrarse en el uso de RPC
 			for(int i = 0; i < v2.t_array_len; i++){
 				printf("\nIntroduce elemento i al vector 2:\n");
 				scanf("%lf",&v2.t_array_val[i]);
 			}
 
-
 			operaciones_vectores(host,v1,v2,v2.t_array_len, operador);
+		break;
+
+		case 3:
+		printf("\nFuncion ->");
+		funcion f1, f2;
+		f1 = leer_funcion();
+		mostrar_funcion(f1);
+
+		f2 = leer_funcion();
+		mostrar_funcion(f2);
+
+		printf("\n1.Operaciones basicas con funciones\n2.Integrar o derivar\n");
+		scanf("%d",&opcion);
+
+		printf("\nIntroduce el operador:\n");
+		scanf(" %c",&operador);
+
+			switch(opcion)
+			{
+				case 1:
+					operaciones_funciones_basicas(host,f1,f2,operador);
+				break;
+
+				case 2:
+
+				break;
+
+			}
+		break;
 	}
+
 
 
 exit (0);
