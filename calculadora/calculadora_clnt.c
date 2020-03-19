@@ -218,15 +218,13 @@ divisionfunciones_1(funcion f1, funcion f2,  CLIENT *clnt)
 }
 
 funcion *
-derivadafunciones_1(funcion f1, funcion f2,  CLIENT *clnt)
+derivadafunciones_1(funcion f1,  CLIENT *clnt)
 {
-	derivadafunciones_1_argument arg;
 	static funcion clnt_res;
 
 	memset((char *)&clnt_res, 0, sizeof(clnt_res));
-	arg.f1 = f1;
-	arg.f2 = f2;
-	if (clnt_call (clnt, derivadaFunciones, (xdrproc_t) xdr_derivadafunciones_1_argument, (caddr_t) &arg,
+	if (clnt_call (clnt, derivadaFunciones,
+		(xdrproc_t) xdr_funcion, (caddr_t) &f1,
 		(xdrproc_t) xdr_funcion, (caddr_t) &clnt_res,
 		TIMEOUT) != RPC_SUCCESS) {
 		return (NULL);
@@ -235,15 +233,13 @@ derivadafunciones_1(funcion f1, funcion f2,  CLIENT *clnt)
 }
 
 funcion *
-integralfunciones_1(funcion f1, funcion f2,  CLIENT *clnt)
+integralfunciones_1(funcion f1,  CLIENT *clnt)
 {
-	integralfunciones_1_argument arg;
 	static funcion clnt_res;
 
 	memset((char *)&clnt_res, 0, sizeof(clnt_res));
-	arg.f1 = f1;
-	arg.f2 = f2;
-	if (clnt_call (clnt, integralFunciones, (xdrproc_t) xdr_integralfunciones_1_argument, (caddr_t) &arg,
+	if (clnt_call (clnt, integralFunciones,
+		(xdrproc_t) xdr_funcion, (caddr_t) &f1,
 		(xdrproc_t) xdr_funcion, (caddr_t) &clnt_res,
 		TIMEOUT) != RPC_SUCCESS) {
 		return (NULL);

@@ -1,9 +1,12 @@
 typedef double t_array<>;
 
 struct funcion{
-	double x2;
 	double x;
-	double valor;
+	int exponente_x;
+	double y;
+	int exponente_y;
+	double z;
+	int exponente_z;
 };
 
 
@@ -21,7 +24,7 @@ program CALPROG {
 		funcion restaFunciones(funcion f1, funcion f2) = 10;
 		funcion multiplicacionFunciones(funcion f1, funcion f2) = 11;
 		funcion divisionFunciones(funcion f1, funcion f2) = 12;
-		funcion derivadaFunciones(funcion f1, funcion f2) = 13;
-		funcion integralFunciones(funcion f1, funcion f2) = 14;
+		funcion derivadaFunciones(funcion f1) = 13;
+		funcion integralFunciones(funcion f1) = 14;
 	} =1;
 } = 0x20000002;

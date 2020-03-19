@@ -89,15 +89,15 @@ _divisionfunciones_1 (divisionfunciones_1_argument *argp, struct svc_req *rqstp)
 }
 
 static funcion *
-_derivadafunciones_1 (derivadafunciones_1_argument *argp, struct svc_req *rqstp)
+_derivadafunciones_1 (funcion  *argp, struct svc_req *rqstp)
 {
-	return (derivadafunciones_1_svc(argp->f1, argp->f2, rqstp));
+	return (derivadafunciones_1_svc(*argp, rqstp));
 }
 
 static funcion *
-_integralfunciones_1 (integralfunciones_1_argument *argp, struct svc_req *rqstp)
+_integralfunciones_1 (funcion  *argp, struct svc_req *rqstp)
 {
-	return (integralfunciones_1_svc(argp->f1, argp->f2, rqstp));
+	return (integralfunciones_1_svc(*argp, rqstp));
 }
 
 static void
@@ -116,8 +116,8 @@ calprog_1(struct svc_req *rqstp, register SVCXPRT *transp)
 		restafunciones_1_argument restafunciones_1_arg;
 		multiplicacionfunciones_1_argument multiplicacionfunciones_1_arg;
 		divisionfunciones_1_argument divisionfunciones_1_arg;
-		derivadafunciones_1_argument derivadafunciones_1_arg;
-		integralfunciones_1_argument integralfunciones_1_arg;
+		funcion derivadafunciones_1_arg;
+		funcion integralfunciones_1_arg;
 	} argument;
 	char *result;
 	xdrproc_t _xdr_argument, _xdr_result;
@@ -201,13 +201,13 @@ calprog_1(struct svc_req *rqstp, register SVCXPRT *transp)
 		break;
 
 	case derivadaFunciones:
-		_xdr_argument = (xdrproc_t) xdr_derivadafunciones_1_argument;
+		_xdr_argument = (xdrproc_t) xdr_funcion;
 		_xdr_result = (xdrproc_t) xdr_funcion;
 		local = (char *(*)(char *, struct svc_req *)) _derivadafunciones_1;
 		break;
 
 	case integralFunciones:
-		_xdr_argument = (xdrproc_t) xdr_integralfunciones_1_argument;
+		_xdr_argument = (xdrproc_t) xdr_funcion;
 		_xdr_result = (xdrproc_t) xdr_funcion;
 		local = (char *(*)(char *, struct svc_req *)) _integralfunciones_1;
 		break;

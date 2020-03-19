@@ -103,9 +103,9 @@ sumafunciones_1_svc(funcion f1, funcion f2,  struct svc_req *rqstp)
 {
 	static funcion result;
 
-	result.x2 = f1.x2 + f2.x2;
 	result.x = f1.x + f2.x;
-	result.valor = f1.valor + f2.valor;
+	result.y = f1.y + f2.y;
+	result.z = f1.z + f2.z;
 
 	return &result;
 }
@@ -115,9 +115,9 @@ restafunciones_1_svc(funcion f1, funcion f2,  struct svc_req *rqstp)
 {
 	static funcion result;
 
-	result.x2 = f1.x2 - f2.x2;
 	result.x = f1.x - f2.x;
-	result.valor = f1.valor - f2.valor;
+	result.y = f1.y - f2.y;
+	result.z = f1.z - f2.z;
 
 	return &result;
 }
@@ -127,9 +127,9 @@ multiplicacionfunciones_1_svc(funcion f1, funcion f2,  struct svc_req *rqstp)
 {
 	static funcion result;
 
-	result.x2 = f1.x2 * f2.x2;
 	result.x = f1.x * f2.x;
-	result.valor = f1.valor * f2.valor;
+	result.y = f1.y * f2.y;
+	result.z = f1.z * f2.z;
 
 	return &result;
 }
@@ -139,33 +139,39 @@ divisionfunciones_1_svc(funcion f1, funcion f2,  struct svc_req *rqstp)
 {
 	static funcion result;
 
-	result.x2 = f1.x2 / f2.x2;
 	result.x = f1.x / f2.x;
-	result.valor = f1.valor / f2.valor;
+	result.y = f1.y / f2.y;
+	result.z = f1.z / f2.z;
 
 	return &result;
 }
 
 funcion *
-derivadafunciones_1_svc(funcion f1, funcion f2,  struct svc_req *rqstp)
+derivadafunciones_1_svc(funcion f1,  struct svc_req *rqstp)
 {
-	static funcion  result;
+	static funcion result;
 
-	/*
-	 * insert server code here
-	 */
+	result.z = f1.y ;
+	result.y = f1.x * 2;
+	result.x = 0;
 
 	return &result;
 }
 
 funcion *
-integralfunciones_1_svc(funcion f1, funcion f2,  struct svc_req *rqstp)
+integralfunciones_1_svc(funcion f1,  struct svc_req *rqstp)
 {
 	static funcion  result;
 
-	/*
-	 * insert server code here
-	 */
+	result.exponente_x = f1.exponente_x + 1;
+	result.x = f1.exponente_x / result.exponente_x;
+
+	result.exponente_y = f1.exponente_y + 1;
+	result.y = f1.exponente_y / result.exponente_y;
+
+	result.exponente_z = f1.exponente_z + 1;
+	result.z = f1.exponente_z / result.exponente_z;
+
 
 	return &result;
 }

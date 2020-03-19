@@ -217,7 +217,7 @@ void operaciones_funciones_basicas(char *host, funcion f1, funcion f2, char oper
 			break;
 
 		}
-
+		
 #ifndef	DEBUG
 	clnt_destroy (clnt);
 #endif	 /* DEBUG */
@@ -227,33 +227,110 @@ funcion leer_funcion(){
 	funcion f1;
 
 	printf("\nIntroduce el valor de la x^2:\n");
-	scanf("%lf",&f1.x2);
-	printf("\nIntroduce el valor de la x^1:\n");
 	scanf("%lf",&f1.x);
+	f1.exponente_x = 2;
+
+	printf("\nIntroduce el valor de la x^1:\n");
+	scanf("%lf",&f1.y);
+	f1.exponente_y = 1;
+
 	printf("\nIntroduce exponente de la x^0:\n");
-	scanf("%lf",&f1.valor);
+	scanf("%lf",&f1.z);
+	f1.exponente_z = 0;
 
 	return f1;
 }
 
 void mostrar_funcionP(funcion* f1){
 	printf("Funcion resultante: ");
-	printf("%lf",f1->x2);
-	printf("X^2 + ");
+	
 	printf("%lf",f1->x);
-	printf("X + ");
-	printf("%lf",f1->valor);
+	printf("X^");
+	printf("%d",f1->exponente_x);
+	printf(" +");
+
+	printf("%lf",f1->y);
+	printf("X^");
+	printf("%d",f1->exponente_y);
+	printf(" +");
+
+
+	printf("%lf",f1->z);
+	printf("X^");
+	printf("%d",f1->exponente_z);
+
 	printf("\n");
 }
 
 void mostrar_funcion(funcion f1){
-	printf("Funcion: ");
-	printf("%lf",f1.x2);
-	printf("X^2 + ");
 	printf("%lf",f1.x);
-	printf("X + ");
-	printf("%lf",f1.valor);
+	printf("X^");
+	printf("%d",f1.exponente_x);
+	printf(" +");
+
+	printf("%lf",f1.y);
+	printf("X^");
+	printf("%d",f1.exponente_y);
+	printf(" +");
+
+
+	printf("%lf",f1.z);
+	printf("X^");
+	printf("%d",f1.exponente_z);
+
 	printf("\n");
+}
+
+void derivar_funcion(char *host, funcion f1){
+	CLIENT *clnt;
+	funcion  *result_3;  
+
+	#ifndef	DEBUG
+	clnt = clnt_create (host, CALPROG, DIRVER, "udp");
+	if (clnt == NULL) {
+		clnt_pcreateerror (host);
+		exit (1);
+	}
+	#endif	/* DEBUG */
+
+	result_3 = derivadafunciones_1(f1,clnt);
+	if (result_3 == (funcion *) NULL) {
+		clnt_perror (clnt, "call failed");
+	}
+	else
+	{
+		mostrar_funcionP(result_3);
+	}
+
+#ifndef	DEBUG
+	clnt_destroy (clnt);
+#endif	 /* DEBUG */
+}
+
+void integral_funcion(char *host, funcion f1){
+	CLIENT *clnt;
+	funcion  *result_3;  
+
+	#ifndef	DEBUG
+	clnt = clnt_create (host, CALPROG, DIRVER, "udp");
+	if (clnt == NULL) {
+		clnt_pcreateerror (host);
+		exit (1);
+	}
+	#endif	/* DEBUG */
+
+	result_3 = integralfunciones_1(f1,clnt);
+	if (result_3 == (funcion *) NULL) {
+		clnt_perror (clnt, "call failed");
+	}
+	else
+	{
+		mostrar_funcionP(result_3);
+	}
+
+#ifndef	DEBUG
+	clnt_destroy (clnt);
+#endif	 /* DEBUG */
 }
 
 int main (int argc, char *argv[])
@@ -328,24 +405,51 @@ int main (int argc, char *argv[])
 		funcion f1, f2;
 		f1 = leer_funcion();
 		mostrar_funcion(f1);
+		//las funciones por defecto las he hecho de grado 2 porque a la hora de hacer las cuentas tampoco supone
+		//una gran diferencia cambiarlo todo para que sean funcion de un tamaño elegido por el usuario
 
 		f2 = leer_funcion();
 		mostrar_funcion(f2);
 
-		printf("\n1.Operaciones basicas con funciones\n2.Integrar o derivar\n");
+		printf("\n\n1.Operaciones basicas con funciones\n2.Integrar o derivar\n");
 		scanf("%d",&opcion);
 
-		printf("\nIntroduce el operador:\n");
-		scanf(" %c",&operador);
+
 
 			switch(opcion)
 			{
 				case 1:
+					printf("\nIntroduce el operador:\n");
+					scanf(" %c",&operador);
 					operaciones_funciones_basicas(host,f1,f2,operador);
 				break;
 
 				case 2:
-
+					printf("\n1.Integral\n2.Derivar\n");
+					scanf("%d",&opcion);
+					if(opcion == 1)
+					{
+						printf("\n1.Integral sobre la primera funcion\n2.Integral sobre la segunda funcion\n");
+						scanf("%d",&opcion);
+						if(opcion == 1){
+							integral_funcion(host,f1);
+						}
+						if(opcion == 2){
+							integral_funcion(host,f2);			
+						}	
+					}
+					if(opcion == 2)
+					{
+						printf("\n1.Derivar sobre la primera funcion\n2.Derivar sobre la segunda funcion\n");
+						scanf("%d",&opcion);
+						if(opcion == 1){
+							derivar_funcion(host,f1);
+						}
+						if(opcion == 2){
+							derivar_funcion(host,f2);			
+						}	
+					}
+					//poner algo asi como un seguir integrando o algo asi
 				break;
 
 			}
