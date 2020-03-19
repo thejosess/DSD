@@ -52,3 +52,48 @@ sumavectores_1_svc(t_array a, t_array b, int n,  struct svc_req *rqstp)
 
 	return &result;
 }
+
+t_array *
+restvectores_1_svc(t_array a, t_array b, int n,  struct svc_req *rqstp)
+{
+	static t_array  result;	//static OJO
+	result.t_array_len = n;
+	result.t_array_val = malloc(n*sizeof(double));
+
+	for(int i = 0; i < result.t_array_len; i++)
+	{
+		result.t_array_val[i] = a.t_array_val[i] - b.t_array_val[i];
+	}
+
+	return &result;
+}
+
+t_array *
+multiplicacionvectores_1_svc(t_array a, t_array b, int n,  struct svc_req *rqstp)
+{
+	static t_array  result;	//static OJO
+	result.t_array_len = n;
+	result.t_array_val = malloc(n*sizeof(double));
+
+	for(int i = 0; i < result.t_array_len; i++)
+	{
+		result.t_array_val[i] = a.t_array_val[i] * b.t_array_val[i];
+	}
+
+	return &result;
+}
+
+t_array *
+divisionvectores_1_svc(t_array a, t_array b, int n,  struct svc_req *rqstp)
+{
+	static t_array  result;	//static OJO
+	result.t_array_len = n;
+	result.t_array_val = malloc(n*sizeof(double));
+
+	for(int i = 0; i < result.t_array_len; i++)
+	{
+		result.t_array_val[i] = a.t_array_val[i] / b.t_array_val[i];
+	}
+
+	return &result;
+}

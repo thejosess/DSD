@@ -78,7 +78,7 @@ if (clnt == NULL) {
 
 }
 
-void operaciones_vectores(char *host, t_array v1, t_array v2, int n){
+void operaciones_vectores(char *host, t_array v1, t_array v2, int n, char operador){
 	
 	CLIENT *clnt;
 	t_array  *result_2;  
@@ -102,18 +102,71 @@ void operaciones_vectores(char *host, t_array v1, t_array v2, int n){
 		} */
 
 
-		result_2 = malloc(v2.t_array_len);
-		result_2 = sumavectores_1(v1, v2, v2.t_array_len, clnt);
-		if (result_2 == (t_array *) NULL) 
-			clnt_perror (clnt, "call failed");
-		else
+		switch (operador)
 		{
-			printf("\nEl resultado es:\n");
-			for(int i = 0; i < result_2->t_array_len; i++){
-			printf("\nElemento:\n");
-			printf("%lf",result_2->t_array_val[i]);
+		case '+':
+			result_2 = malloc(v2.t_array_len);
+			result_2 = sumavectores_1(v1, v2, v2.t_array_len, clnt);
+			if (result_2 == (t_array *) NULL) 
+				clnt_perror (clnt, "call failed");
+			else
+			{
+				printf("\nEl resultado es:\n");
+				for(int i = 0; i < result_2->t_array_len; i++){
+				printf("\nElemento:\n");
+				printf("%lf",result_2->t_array_val[i]);
+				}
+				printf("\n");
 			}
-			printf("\n");
+			break;
+
+		case '-':
+			result_2 = malloc(v2.t_array_len);
+			result_2 = restvectores_1(v1, v2, v2.t_array_len, clnt);
+			if (result_2 == (t_array *) NULL) 
+				clnt_perror (clnt, "call failed");
+			else
+			{
+				printf("\nEl resultado es:\n");
+				for(int i = 0; i < result_2->t_array_len; i++){
+				printf("\nElemento:\n");
+				printf("%lf",result_2->t_array_val[i]);
+				}
+				printf("\n");
+			}
+			break;
+		
+		case 'x':
+			result_2 = malloc(v2.t_array_len);
+			result_2 = multiplicacionvectores_1(v1, v2, v2.t_array_len, clnt);
+			if (result_2 == (t_array *) NULL) 
+				clnt_perror (clnt, "call failed");
+			else
+			{
+				printf("\nEl resultado es:\n");
+				for(int i = 0; i < result_2->t_array_len; i++){
+				printf("\nElemento:\n");
+				printf("%lf",result_2->t_array_val[i]);
+				}
+				printf("\n");
+			}
+			break;
+
+		case '/':
+			result_2 = malloc(v2.t_array_len);
+			result_2 = divisionvectores_1(v1, v2, v2.t_array_len, clnt);
+			if (result_2 == (t_array *) NULL) 
+				clnt_perror (clnt, "call failed");
+			else
+			{
+				printf("\nEl resultado es:\n");
+				for(int i = 0; i < result_2->t_array_len; i++){
+				printf("\nElemento:\n");
+				printf("%lf",result_2->t_array_val[i]);
+				}
+				printf("\n");
+			}
+			break;
 		}
 
 		free(v1.t_array_val);
@@ -168,6 +221,8 @@ int main (int argc, char *argv[])
 		case 2:
 			printf("\nIntroduce el tamaño de los vectores(han de ser iguales) :\n");
 			scanf("%d",&tam);
+			printf("\nIntroduce el operador:\n");
+			scanf(" %c",&operador);
 
 			t_array v1,v2,v3;
 
@@ -188,7 +243,8 @@ int main (int argc, char *argv[])
 				scanf("%lf",&v2.t_array_val[i]);
 			}
 
-			operaciones_vectores(host,v1,v2,v2.t_array_len);
+
+			operaciones_vectores(host,v1,v2,v2.t_array_len, operador);
 	}
 
 

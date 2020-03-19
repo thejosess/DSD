@@ -46,6 +46,24 @@ _sumavectores_1 (sumavectores_1_argument *argp, struct svc_req *rqstp)
 	return (sumavectores_1_svc(argp->a, argp->b, argp->n, rqstp));
 }
 
+static t_array *
+_restvectores_1 (restvectores_1_argument *argp, struct svc_req *rqstp)
+{
+	return (restvectores_1_svc(argp->a, argp->b, argp->n, rqstp));
+}
+
+static t_array *
+_multiplicacionvectores_1 (multiplicacionvectores_1_argument *argp, struct svc_req *rqstp)
+{
+	return (multiplicacionvectores_1_svc(argp->a, argp->b, argp->n, rqstp));
+}
+
+static t_array *
+_divisionvectores_1 (divisionvectores_1_argument *argp, struct svc_req *rqstp)
+{
+	return (divisionvectores_1_svc(argp->a, argp->b, argp->n, rqstp));
+}
+
 static void
 calprog_1(struct svc_req *rqstp, register SVCXPRT *transp)
 {
@@ -55,6 +73,9 @@ calprog_1(struct svc_req *rqstp, register SVCXPRT *transp)
 		multiplicacion_1_argument multiplicacion_1_arg;
 		division_1_argument division_1_arg;
 		sumavectores_1_argument sumavectores_1_arg;
+		restvectores_1_argument restvectores_1_arg;
+		multiplicacionvectores_1_argument multiplicacionvectores_1_arg;
+		divisionvectores_1_argument divisionvectores_1_arg;
 	} argument;
 	char *result;
 	xdrproc_t _xdr_argument, _xdr_result;
@@ -93,6 +114,24 @@ calprog_1(struct svc_req *rqstp, register SVCXPRT *transp)
 		_xdr_argument = (xdrproc_t) xdr_sumavectores_1_argument;
 		_xdr_result = (xdrproc_t) xdr_t_array;
 		local = (char *(*)(char *, struct svc_req *)) _sumavectores_1;
+		break;
+
+	case restVectores:
+		_xdr_argument = (xdrproc_t) xdr_restvectores_1_argument;
+		_xdr_result = (xdrproc_t) xdr_t_array;
+		local = (char *(*)(char *, struct svc_req *)) _restvectores_1;
+		break;
+
+	case multiplicacionVectores:
+		_xdr_argument = (xdrproc_t) xdr_multiplicacionvectores_1_argument;
+		_xdr_result = (xdrproc_t) xdr_t_array;
+		local = (char *(*)(char *, struct svc_req *)) _multiplicacionvectores_1;
+		break;
+
+	case divisionVectores:
+		_xdr_argument = (xdrproc_t) xdr_divisionvectores_1_argument;
+		_xdr_result = (xdrproc_t) xdr_t_array;
+		local = (char *(*)(char *, struct svc_req *)) _divisionvectores_1;
 		break;
 
 	default:

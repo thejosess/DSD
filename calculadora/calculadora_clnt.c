@@ -94,3 +94,57 @@ sumavectores_1(t_array a, t_array b, int n,  CLIENT *clnt)
 	}
 	return (&clnt_res);
 }
+
+t_array *
+restvectores_1(t_array a, t_array b, int n,  CLIENT *clnt)
+{
+	restvectores_1_argument arg;
+	static t_array clnt_res;
+
+	memset((char *)&clnt_res, 0, sizeof(clnt_res));
+	arg.a = a;
+	arg.b = b;
+	arg.n = n;
+	if (clnt_call (clnt, restVectores, (xdrproc_t) xdr_restvectores_1_argument, (caddr_t) &arg,
+		(xdrproc_t) xdr_t_array, (caddr_t) &clnt_res,
+		TIMEOUT) != RPC_SUCCESS) {
+		return (NULL);
+	}
+	return (&clnt_res);
+}
+
+t_array *
+multiplicacionvectores_1(t_array a, t_array b, int n,  CLIENT *clnt)
+{
+	multiplicacionvectores_1_argument arg;
+	static t_array clnt_res;
+
+	memset((char *)&clnt_res, 0, sizeof(clnt_res));
+	arg.a = a;
+	arg.b = b;
+	arg.n = n;
+	if (clnt_call (clnt, multiplicacionVectores, (xdrproc_t) xdr_multiplicacionvectores_1_argument, (caddr_t) &arg,
+		(xdrproc_t) xdr_t_array, (caddr_t) &clnt_res,
+		TIMEOUT) != RPC_SUCCESS) {
+		return (NULL);
+	}
+	return (&clnt_res);
+}
+
+t_array *
+divisionvectores_1(t_array a, t_array b, int n,  CLIENT *clnt)
+{
+	divisionvectores_1_argument arg;
+	static t_array clnt_res;
+
+	memset((char *)&clnt_res, 0, sizeof(clnt_res));
+	arg.a = a;
+	arg.b = b;
+	arg.n = n;
+	if (clnt_call (clnt, divisionVectores, (xdrproc_t) xdr_divisionvectores_1_argument, (caddr_t) &arg,
+		(xdrproc_t) xdr_t_array, (caddr_t) &clnt_res,
+		TIMEOUT) != RPC_SUCCESS) {
+		return (NULL);
+	}
+	return (&clnt_res);
+}

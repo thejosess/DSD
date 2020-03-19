@@ -50,6 +50,27 @@ struct sumavectores_1_argument {
 };
 typedef struct sumavectores_1_argument sumavectores_1_argument;
 
+struct restvectores_1_argument {
+	t_array a;
+	t_array b;
+	int n;
+};
+typedef struct restvectores_1_argument restvectores_1_argument;
+
+struct multiplicacionvectores_1_argument {
+	t_array a;
+	t_array b;
+	int n;
+};
+typedef struct multiplicacionvectores_1_argument multiplicacionvectores_1_argument;
+
+struct divisionvectores_1_argument {
+	t_array a;
+	t_array b;
+	int n;
+};
+typedef struct divisionvectores_1_argument divisionvectores_1_argument;
+
 #define CALPROG 0x20000002
 #define DIRVER 1
 
@@ -69,6 +90,15 @@ extern  double * division_1_svc(int , int , struct svc_req *);
 #define sumaVectores 5
 extern  t_array * sumavectores_1(t_array , t_array , int , CLIENT *);
 extern  t_array * sumavectores_1_svc(t_array , t_array , int , struct svc_req *);
+#define restVectores 6
+extern  t_array * restvectores_1(t_array , t_array , int , CLIENT *);
+extern  t_array * restvectores_1_svc(t_array , t_array , int , struct svc_req *);
+#define multiplicacionVectores 7
+extern  t_array * multiplicacionvectores_1(t_array , t_array , int , CLIENT *);
+extern  t_array * multiplicacionvectores_1_svc(t_array , t_array , int , struct svc_req *);
+#define divisionVectores 8
+extern  t_array * divisionvectores_1(t_array , t_array , int , CLIENT *);
+extern  t_array * divisionvectores_1_svc(t_array , t_array , int , struct svc_req *);
 extern int calprog_1_freeresult (SVCXPRT *, xdrproc_t, caddr_t);
 
 #else /* K&R C */
@@ -87,6 +117,15 @@ extern  double * division_1_svc();
 #define sumaVectores 5
 extern  t_array * sumavectores_1();
 extern  t_array * sumavectores_1_svc();
+#define restVectores 6
+extern  t_array * restvectores_1();
+extern  t_array * restvectores_1_svc();
+#define multiplicacionVectores 7
+extern  t_array * multiplicacionvectores_1();
+extern  t_array * multiplicacionvectores_1_svc();
+#define divisionVectores 8
+extern  t_array * divisionvectores_1();
+extern  t_array * divisionvectores_1_svc();
 extern int calprog_1_freeresult ();
 #endif /* K&R C */
 
@@ -99,6 +138,9 @@ extern  bool_t xdr_resta_1_argument (XDR *, resta_1_argument*);
 extern  bool_t xdr_multiplicacion_1_argument (XDR *, multiplicacion_1_argument*);
 extern  bool_t xdr_division_1_argument (XDR *, division_1_argument*);
 extern  bool_t xdr_sumavectores_1_argument (XDR *, sumavectores_1_argument*);
+extern  bool_t xdr_restvectores_1_argument (XDR *, restvectores_1_argument*);
+extern  bool_t xdr_multiplicacionvectores_1_argument (XDR *, multiplicacionvectores_1_argument*);
+extern  bool_t xdr_divisionvectores_1_argument (XDR *, divisionvectores_1_argument*);
 
 #else /* K&R C */
 extern bool_t xdr_t_array ();
@@ -107,6 +149,9 @@ extern bool_t xdr_resta_1_argument ();
 extern bool_t xdr_multiplicacion_1_argument ();
 extern bool_t xdr_division_1_argument ();
 extern bool_t xdr_sumavectores_1_argument ();
+extern bool_t xdr_restvectores_1_argument ();
+extern bool_t xdr_multiplicacionvectores_1_argument ();
+extern bool_t xdr_divisionvectores_1_argument ();
 
 #endif /* K&R C */
 

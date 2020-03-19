@@ -67,3 +67,39 @@ xdr_sumavectores_1_argument (XDR *xdrs, sumavectores_1_argument *objp)
 		 return FALSE;
 	return TRUE;
 }
+
+bool_t
+xdr_restvectores_1_argument (XDR *xdrs, restvectores_1_argument *objp)
+{
+	 if (!xdr_t_array (xdrs, &objp->a))
+		 return FALSE;
+	 if (!xdr_t_array (xdrs, &objp->b))
+		 return FALSE;
+	 if (!xdr_int (xdrs, &objp->n))
+		 return FALSE;
+	return TRUE;
+}
+
+bool_t
+xdr_multiplicacionvectores_1_argument (XDR *xdrs, multiplicacionvectores_1_argument *objp)
+{
+	 if (!xdr_t_array (xdrs, &objp->a))
+		 return FALSE;
+	 if (!xdr_t_array (xdrs, &objp->b))
+		 return FALSE;
+	 if (!xdr_int (xdrs, &objp->n))
+		 return FALSE;
+	return TRUE;
+}
+
+bool_t
+xdr_divisionvectores_1_argument (XDR *xdrs, divisionvectores_1_argument *objp)
+{
+	 if (!xdr_t_array (xdrs, &objp->a))
+		 return FALSE;
+	 if (!xdr_t_array (xdrs, &objp->b))
+		 return FALSE;
+	 if (!xdr_int (xdrs, &objp->n))
+		 return FALSE;
+	return TRUE;
+}
