@@ -155,6 +155,10 @@ derivadafunciones_1_svc(funcion f1,  struct svc_req *rqstp)
 	result.y = f1.x * 2;
 	result.x = 0;
 
+	result.exponente_x = 2;
+	result.exponente_y = 1;
+	result.exponente_z = 0;
+
 	return &result;
 }
 
@@ -164,13 +168,13 @@ integralfunciones_1_svc(funcion f1,  struct svc_req *rqstp)
 	static funcion  result;
 
 	result.exponente_x = f1.exponente_x + 1;
-	result.x = f1.exponente_x / result.exponente_x;
+	result.x = f1.exponente_x / (double) result.exponente_x;
 
 	result.exponente_y = f1.exponente_y + 1;
-	result.y = f1.exponente_y / result.exponente_y;
+	result.y = f1.exponente_y / (double) result.exponente_y;
 
 	result.exponente_z = f1.exponente_z + 1;
-	result.z = f1.exponente_z / result.exponente_z;
+	result.z = f1.exponente_z / (double) result.exponente_z;
 
 
 	return &result;
