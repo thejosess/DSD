@@ -246,3 +246,20 @@ integralfunciones_1(funcion f1,  CLIENT *clnt)
 	}
 	return (&clnt_res);
 }
+
+double *
+resultadoformula_1(char *formula, int n,  CLIENT *clnt)
+{
+	resultadoformula_1_argument arg;
+	static double clnt_res;
+
+	memset((char *)&clnt_res, 0, sizeof(clnt_res));
+	arg.formula = formula;
+	arg.n = n;
+	if (clnt_call (clnt, resultadoFormula, (xdrproc_t) xdr_resultadoformula_1_argument, (caddr_t) &arg,
+		(xdrproc_t) xdr_double, (caddr_t) &clnt_res,
+		TIMEOUT) != RPC_SUCCESS) {
+		return (NULL);
+	}
+	return (&clnt_res);
+}

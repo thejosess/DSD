@@ -100,6 +100,12 @@ _integralfunciones_1 (funcion  *argp, struct svc_req *rqstp)
 	return (integralfunciones_1_svc(*argp, rqstp));
 }
 
+static double *
+_resultadoformula_1 (resultadoformula_1_argument *argp, struct svc_req *rqstp)
+{
+	return (resultadoformula_1_svc(argp->formula, argp->n, rqstp));
+}
+
 static void
 calprog_1(struct svc_req *rqstp, register SVCXPRT *transp)
 {
@@ -118,6 +124,7 @@ calprog_1(struct svc_req *rqstp, register SVCXPRT *transp)
 		divisionfunciones_1_argument divisionfunciones_1_arg;
 		funcion derivadafunciones_1_arg;
 		funcion integralfunciones_1_arg;
+		resultadoformula_1_argument resultadoformula_1_arg;
 	} argument;
 	char *result;
 	xdrproc_t _xdr_argument, _xdr_result;
@@ -210,6 +217,12 @@ calprog_1(struct svc_req *rqstp, register SVCXPRT *transp)
 		_xdr_argument = (xdrproc_t) xdr_funcion;
 		_xdr_result = (xdrproc_t) xdr_funcion;
 		local = (char *(*)(char *, struct svc_req *)) _integralfunciones_1;
+		break;
+
+	case resultadoFormula:
+		_xdr_argument = (xdrproc_t) xdr_resultadoformula_1_argument;
+		_xdr_result = (xdrproc_t) xdr_double;
+		local = (char *(*)(char *, struct svc_req *)) _resultadoformula_1;
 		break;
 
 	default:

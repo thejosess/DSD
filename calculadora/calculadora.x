@@ -26,5 +26,6 @@ program CALPROG {
 		funcion divisionFunciones(funcion f1, funcion f2) = 12;
 		funcion derivadaFunciones(funcion f1) = 13;
 		funcion integralFunciones(funcion f1) = 14;
+		double resultadoFormula(string formula, int n) = 15;
 	} =1;
 } = 0x20000002;

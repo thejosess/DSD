@@ -163,3 +163,13 @@ xdr_divisionfunciones_1_argument (XDR *xdrs, divisionfunciones_1_argument *objp)
 		 return FALSE;
 	return TRUE;
 }
+
+bool_t
+xdr_resultadoformula_1_argument (XDR *xdrs, resultadoformula_1_argument *objp)
+{
+	 if (!xdr_string (xdrs, &objp->formula, ~0))
+		 return FALSE;
+	 if (!xdr_int (xdrs, &objp->n))
+		 return FALSE;
+	return TRUE;
+}

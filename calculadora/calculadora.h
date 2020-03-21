@@ -105,6 +105,12 @@ struct divisionfunciones_1_argument {
 };
 typedef struct divisionfunciones_1_argument divisionfunciones_1_argument;
 
+struct resultadoformula_1_argument {
+	char *formula;
+	int n;
+};
+typedef struct resultadoformula_1_argument resultadoformula_1_argument;
+
 #define CALPROG 0x20000002
 #define DIRVER 1
 
@@ -151,6 +157,9 @@ extern  funcion * derivadafunciones_1_svc(funcion , struct svc_req *);
 #define integralFunciones 14
 extern  funcion * integralfunciones_1(funcion , CLIENT *);
 extern  funcion * integralfunciones_1_svc(funcion , struct svc_req *);
+#define resultadoFormula 15
+extern  double * resultadoformula_1(char *, int , CLIENT *);
+extern  double * resultadoformula_1_svc(char *, int , struct svc_req *);
 extern int calprog_1_freeresult (SVCXPRT *, xdrproc_t, caddr_t);
 
 #else /* K&R C */
@@ -196,6 +205,9 @@ extern  funcion * derivadafunciones_1_svc();
 #define integralFunciones 14
 extern  funcion * integralfunciones_1();
 extern  funcion * integralfunciones_1_svc();
+#define resultadoFormula 15
+extern  double * resultadoformula_1();
+extern  double * resultadoformula_1_svc();
 extern int calprog_1_freeresult ();
 #endif /* K&R C */
 
@@ -216,6 +228,7 @@ extern  bool_t xdr_sumafunciones_1_argument (XDR *, sumafunciones_1_argument*);
 extern  bool_t xdr_restafunciones_1_argument (XDR *, restafunciones_1_argument*);
 extern  bool_t xdr_multiplicacionfunciones_1_argument (XDR *, multiplicacionfunciones_1_argument*);
 extern  bool_t xdr_divisionfunciones_1_argument (XDR *, divisionfunciones_1_argument*);
+extern  bool_t xdr_resultadoformula_1_argument (XDR *, resultadoformula_1_argument*);
 
 #else /* K&R C */
 extern bool_t xdr_t_array ();
@@ -232,6 +245,7 @@ extern bool_t xdr_sumafunciones_1_argument ();
 extern bool_t xdr_restafunciones_1_argument ();
 extern bool_t xdr_multiplicacionfunciones_1_argument ();
 extern bool_t xdr_divisionfunciones_1_argument ();
+extern bool_t xdr_resultadoformula_1_argument ();
 
 #endif /* K&R C */
 

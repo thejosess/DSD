@@ -179,3 +179,113 @@ integralfunciones_1_svc(funcion f1,  struct svc_req *rqstp)
 
 	return &result;
 }
+
+//iba a hacer con numeros de mas de una cifra pero ya no tenia mucho tiempo
+double *
+resultadoformula_1_svc(char *formula, int n,  struct svc_req *rqstp)
+{
+		static double  result;
+
+		const int TAMANO = 20;
+		int numero;
+		char *operadores = malloc(TAMANO);
+		int *numeros = malloc(TAMANO);
+		int tam_numeros = 0;
+		int tam_operadores = 0;
+		char *c[1];
+
+
+		for(int i=0;i<n;i++)
+		{
+			if(formula[i] == '+')
+			{
+				operadores[tam_operadores] = formula[i];
+				tam_operadores++;
+			}
+			else if(formula[i] == '-')
+			{
+				operadores[tam_operadores] = formula[i];
+				tam_operadores++;
+			}
+			else if(formula[i] == 'x')
+			{
+				operadores[tam_operadores] = formula[i];
+				tam_operadores++;
+			}
+			else if(formula[i] == '/')
+			{
+				operadores[tam_operadores] = formula[i];
+				tam_operadores++;
+			}
+			else
+			{
+				c[0] = formula[i];
+				int valor = atoi(c);
+				numeros[tam_numeros] = valor;
+				tam_numeros++;
+			}//intente hacer una que evaluase la expresion cuando encontrase el = con bool_t pero no me funcionaba a la hora de decirle = TRUE
+		}
+
+		int j = 0;
+		int h = 0;
+		int primera_vez = 0;
+
+		double resultado;
+
+		//entra en el for?
+		for(int i=0; i<tam_operadores;i++)
+		{
+			if(operadores[i] == '+')
+			{
+				if(primera_vez == 0)
+				{
+					resultado = numeros[j] + numeros[j+1];
+					primera_vez = 1;
+				}
+				else{
+					resultado = resultado + numeros[j+1];
+				}
+			}
+			if(operadores[i] == '-')
+			{
+				if(primera_vez == 0)
+				{
+					resultado = numeros[j] - numeros[j+1];
+					primera_vez = 1;
+				}
+				else{
+					resultado = resultado - numeros[j+1];
+				}
+			}
+			if(operadores[i] == '/')
+			{
+				if(primera_vez == 0)
+				{
+					resultado = numeros[j] / numeros[j+1];
+					primera_vez = 1;
+				}
+				else{
+					resultado = resultado / numeros[j+1];
+				}
+			}
+			if(operadores[i] == 'x')
+			{
+				if(primera_vez == 0)
+				{
+					resultado = numeros[j] * numeros[j+1];
+					primera_vez = 1;
+				}
+				else{
+					resultado = resultado * numeros[j+1];
+				}
+			}
+			j++;
+		}
+
+		result = resultado;
+
+		free(operadores);
+		free(numeros);
+	
+	return &result;
+}
