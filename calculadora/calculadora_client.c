@@ -102,13 +102,14 @@ void operaciones_vectores(char *host, t_array v1, t_array v2, int n, char operad
 	}
 	#endif	/* DEBUG */
 
-		result_2 = malloc(v2.t_array_len);
-		result_2 = sumavectores_1(v1, v2, v2.t_array_len, clnt);
+		
 
 		switch (operador)
 		{
 		case '+':
 			
+			result_2 = malloc(v2.t_array_len);
+			result_2 = sumavectores_1(v1, v2, v2.t_array_len, clnt);
 			if (result_2 == (t_array *) NULL) 
 				clnt_perror (clnt, "call failed");
 			else
@@ -118,6 +119,8 @@ void operaciones_vectores(char *host, t_array v1, t_array v2, int n, char operad
 			break;
 
 		case '-':
+			result_2 = malloc(v2.t_array_len);
+			result_2 = restvectores_1(v1, v2, v2.t_array_len, clnt);
 			if (result_2 == (t_array *) NULL) 
 				clnt_perror (clnt, "call failed");
 			else
@@ -127,6 +130,8 @@ void operaciones_vectores(char *host, t_array v1, t_array v2, int n, char operad
 			break;
 		
 		case 'x':
+			result_2 = malloc(v2.t_array_len);
+			result_2 = multiplicacionvectores_1(v1, v2, v2.t_array_len, clnt);
 			if (result_2 == (t_array *) NULL) 
 				clnt_perror (clnt, "call failed");
 			else
@@ -136,6 +141,8 @@ void operaciones_vectores(char *host, t_array v1, t_array v2, int n, char operad
 			break;
 
 		case '/':
+			result_2 = malloc(v2.t_array_len);
+			result_2 = divisionvectores_1(v1, v2, v2.t_array_len, clnt);
 			if (result_2 == (t_array *) NULL) 
 				clnt_perror (clnt, "call failed");
 			else
@@ -242,7 +249,7 @@ funcion leer_funcion(){
 }
 
 void mostrar_funcionP(funcion* f1){
-	printf("Funcion resultante: ");
+	printf("\nFuncion resultante: ");
 	
 	printf("%lf",f1->x);
 	printf("X^");
@@ -374,12 +381,18 @@ int main (int argc, char *argv[])
 
 	//he utilizado meter desde consola, interfaz y menus para dar mas variedad 
 
+	//intente hacer que un servidor fuera tambien un cliente, metiendo el codigo que 
+	//me generaba el segundo cliente dentro del servidor, pero a la hora de hacer el makefile
+	//me daban errores ya que habia redefiniciones, ya que comparte codigo, estuve probandolo
+	//y no consegui sacarlo y decidi desecharlo.
+
 	int entero1, entero2,opcion;
 	char operador;
 	char caracter[1];
 
 	int tam;
 	int elemento;
+	int continuar = 1;
 
 	if (argc != 3) {
 		printf ("usage: %s <server_host> <tipo>\n", argv[0]);
@@ -388,142 +401,147 @@ int main (int argc, char *argv[])
 	}
 	host = argv[1];
 
-	printf("CALCULADORA\n");
+	printf("\nCALCULADORA\n");
 	printf("************\n");	
 
 	if(atoi(argv[2]) == 1)
 	{
-		printf("Seleccione una opcion:\n1.Operaciones con enteros\n2.Operaciones con vectores\n3.Operacion con funciones\n\n");
-		scanf("%d",&opcion);
-
-		switch (opcion)
+		while(opcion != 0)
 		{
-			
-			case 1:
-				printf("\nIntroduce dos enteros separados por un espacio: \n");
-				scanf("%d %d", &entero1, &entero2);
-				printf("\nIntroduce el operador:\n");
-				scanf(" %c",&operador);
-
-				if(operador == '/' && entero2 == 0)
-				{
-					printf("No se puede dividir entre cero");
-					exit(1);
-				}
-				else
-					operaciones_basicas(host,entero1,entero2,operador);
-			break;
-			case 2:
-				printf("\nIntroduce el tamaño de los vectores(han de ser iguales) :\n");
-				scanf("%d",&tam);
-				printf("\nIntroduce el operador:\n");
-				scanf(" %c",&operador);
-
-				t_array v1,v2,v3;
-
-				v1.t_array_len = tam;
-				v1.t_array_val = malloc(v1.t_array_len);
-
-				v2.t_array_len = tam;
-				v2.t_array_val = malloc(v2.t_array_len);
-
-				for(int i = 0; i < v1.t_array_len; i++){
-					printf("\nIntroduce elemento i al vector 1:\n");
-					scanf("%lf",&v1.t_array_val[i]);
-					
-				}
-
-				//se podria hacer con un bucle pero creo que asi es mas claro y la idea de la practica no es perder el tiempo en programacion y centrarse en el uso de RPC
-				for(int i = 0; i < v2.t_array_len; i++){
-					printf("\nIntroduce elemento i al vector 2:\n");
-					scanf("%lf",&v2.t_array_val[i]);
-				}
-
-				operaciones_vectores(host,v1,v2,v2.t_array_len, operador);
-			break;
-
-			case 3:
-			printf("\nFuncion ->");
-			funcion f1, f2;
-			f1 = leer_funcion();
-			mostrar_funcion(f1);
-			//las funciones por defecto las he hecho de grado 2 porque a la hora de hacer las cuentas tampoco supone
-			//una gran diferencia cambiarlo todo para que sean funcion de un tamaño elegido por el usuario
-
-			f2 = leer_funcion();
-			mostrar_funcion(f2);
-
-			printf("\n\n1.Operaciones basicas con funciones\n2.Integrar o derivar\n");
+			printf("\n\nSeleccione una opcion:\n0.Para terminar\n1.Operaciones con enteros\n2.Operaciones con vectores\n3.Operacion con funciones\n\n");
 			scanf("%d",&opcion);
 
+			switch (opcion)
+			{
+				
+				case 1:
+					printf("\nIntroduce dos enteros separados por un espacio: \n");
+					scanf("%d %d", &entero1, &entero2);
+					printf("\nIntroduce el operador:\n");
+					scanf(" %c",&operador);
 
+					if(operador == '/' && entero2 == 0)
+					{
+						printf("No se puede dividir entre cero");
+						exit(1);
+					}
+					else
+						operaciones_basicas(host,entero1,entero2,operador);
+				break;
+				case 2:
+					printf("\nIntroduce el tamaño de los vectores(han de ser iguales) :\n");
+					scanf("%d",&tam);
+					printf("\nIntroduce el operador:\n");
+					scanf(" %c",&operador);
 
-				switch(opcion)
-				{
-					case 1:
-						printf("\nIntroduce el operador:\n");
-						scanf(" %c",&operador);
-						operaciones_funciones_basicas(host,f1,f2,operador);
-					break;
+					t_array v1,v2,v3;
 
-					case 2:
-						printf("\n1.Integral\n2.Derivar\n");
-						scanf("%d",&opcion);
-						if(opcion == 1)
-						{
-							printf("\n1.Integral sobre la primera funcion\n2.Integral sobre la segunda funcion\n");
-							scanf("%d",&opcion);
-							if(opcion == 1){
-								integral_funcion(host,f1);
-							}
-							if(opcion == 2){
-								integral_funcion(host,f2);			
-							}	
-						}
-						if(opcion == 2)
-						{
-							printf("\n1.Derivar sobre la primera funcion\n2.Derivar sobre la segunda funcion\n");
-							scanf("%d",&opcion);
-							if(opcion == 1){
-								derivar_funcion(host,f1);
-							}
-							if(opcion == 2){
-								derivar_funcion(host,f2);			
-							}	
-						}
-						//poner algo asi como un seguir integrando o algo asi
-					break;
+					v1.t_array_len = tam;
+					v1.t_array_val = malloc(v1.t_array_len);
 
-				}
-			break;
+					v2.t_array_len = tam;
+					v2.t_array_val = malloc(v2.t_array_len);
 
-			case 4:
-				printf("\n1.Introducir por ruta de archivo\n2.Escribr por terminal\n");
+					for(int i = 0; i < v1.t_array_len; i++){
+						printf("\nIntroduce elemento i al vector 1:\n");
+						scanf("%lf",&v1.t_array_val[i]);
+						
+					}
+
+					//se podria hacer con un bucle pero creo que asi es mas claro y la idea de la practica no es perder el tiempo en programacion y centrarse en el uso de RPC
+					for(int i = 0; i < v2.t_array_len; i++){
+						printf("\nIntroduce elemento i al vector 2:\n");
+						scanf("%lf",&v2.t_array_val[i]);
+					}
+
+					operaciones_vectores(host,v1,v2,v2.t_array_len, operador);
+				break;
+
+				case 3:
+				printf("\nFuncion ->");
+				funcion f1, f2;
+				f1 = leer_funcion();
+				printf("\nf(x) = ");
+				mostrar_funcion(f1);
+				//las funciones por defecto las he hecho de grado 2 porque a la hora de hacer las cuentas tampoco supone
+				//una gran diferencia cambiarlo todo para que sean funcion de un tamaño elegido por el usuario
+
+				f2 = leer_funcion();
+				printf("\ng(x) = ");
+				mostrar_funcion(f2);
+
+				printf("\n\n1.Operaciones basicas con funciones\n2.Integrar o derivar\n");
 				scanf("%d",&opcion);
 
-				if(opcion == 1)
-				{
-					//scanf("%[^' ']",&line);
-					/*scanf("%s",line);
-					scanf("%s",line2);
-					printf("%s",line);
-					printf("%s",line2);*/
-					//ir ahciendo scanf hasta que el elemento sea \n 
-					//cuando sea un salto de linea se acaba y ya tienes tus palabras creadas
-				}
-				if(opcion == 2)
-				{
-					//iba a usar aqui scanf pero es menos seguro y de esta forma mas seguro
 
 
-					//puts(cadena);
+					switch(opcion)
+					{
+						case 1:
+							printf("\nIntroduce el operador:\n");
+							scanf(" %c",&operador);
+							operaciones_funciones_basicas(host,f1,f2,operador);
+						break;
 
-					//free(cadena);
-					
-					//problemas con printf 
-					//hacer dos funciones que sean leer cadena, procesar palabras
-				}
-			break;
+						case 2:
+							printf("\n1.Integral\n2.Derivar\n");
+							scanf("%d",&opcion);
+							if(opcion == 1)
+							{
+								printf("\n1.Integral sobre la primera funcion\n2.Integral sobre la segunda funcion\n");
+								scanf("%d",&opcion);
+								if(opcion == 1){
+									integral_funcion(host,f1);
+								}
+								if(opcion == 2){
+									integral_funcion(host,f2);			
+								}	
+							}
+							if(opcion == 2)
+							{
+								printf("\n1.Derivar sobre la primera funcion\n2.Derivar sobre la segunda funcion\n");
+								scanf("%d",&opcion);
+								if(opcion == 1){
+									derivar_funcion(host,f1);
+								}
+								if(opcion == 2){
+									derivar_funcion(host,f2);			
+								}	
+							}
+							//poner algo asi como un seguir integrando o algo asi
+						break;
+
+					}
+				break;
+
+				case 4:
+					printf("\n1.Introducir por ruta de archivo\n2.Escribr por terminal\n");
+					scanf("%d",&opcion);
+
+					if(opcion == 1)
+					{
+						//scanf("%[^' ']",&line);
+						/*scanf("%s",line);
+						scanf("%s",line2);
+						printf("%s",line);
+						printf("%s",line2);*/
+						//ir ahciendo scanf hasta que el elemento sea \n 
+						//cuando sea un salto de linea se acaba y ya tienes tus palabras creadas
+					}
+					if(opcion == 2)
+					{
+						//iba a usar aqui scanf pero es menos seguro y de esta forma mas seguro
+
+
+						//puts(cadena);
+
+						//free(cadena);
+						
+						//problemas con printf 
+						//hacer dos funciones que sean leer cadena, procesar palabras
+					}
+				break;
+			}
 		}
 	}
 	
@@ -547,14 +565,18 @@ int main (int argc, char *argv[])
 			calcular_expresion(host,cadena,numero_bytes);
 		}
 
+		//para hacerlo de un archivo seria coger esa cadena y mirar si el primer 
+		//char es un . de ./ y entonces haces un FILE *fp, fp = fopen(cadena,"r")
 
-		/*for(char *t = cadena; *t != numero_bytes; t++)
-		{
-			puts(t);
-		}*/
+		//de haberlo hecho meter las operades desde el terminal, pues habria sido mas sencillo
+		//habria leido los numeros con atoi y se podrian las operacines con numeros de mas de dos digitos.
+
 
 	}
 
+//problemas con los punteros 
+//he puesto casi todasf las formas de hacerlom, desde fichero, entrada normal, scanf, getline
+//menu normal
 
 
 exit (0);

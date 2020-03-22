@@ -41,7 +41,7 @@ division_1_svc(int arg1, int arg2,  struct svc_req *rqstp)
 t_array *
 sumavectores_1_svc(t_array a, t_array b, int n,  struct svc_req *rqstp)
 {
-	static t_array  result;	//static OJO
+	static t_array  result;	
 	result.t_array_len = n;
 	result.t_array_val = malloc(n*sizeof(double));
 
@@ -56,7 +56,7 @@ sumavectores_1_svc(t_array a, t_array b, int n,  struct svc_req *rqstp)
 t_array *
 restvectores_1_svc(t_array a, t_array b, int n,  struct svc_req *rqstp)
 {
-	static t_array  result;	//static OJO
+	static t_array  result;	
 	result.t_array_len = n;
 	result.t_array_val = malloc(n*sizeof(double));
 
@@ -71,7 +71,7 @@ restvectores_1_svc(t_array a, t_array b, int n,  struct svc_req *rqstp)
 t_array *
 multiplicacionvectores_1_svc(t_array a, t_array b, int n,  struct svc_req *rqstp)
 {
-	static t_array  result;	//static OJO
+	static t_array  result;	
 	result.t_array_len = n;
 	result.t_array_val = malloc(n*sizeof(double));
 
@@ -86,7 +86,7 @@ multiplicacionvectores_1_svc(t_array a, t_array b, int n,  struct svc_req *rqstp
 t_array *
 divisionvectores_1_svc(t_array a, t_array b, int n,  struct svc_req *rqstp)
 {
-	static t_array  result;	//static OJO
+	static t_array  result;	
 	result.t_array_len = n;
 	result.t_array_val = malloc(n*sizeof(double));
 
