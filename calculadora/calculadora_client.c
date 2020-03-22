@@ -364,11 +364,6 @@ void calcular_expresion(char *host,char *formula, int n)
 		printf("\n");
 	}
 
-
-	//PROBE A USAR BOOL_T pero no funcionaba
-//para el de deolver resultado
-
-
 #ifndef	DEBUG
 	clnt_destroy (clnt);
 #endif	 /* DEBUG */
@@ -378,13 +373,6 @@ void calcular_expresion(char *host,char *formula, int n)
 int main (int argc, char *argv[])
 {
 	char *host;
-
-	//he utilizado meter desde consola, interfaz y menus para dar mas variedad 
-
-	//intente hacer que un servidor fuera tambien un cliente, metiendo el codigo que 
-	//me generaba el segundo cliente dentro del servidor, pero a la hora de hacer el makefile
-	//me daban errores ya que habia redefiniciones, ya que comparte codigo, estuve probandolo
-	//y no consegui sacarlo y decidi desecharlo.
 
 	int entero1, entero2,opcion;
 	char operador;
@@ -448,7 +436,6 @@ int main (int argc, char *argv[])
 						
 					}
 
-					//se podria hacer con un bucle pero creo que asi es mas claro y la idea de la practica no es perder el tiempo en programacion y centrarse en el uso de RPC
 					for(int i = 0; i < v2.t_array_len; i++){
 						printf("\nIntroduce elemento i al vector 2:\n");
 						scanf("%lf",&v2.t_array_val[i]);
@@ -463,8 +450,6 @@ int main (int argc, char *argv[])
 				f1 = leer_funcion();
 				printf("\nf(x) = ");
 				mostrar_funcion(f1);
-				//las funciones por defecto las he hecho de grado 2 porque a la hora de hacer las cuentas tampoco supone
-				//una gran diferencia cambiarlo todo para que sean funcion de un tamaño elegido por el usuario
 
 				f2 = leer_funcion();
 				printf("\ng(x) = ");
@@ -472,7 +457,7 @@ int main (int argc, char *argv[])
 
 				printf("\n\n1.Operaciones basicas con funciones\n2.Integrar o derivar\n");
 				scanf("%d",&opcion);
-				
+
 					switch(opcion)
 					{
 						case 1:
@@ -506,37 +491,8 @@ int main (int argc, char *argv[])
 									derivar_funcion(host,f2);			
 								}	
 							}
-							//poner algo asi como un seguir integrando o algo asi
 						break;
 
-					}
-				break;
-
-				case 4:
-					printf("\n1.Introducir por ruta de archivo\n2.Escribr por terminal\n");
-					scanf("%d",&opcion);
-
-					if(opcion == 1)
-					{
-						//scanf("%[^' ']",&line);
-						/*scanf("%s",line);
-						scanf("%s",line2);
-						printf("%s",line);
-						printf("%s",line2);*/
-						//ir ahciendo scanf hasta que el elemento sea \n 
-						//cuando sea un salto de linea se acaba y ya tienes tus palabras creadas
-					}
-					if(opcion == 2)
-					{
-						//iba a usar aqui scanf pero es menos seguro y de esta forma mas seguro
-
-
-						//puts(cadena);
-
-						//free(cadena);
-						
-						//problemas con printf 
-						//hacer dos funciones que sean leer cadena, procesar palabras
 					}
 				break;
 			}
@@ -548,12 +504,6 @@ int main (int argc, char *argv[])
 		int numero_bytes = 0;
 		char *cadena = NULL;
 
-		/*	printf("\n1.Introducir por ruta de archivo\n2.Escribr por terminal\n");
-			scanf("%d",&opcion);*/
-		//hacer que puedas meterlo desde un fichero
-		//dos opciones una que evalue una expresion y otra quue realice la operacion
-		//evaluar y mostrar resultado en una misma
-
 		puts("Introduce la expresion:\n");
 
 		numero_bytes = getline(&cadena, &numero_bytes, stdin);
@@ -562,20 +512,7 @@ int main (int argc, char *argv[])
 		{
 			calcular_expresion(host,cadena,numero_bytes);
 		}
-
-		//para hacerlo de un archivo seria coger esa cadena y mirar si el primer 
-		//char es un . de ./ y entonces haces un FILE *fp, fp = fopen(cadena,"r")
-
-		//de haberlo hecho meter las operades desde el terminal, pues habria sido mas sencillo
-		//habria leido los numeros con atoi y se podrian las operacines con numeros de mas de dos digitos.
-
-
 	}
-
-//problemas con los punteros 
-//he puesto casi todasf las formas de hacerlom, desde fichero, entrada normal, scanf, getline
-//menu normal
-
 
 exit (0);
 }

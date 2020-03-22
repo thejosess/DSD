@@ -34,7 +34,7 @@ double *
 division_1_svc(int arg1, int arg2,  struct svc_req *rqstp)
 {
 	static double  result;
-	result = (arg1 + 0.0) / arg2;	//obtendriamos los decimales ya que es un double con el 0.0
+	result = (arg1 + 0.0) / arg2;	
 	return &result;
 }
 
@@ -199,7 +199,6 @@ integralfunciones_1_svc(funcion f1,  struct svc_req *rqstp)
 	return &result;
 }
 
-//iba a hacer con numeros de mas de una cifra pero ya no tenia mucho tiempo
 double *
 resultadoformula_1_svc(char *formula, int n,  struct svc_req *rqstp)
 {
@@ -242,7 +241,7 @@ resultadoformula_1_svc(char *formula, int n,  struct svc_req *rqstp)
 				int valor = atoi(c);
 				numeros[tam_numeros] = valor;
 				tam_numeros++;
-			}//intente hacer una que evaluase la expresion cuando encontrase el = con bool_t pero no me funcionaba a la hora de decirle = TRUE
+			}
 		}
 
 		int j = 0;
@@ -251,7 +250,6 @@ resultadoformula_1_svc(char *formula, int n,  struct svc_req *rqstp)
 
 		double resultado;
 
-		//entra en el for?
 		for(int i=0; i<tam_operadores;i++)
 		{
 			if(operadores[i] == '+')
