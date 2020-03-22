@@ -107,6 +107,10 @@ sumafunciones_1_svc(funcion f1, funcion f2,  struct svc_req *rqstp)
 	result.y = f1.y + f2.y;
 	result.z = f1.z + f2.z;
 
+	result.exponente_x = f1.exponente_x;
+	result.exponente_y = f1.exponente_y;
+	result.exponente_z = f1.exponente_z;
+
 	return &result;
 }
 
@@ -118,6 +122,11 @@ restafunciones_1_svc(funcion f1, funcion f2,  struct svc_req *rqstp)
 	result.x = f1.x - f2.x;
 	result.y = f1.y - f2.y;
 	result.z = f1.z - f2.z;
+
+	result.exponente_x = f1.exponente_x;
+	result.exponente_y = f1.exponente_y;
+	result.exponente_z = f1.exponente_z;
+
 
 	return &result;
 }
@@ -131,6 +140,11 @@ multiplicacionfunciones_1_svc(funcion f1, funcion f2,  struct svc_req *rqstp)
 	result.y = f1.y * f2.y;
 	result.z = f1.z * f2.z;
 
+	result.exponente_x = f1.exponente_x;
+	result.exponente_y = f1.exponente_y;
+	result.exponente_z = f1.exponente_z;
+
+
 	return &result;
 }
 
@@ -142,6 +156,11 @@ divisionfunciones_1_svc(funcion f1, funcion f2,  struct svc_req *rqstp)
 	result.x = f1.x / f2.x;
 	result.y = f1.y / f2.y;
 	result.z = f1.z / f2.z;
+
+	result.exponente_x = f1.exponente_x;
+	result.exponente_y = f1.exponente_y;
+	result.exponente_z = f1.exponente_z;
+
 
 	return &result;
 }

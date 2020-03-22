@@ -472,9 +472,7 @@ int main (int argc, char *argv[])
 
 				printf("\n\n1.Operaciones basicas con funciones\n2.Integrar o derivar\n");
 				scanf("%d",&opcion);
-
-
-
+				
 					switch(opcion)
 					{
 						case 1:
