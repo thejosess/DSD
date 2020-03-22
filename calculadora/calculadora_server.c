@@ -174,9 +174,9 @@ derivadafunciones_1_svc(funcion f1,  struct svc_req *rqstp)
 	result.y = f1.x * 2;
 	result.x = 0;
 
-	result.exponente_x = 2;
-	result.exponente_y = 1;
-	result.exponente_z = 0;
+	result.exponente_x = f1.exponente_x;
+	result.exponente_y = f1.exponente_y;
+	result.exponente_z = f1.exponente_z;
 
 	return &result;
 }
