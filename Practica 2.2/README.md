@@ -88,5 +88,124 @@ En este punto de la práctica y sin tener ningún conocimiento de python, tuve q
 ![basica](./imagenes/basica.png "Calculadora básica y vectores")
 
 
-         
+
+
+## 3.Implementación servidor en Java  
+
+Para implementar el servidor en Java me hizo falta usar netbeans y desde ahí cargar dos archivos .jar, libthrift-0.9.1.jar y slf4j-api-1.7.25.jar. Tras generar Calculadora.java con thrift, me dieron errores debido a que usaba un archivo .jar de thrift para una versión distinta a la que tenía de thrift. Tras implementar el servidor en Java(había que cambiar ciertas cosas de lo puesto en el pdf)
+
+    class Servidor{
+    public static void main(String args[]){
+        CalculadoraHandler handler = new CalculadoraHandler();
+        Processor processor = new Processor(handler);
+        try{
+            TServerTransport serverTransport = new TServerSocket(9090);
+            TServer server = new TSimpleServer(new Args((TNonblockingServerTransport) serverTransport).processor(processor));
+            
+            System.out.println("Iniciando servidor...");
+            server.serve();
+        }catch (Exception e){e.printStackTrace();}
+    }
+    }
+
+Me dio el siguiente error
+
+    SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
+    SLF4J: Defaulting to no-operation (NOP) logger implementation
+
+Y tras cambiar el archivo .jar a la versión 1.7.25 continuo dandomelo, imposibilitandome seguir la implementación en java. Probé también a utilizar la versión 0.13 de thrift con su respectivo .jar pero seguia dando el mismo error.
+![error](./imagenes/error.jpg "error").   
+Probe a cambiar el código del servidor por si eso era el problema
+        
+
+        public class Servidor {
+
+        public static CalculadoraHandler handler;
+
+        public static Calculadora.Processor processor;
+
+        public static void main(String [] args) {
+            try {
+            handler = new CalculadoraHandler();
+            processor = new Calculadora.Processor(handler);
+
+            Runnable simple = new Runnable() {
+                public void run() {
+                simple(processor);
+                }
+            };      
+            
+            new Thread(simple).start();
+            } catch (Exception x) {
+            x.printStackTrace();
+            }
+        }
+
+        public static void simple(Calculadora.Processor processor) {
+            try {
+            TServerTransport serverTransport = new TServerSocket(9090);
+            TServer server = new TSimpleServer(new Args(serverTransport).processor(processor));
+
+            System.out.println("Starting the simple server...");
+            server.serve();
+            } catch (Exception e) {
+            e.printStackTrace();
+            }
+        }
+        }
+
+pero el problema persistia y decidí hacer en java unicamente el cliente. 
+
+    public class Cliente {
+        public static void main(String args[]){
+    try {
+      TTransport transport;
+     
+      transport = new TSocket("localhost", 9090);
+      transport.open();
+
+      TProtocol protocol = new  TBinaryProtocol(transport);
+        Calculadora.Client client = new Calculadora.Client(protocol);
+        double resultado = client.suma(1, 2);
+        System.out.println("El resultado es: "+resultado);
+                    .....
+
+        ArrayList<Double> v1 = new ArrayList<>();
+        ArrayList<Double> v2 = new ArrayList<>();
+        inicializarVectores(v1,v2);
+        
+        System.out.println("Sumando vectores: ");
+
+        System.out.println(v1.toString());
+        System.out.println(v2.toString());
+
+        List<Double> rs;
+        rs = client.sumarVectores(v1, v2);
+        System.out.println("Vector resultado: ");
+        System.out.println(rs.toString());            
+      
+
+      transport.close();
+    } catch (Exception e){e.printStackTrace();}
+    }
+    }
+
+Aunque el error me seguia saliendo por pantalla, se hace de forma correcta el ping al servidor y mostraba de forma correcta el resultado de la suma. Por lo tanto, terminé de implementar todas las llamadas al servidor que tenia en cliente de python pero en java. Todo esto permite realizar las llamdas desde un cliente java al servidor en python de forma correcta.
+
+
+![java_cliente](./imagenes/java_client.png "Cliente en java y servidor en python")
+
+
+## 4.
+
+
+en esta practica me he querido centrar mas bien en crear distintos servidores y clientes que no tanto funcionalidades de la calculadora
 explicar por algun lado que este mejora los fallos del anterior, no te obliga a C, no te pone punteros por defecto y tu tienes que implementar y crear servidor y cliente, 
+problemas a la hora de usar el .jar de la verdsion dsititnas del thrift
+
+hacer un utlimo punto explicando como se lanza todo, uno con netbeans y el otro no
+
+EL PROBLEMA DE VERSIONES ENTRE SI FUE UNA PEJIGUERA CON JAVA, estuve mirando y lo mejor hubiese sido usar maven tal y como dijo el profe
+
+captura pantalla problema con s4ltf y servidor java
+tendrí que haber usado maven
