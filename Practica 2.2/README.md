@@ -90,7 +90,7 @@ En este punto de la práctica y sin tener ningún conocimiento de python, tuve q
 
 
 
-## 3.Implementación servidor en Java  
+## 3.Implementación servidor/cliente en Java  
 
 Para implementar el servidor en Java me hizo falta usar netbeans y desde ahí cargar dos archivos .jar, libthrift-0.9.1.jar y slf4j-api-1.7.25.jar. Tras generar Calculadora.java con thrift, me dieron errores debido a que usaba un archivo .jar de thrift para una versión distinta a la que tenía de thrift. Tras implementar el servidor en Java(había que cambiar ciertas cosas de lo puesto en el pdf)
 
@@ -196,16 +196,72 @@ Aunque el error me seguia saliendo por pantalla, se hace de forma correcta el pi
 ![java_cliente](./imagenes/java_client.png "Cliente en java y servidor en python")
 
 
-## 4.
+## 4.Implementación servidor en Ruby  
+Tras el intento fallido del servidor en Java, implementé el servidor en Ruby, usando manualmente la libreria de thrift en el proyecto (se puede ver en el zip que he enviado).
+
+    class CalculadoraHandler
+    def initialize()
+        @log = {}
+    end
+
+    def ping()
+        puts "ping()"
+    end
+
+    def suma(num1, num2)
+        return num1 + num2
+    end
+
+           ...
+
+        def sumarVectores(v1, v2)
+            valor = v1.length - 1
+            v3 = Array.new(valor)
+            for i in 0..valor
+            v3[i] = v1[i] + v2[i]
+            end
+            return v3
+        end
+              ....
+    end
+    end
+
+    handler = CalculadoraHandler.new()
+    processor = Calculadora::Processor.new(handler)
+    transport = Thrift::ServerSocket.new('127.0.0.1',9090)
+    transportFactory = Thrift::BufferedTransportFactory.new()
+    server = Thrift::SimpleServer.new(processor, transport, transportFactory)
+
+    puts "Starting the server..."
+    server.serve()
+    puts "done."
+
+Tuve algún problema a la hora de devolver el vector resultado tras realizar las operaciones con ruby, ya que lo declaraba como Array.new. Para solucionar, lo declaré como Array.new(v1.length - 1).
+
+![ruby_servidor](./imagenes/ruby_servidor.png "Cliente en java y servidor en ruby")
+
+
+## 5.Implementación operaciones adicionales 
+
+
+
+
+
+
 
 
 en esta practica me he querido centrar mas bien en crear distintos servidores y clientes que no tanto funcionalidades de la calculadora
 explicar por algun lado que este mejora los fallos del anterior, no te obliga a C, no te pone punteros por defecto y tu tienes que implementar y crear servidor y cliente, 
 problemas a la hora de usar el .jar de la verdsion dsititnas del thrift
 
+enseñar y decir todos los servidore y clientes que tengo y que permito conexiones entre ellos,
+mejor que el otro que al generar nuevos ficheros no se te borran clientes y servidores
+
 hacer un utlimo punto explicando como se lanza todo, uno con netbeans y el otro no
 
 EL PROBLEMA DE VERSIONES ENTRE SI FUE UNA PEJIGUERA CON JAVA, estuve mirando y lo mejor hubiese sido usar maven tal y como dijo el profe
+
+problema con ruby por el tema de los array
 
 captura pantalla problema con s4ltf y servidor java
 tendrí que haber usado maven

@@ -41,7 +41,8 @@ public class Cliente {
 
       TProtocol protocol = new  TBinaryProtocol(transport);
         Calculadora.Client client = new Calculadora.Client(protocol);
-        int resultado = client.suma(1, 2);
+        client.ping();
+        int resultado =client.suma(1, 1);
         System.out.println("1+1="+resultado);
         resultado = client.resta(1, 1);
         System.out.println("1-1="+resultado);
