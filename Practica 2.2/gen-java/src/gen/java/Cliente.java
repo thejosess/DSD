@@ -32,6 +32,12 @@ public class Cliente {
         }
     }
     
+    public static void mostrarFuncion(funcion f1){
+        String salida = "Funcion: " + f1.x + "x^" + f1.exponente_x + " + " + f1.y + "x^" + f1.exponente_y + " + " + f1.z + "x^" + f1.exponente_z ; 
+        System.out.println(salida);
+        
+    }
+    
         public static void main(String args[]){
     try {
       TTransport transport;
@@ -79,10 +85,33 @@ public class Cliente {
         rs = client.dividirVectores(v1, v2);
         System.out.println(rs.toString());
 
-
-
+        funcion f1 = new funcion(2,2,2,1,2,0);
+        funcion f2 = new funcion(3,2,3,1,3,0);
+        funcion f3 = new funcion(0,0,0,0,0,0);
+        mostrarFuncion(f1);
+        mostrarFuncion(f2);
         
+        System.out.println("\nSumando funciones: ");
+        f3 = client.sumaFunciones(f1, f2);
+        mostrarFuncion(f3);
         
+        System.out.println("\nRestando funciones: ");
+        f3 = client.restaFunciones(f1, f2);
+        mostrarFuncion(f3);
+        
+        System.out.println("\nMultiplicando funciones: ");
+        f3 = client.multiplicacionFunciones(f1, f2);
+        mostrarFuncion(f3);
+        
+        System.out.println("\nDividiendo funciones: ");
+        f3 = client.divisionFunciones(f1, f2);
+        mostrarFuncion(f3);
+        
+        System.out.println("\nDerivando primera funcion: ");
+        f3 = client.derivadaFunciones(f1);
+        mostrarFuncion(f3);
+        
+                
       transport.close();
     } catch (Exception e){e.printStackTrace();}
     }

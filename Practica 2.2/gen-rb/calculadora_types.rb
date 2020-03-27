@@ -6,3 +6,35 @@
 
 require 'thrift'
 
+class Funcion
+  include ::Thrift::Struct, ::Thrift::Struct_Union
+  X = 1
+  EXPONENTE_X = 2
+  Y = 3
+  EXPONENTE_Y = 4
+  Z = 5
+  EXPONENTE_Z = 6
+
+  FIELDS = {
+    X => {:type => ::Thrift::Types::DOUBLE, :name => 'x'},
+    EXPONENTE_X => {:type => ::Thrift::Types::I32, :name => 'exponente_x'},
+    Y => {:type => ::Thrift::Types::DOUBLE, :name => 'y'},
+    EXPONENTE_Y => {:type => ::Thrift::Types::I32, :name => 'exponente_y'},
+    Z => {:type => ::Thrift::Types::DOUBLE, :name => 'z'},
+    EXPONENTE_Z => {:type => ::Thrift::Types::I32, :name => 'exponente_z'}
+  }
+
+  def struct_fields; FIELDS; end
+
+  def validate
+    raise ::Thrift::ProtocolException.new(::Thrift::ProtocolException::UNKNOWN, 'Required field x is unset!') unless @x
+    raise ::Thrift::ProtocolException.new(::Thrift::ProtocolException::UNKNOWN, 'Required field exponente_x is unset!') unless @exponente_x
+    raise ::Thrift::ProtocolException.new(::Thrift::ProtocolException::UNKNOWN, 'Required field y is unset!') unless @y
+    raise ::Thrift::ProtocolException.new(::Thrift::ProtocolException::UNKNOWN, 'Required field exponente_y is unset!') unless @exponente_y
+    raise ::Thrift::ProtocolException.new(::Thrift::ProtocolException::UNKNOWN, 'Required field z is unset!') unless @z
+    raise ::Thrift::ProtocolException.new(::Thrift::ProtocolException::UNKNOWN, 'Required field exponente_z is unset!') unless @exponente_z
+  end
+
+  ::Thrift::Struct.generate_accessors self
+end
+

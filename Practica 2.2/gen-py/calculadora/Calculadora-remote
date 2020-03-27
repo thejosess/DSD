@@ -33,6 +33,11 @@ if len(sys.argv) <= 1 or sys.argv[1] == '--help':
   print '   restarVectores( v1,  v2)'
   print '   multiplicarVectores( v1,  v2)'
   print '   dividirVectores( v1,  v2)'
+  print '  funcion sumaFunciones(funcion f1, funcion f2)'
+  print '  funcion restaFunciones(funcion f1, funcion f2)'
+  print '  funcion multiplicacionFunciones(funcion f1, funcion f2)'
+  print '  funcion divisionFunciones(funcion f1, funcion f2)'
+  print '  funcion derivadaFunciones(funcion f1)'
   print ''
   sys.exit(0)
 
@@ -143,6 +148,36 @@ elif cmd == 'dividirVectores':
     print 'dividirVectores requires 2 args'
     sys.exit(1)
   pp.pprint(client.dividirVectores(eval(args[0]),eval(args[1]),))
+
+elif cmd == 'sumaFunciones':
+  if len(args) != 2:
+    print 'sumaFunciones requires 2 args'
+    sys.exit(1)
+  pp.pprint(client.sumaFunciones(eval(args[0]),eval(args[1]),))
+
+elif cmd == 'restaFunciones':
+  if len(args) != 2:
+    print 'restaFunciones requires 2 args'
+    sys.exit(1)
+  pp.pprint(client.restaFunciones(eval(args[0]),eval(args[1]),))
+
+elif cmd == 'multiplicacionFunciones':
+  if len(args) != 2:
+    print 'multiplicacionFunciones requires 2 args'
+    sys.exit(1)
+  pp.pprint(client.multiplicacionFunciones(eval(args[0]),eval(args[1]),))
+
+elif cmd == 'divisionFunciones':
+  if len(args) != 2:
+    print 'divisionFunciones requires 2 args'
+    sys.exit(1)
+  pp.pprint(client.divisionFunciones(eval(args[0]),eval(args[1]),))
+
+elif cmd == 'derivadaFunciones':
+  if len(args) != 1:
+    print 'derivadaFunciones requires 1 args'
+    sys.exit(1)
+  pp.pprint(client.derivadaFunciones(eval(args[0]),))
 
 else:
   print 'Unrecognized method %s' % cmd

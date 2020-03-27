@@ -160,6 +160,81 @@ module Calculadora
       raise ::Thrift::ApplicationException.new(::Thrift::ApplicationException::MISSING_RESULT, 'dividirVectores failed: unknown result')
     end
 
+    def sumaFunciones(f1, f2)
+      send_sumaFunciones(f1, f2)
+      return recv_sumaFunciones()
+    end
+
+    def send_sumaFunciones(f1, f2)
+      send_message('sumaFunciones', SumaFunciones_args, :f1 => f1, :f2 => f2)
+    end
+
+    def recv_sumaFunciones()
+      result = receive_message(SumaFunciones_result)
+      return result.success unless result.success.nil?
+      raise ::Thrift::ApplicationException.new(::Thrift::ApplicationException::MISSING_RESULT, 'sumaFunciones failed: unknown result')
+    end
+
+    def restaFunciones(f1, f2)
+      send_restaFunciones(f1, f2)
+      return recv_restaFunciones()
+    end
+
+    def send_restaFunciones(f1, f2)
+      send_message('restaFunciones', RestaFunciones_args, :f1 => f1, :f2 => f2)
+    end
+
+    def recv_restaFunciones()
+      result = receive_message(RestaFunciones_result)
+      return result.success unless result.success.nil?
+      raise ::Thrift::ApplicationException.new(::Thrift::ApplicationException::MISSING_RESULT, 'restaFunciones failed: unknown result')
+    end
+
+    def multiplicacionFunciones(f1, f2)
+      send_multiplicacionFunciones(f1, f2)
+      return recv_multiplicacionFunciones()
+    end
+
+    def send_multiplicacionFunciones(f1, f2)
+      send_message('multiplicacionFunciones', MultiplicacionFunciones_args, :f1 => f1, :f2 => f2)
+    end
+
+    def recv_multiplicacionFunciones()
+      result = receive_message(MultiplicacionFunciones_result)
+      return result.success unless result.success.nil?
+      raise ::Thrift::ApplicationException.new(::Thrift::ApplicationException::MISSING_RESULT, 'multiplicacionFunciones failed: unknown result')
+    end
+
+    def divisionFunciones(f1, f2)
+      send_divisionFunciones(f1, f2)
+      return recv_divisionFunciones()
+    end
+
+    def send_divisionFunciones(f1, f2)
+      send_message('divisionFunciones', DivisionFunciones_args, :f1 => f1, :f2 => f2)
+    end
+
+    def recv_divisionFunciones()
+      result = receive_message(DivisionFunciones_result)
+      return result.success unless result.success.nil?
+      raise ::Thrift::ApplicationException.new(::Thrift::ApplicationException::MISSING_RESULT, 'divisionFunciones failed: unknown result')
+    end
+
+    def derivadaFunciones(f1)
+      send_derivadaFunciones(f1)
+      return recv_derivadaFunciones()
+    end
+
+    def send_derivadaFunciones(f1)
+      send_message('derivadaFunciones', DerivadaFunciones_args, :f1 => f1)
+    end
+
+    def recv_derivadaFunciones()
+      result = receive_message(DerivadaFunciones_result)
+      return result.success unless result.success.nil?
+      raise ::Thrift::ApplicationException.new(::Thrift::ApplicationException::MISSING_RESULT, 'derivadaFunciones failed: unknown result')
+    end
+
   end
 
   class Processor
@@ -233,6 +308,41 @@ module Calculadora
       result = DividirVectores_result.new()
       result.success = @handler.dividirVectores(args.v1, args.v2)
       write_result(result, oprot, 'dividirVectores', seqid)
+    end
+
+    def process_sumaFunciones(seqid, iprot, oprot)
+      args = read_args(iprot, SumaFunciones_args)
+      result = SumaFunciones_result.new()
+      result.success = @handler.sumaFunciones(args.f1, args.f2)
+      write_result(result, oprot, 'sumaFunciones', seqid)
+    end
+
+    def process_restaFunciones(seqid, iprot, oprot)
+      args = read_args(iprot, RestaFunciones_args)
+      result = RestaFunciones_result.new()
+      result.success = @handler.restaFunciones(args.f1, args.f2)
+      write_result(result, oprot, 'restaFunciones', seqid)
+    end
+
+    def process_multiplicacionFunciones(seqid, iprot, oprot)
+      args = read_args(iprot, MultiplicacionFunciones_args)
+      result = MultiplicacionFunciones_result.new()
+      result.success = @handler.multiplicacionFunciones(args.f1, args.f2)
+      write_result(result, oprot, 'multiplicacionFunciones', seqid)
+    end
+
+    def process_divisionFunciones(seqid, iprot, oprot)
+      args = read_args(iprot, DivisionFunciones_args)
+      result = DivisionFunciones_result.new()
+      result.success = @handler.divisionFunciones(args.f1, args.f2)
+      write_result(result, oprot, 'divisionFunciones', seqid)
+    end
+
+    def process_derivadaFunciones(seqid, iprot, oprot)
+      args = read_args(iprot, DerivadaFunciones_args)
+      result = DerivadaFunciones_result.new()
+      result.success = @handler.derivadaFunciones(args.f1)
+      write_result(result, oprot, 'derivadaFunciones', seqid)
     end
 
   end
@@ -565,6 +675,174 @@ module Calculadora
 
     FIELDS = {
       SUCCESS => {:type => ::Thrift::Types::LIST, :name => 'success', :element => {:type => ::Thrift::Types::DOUBLE}}
+    }
+
+    def struct_fields; FIELDS; end
+
+    def validate
+    end
+
+    ::Thrift::Struct.generate_accessors self
+  end
+
+  class SumaFunciones_args
+    include ::Thrift::Struct, ::Thrift::Struct_Union
+    F1 = 1
+    F2 = 2
+
+    FIELDS = {
+      F1 => {:type => ::Thrift::Types::STRUCT, :name => 'f1', :class => ::Funcion},
+      F2 => {:type => ::Thrift::Types::STRUCT, :name => 'f2', :class => ::Funcion}
+    }
+
+    def struct_fields; FIELDS; end
+
+    def validate
+    end
+
+    ::Thrift::Struct.generate_accessors self
+  end
+
+  class SumaFunciones_result
+    include ::Thrift::Struct, ::Thrift::Struct_Union
+    SUCCESS = 0
+
+    FIELDS = {
+      SUCCESS => {:type => ::Thrift::Types::STRUCT, :name => 'success', :class => ::Funcion}
+    }
+
+    def struct_fields; FIELDS; end
+
+    def validate
+    end
+
+    ::Thrift::Struct.generate_accessors self
+  end
+
+  class RestaFunciones_args
+    include ::Thrift::Struct, ::Thrift::Struct_Union
+    F1 = 1
+    F2 = 2
+
+    FIELDS = {
+      F1 => {:type => ::Thrift::Types::STRUCT, :name => 'f1', :class => ::Funcion},
+      F2 => {:type => ::Thrift::Types::STRUCT, :name => 'f2', :class => ::Funcion}
+    }
+
+    def struct_fields; FIELDS; end
+
+    def validate
+    end
+
+    ::Thrift::Struct.generate_accessors self
+  end
+
+  class RestaFunciones_result
+    include ::Thrift::Struct, ::Thrift::Struct_Union
+    SUCCESS = 0
+
+    FIELDS = {
+      SUCCESS => {:type => ::Thrift::Types::STRUCT, :name => 'success', :class => ::Funcion}
+    }
+
+    def struct_fields; FIELDS; end
+
+    def validate
+    end
+
+    ::Thrift::Struct.generate_accessors self
+  end
+
+  class MultiplicacionFunciones_args
+    include ::Thrift::Struct, ::Thrift::Struct_Union
+    F1 = 1
+    F2 = 2
+
+    FIELDS = {
+      F1 => {:type => ::Thrift::Types::STRUCT, :name => 'f1', :class => ::Funcion},
+      F2 => {:type => ::Thrift::Types::STRUCT, :name => 'f2', :class => ::Funcion}
+    }
+
+    def struct_fields; FIELDS; end
+
+    def validate
+    end
+
+    ::Thrift::Struct.generate_accessors self
+  end
+
+  class MultiplicacionFunciones_result
+    include ::Thrift::Struct, ::Thrift::Struct_Union
+    SUCCESS = 0
+
+    FIELDS = {
+      SUCCESS => {:type => ::Thrift::Types::STRUCT, :name => 'success', :class => ::Funcion}
+    }
+
+    def struct_fields; FIELDS; end
+
+    def validate
+    end
+
+    ::Thrift::Struct.generate_accessors self
+  end
+
+  class DivisionFunciones_args
+    include ::Thrift::Struct, ::Thrift::Struct_Union
+    F1 = 1
+    F2 = 2
+
+    FIELDS = {
+      F1 => {:type => ::Thrift::Types::STRUCT, :name => 'f1', :class => ::Funcion},
+      F2 => {:type => ::Thrift::Types::STRUCT, :name => 'f2', :class => ::Funcion}
+    }
+
+    def struct_fields; FIELDS; end
+
+    def validate
+    end
+
+    ::Thrift::Struct.generate_accessors self
+  end
+
+  class DivisionFunciones_result
+    include ::Thrift::Struct, ::Thrift::Struct_Union
+    SUCCESS = 0
+
+    FIELDS = {
+      SUCCESS => {:type => ::Thrift::Types::STRUCT, :name => 'success', :class => ::Funcion}
+    }
+
+    def struct_fields; FIELDS; end
+
+    def validate
+    end
+
+    ::Thrift::Struct.generate_accessors self
+  end
+
+  class DerivadaFunciones_args
+    include ::Thrift::Struct, ::Thrift::Struct_Union
+    F1 = 1
+
+    FIELDS = {
+      F1 => {:type => ::Thrift::Types::STRUCT, :name => 'f1', :class => ::Funcion}
+    }
+
+    def struct_fields; FIELDS; end
+
+    def validate
+    end
+
+    ::Thrift::Struct.generate_accessors self
+  end
+
+  class DerivadaFunciones_result
+    include ::Thrift::Struct, ::Thrift::Struct_Union
+    SUCCESS = 0
+
+    FIELDS = {
+      SUCCESS => {:type => ::Thrift::Types::STRUCT, :name => 'success', :class => ::Funcion}
     }
 
     def struct_fields; FIELDS; end

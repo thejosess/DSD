@@ -190,7 +190,7 @@ pero el problema persistia y decidí hacer en java unicamente el cliente.
     }
     }
 
-Aunque el error me seguia saliendo por pantalla, se hace de forma correcta el ping al servidor y mostraba de forma correcta el resultado de la suma. Por lo tanto, terminé de implementar todas las llamadas al servidor que tenia en cliente de python pero en java. Todo esto permite realizar las llamdas desde un cliente java al servidor en python de forma correcta.
+Aunque el error me seguia saliendo por pantalla, se hace de forma correcta el ping al servidor y mostraba de forma correcta el resultado de la suma [1]. Por lo tanto, terminé de implementar todas las llamadas al servidor que tenia en cliente de python pero en java. Todo esto permite realizar las llamdas desde un cliente java al servidor en python de forma correcta.
 
 
 ![java_cliente](./imagenes/java_client.png "Cliente en java y servidor en python")
@@ -243,7 +243,9 @@ Tuve algún problema a la hora de devolver el vector resultado tras realizar las
 
 ## 5.Implementación operaciones adicionales 
 
-
+poner lo que he hecho de import en ruby
+los archivos que me ha generado para java
+y los require de ruby
 
 
 
@@ -265,3 +267,5 @@ problema con ruby por el tema de los array
 
 captura pantalla problema con s4ltf y servidor java
 tendrí que haber usado maven
+
+[1]: No sé si podría ser entonces un warning.

@@ -93,6 +93,45 @@ class Iface:
     """
     pass
 
+  def sumaFunciones(self, f1, f2):
+    """
+    Parameters:
+     - f1
+     - f2
+    """
+    pass
+
+  def restaFunciones(self, f1, f2):
+    """
+    Parameters:
+     - f1
+     - f2
+    """
+    pass
+
+  def multiplicacionFunciones(self, f1, f2):
+    """
+    Parameters:
+     - f1
+     - f2
+    """
+    pass
+
+  def divisionFunciones(self, f1, f2):
+    """
+    Parameters:
+     - f1
+     - f2
+    """
+    pass
+
+  def derivadaFunciones(self, f1):
+    """
+    Parameters:
+     - f1
+    """
+    pass
+
 
 class Client(Iface):
   def __init__(self, iprot, oprot=None):
@@ -412,6 +451,164 @@ class Client(Iface):
       return result.success
     raise TApplicationException(TApplicationException.MISSING_RESULT, "dividirVectores failed: unknown result");
 
+  def sumaFunciones(self, f1, f2):
+    """
+    Parameters:
+     - f1
+     - f2
+    """
+    self.send_sumaFunciones(f1, f2)
+    return self.recv_sumaFunciones()
+
+  def send_sumaFunciones(self, f1, f2):
+    self._oprot.writeMessageBegin('sumaFunciones', TMessageType.CALL, self._seqid)
+    args = sumaFunciones_args()
+    args.f1 = f1
+    args.f2 = f2
+    args.write(self._oprot)
+    self._oprot.writeMessageEnd()
+    self._oprot.trans.flush()
+
+  def recv_sumaFunciones(self):
+    (fname, mtype, rseqid) = self._iprot.readMessageBegin()
+    if mtype == TMessageType.EXCEPTION:
+      x = TApplicationException()
+      x.read(self._iprot)
+      self._iprot.readMessageEnd()
+      raise x
+    result = sumaFunciones_result()
+    result.read(self._iprot)
+    self._iprot.readMessageEnd()
+    if result.success is not None:
+      return result.success
+    raise TApplicationException(TApplicationException.MISSING_RESULT, "sumaFunciones failed: unknown result");
+
+  def restaFunciones(self, f1, f2):
+    """
+    Parameters:
+     - f1
+     - f2
+    """
+    self.send_restaFunciones(f1, f2)
+    return self.recv_restaFunciones()
+
+  def send_restaFunciones(self, f1, f2):
+    self._oprot.writeMessageBegin('restaFunciones', TMessageType.CALL, self._seqid)
+    args = restaFunciones_args()
+    args.f1 = f1
+    args.f2 = f2
+    args.write(self._oprot)
+    self._oprot.writeMessageEnd()
+    self._oprot.trans.flush()
+
+  def recv_restaFunciones(self):
+    (fname, mtype, rseqid) = self._iprot.readMessageBegin()
+    if mtype == TMessageType.EXCEPTION:
+      x = TApplicationException()
+      x.read(self._iprot)
+      self._iprot.readMessageEnd()
+      raise x
+    result = restaFunciones_result()
+    result.read(self._iprot)
+    self._iprot.readMessageEnd()
+    if result.success is not None:
+      return result.success
+    raise TApplicationException(TApplicationException.MISSING_RESULT, "restaFunciones failed: unknown result");
+
+  def multiplicacionFunciones(self, f1, f2):
+    """
+    Parameters:
+     - f1
+     - f2
+    """
+    self.send_multiplicacionFunciones(f1, f2)
+    return self.recv_multiplicacionFunciones()
+
+  def send_multiplicacionFunciones(self, f1, f2):
+    self._oprot.writeMessageBegin('multiplicacionFunciones', TMessageType.CALL, self._seqid)
+    args = multiplicacionFunciones_args()
+    args.f1 = f1
+    args.f2 = f2
+    args.write(self._oprot)
+    self._oprot.writeMessageEnd()
+    self._oprot.trans.flush()
+
+  def recv_multiplicacionFunciones(self):
+    (fname, mtype, rseqid) = self._iprot.readMessageBegin()
+    if mtype == TMessageType.EXCEPTION:
+      x = TApplicationException()
+      x.read(self._iprot)
+      self._iprot.readMessageEnd()
+      raise x
+    result = multiplicacionFunciones_result()
+    result.read(self._iprot)
+    self._iprot.readMessageEnd()
+    if result.success is not None:
+      return result.success
+    raise TApplicationException(TApplicationException.MISSING_RESULT, "multiplicacionFunciones failed: unknown result");
+
+  def divisionFunciones(self, f1, f2):
+    """
+    Parameters:
+     - f1
+     - f2
+    """
+    self.send_divisionFunciones(f1, f2)
+    return self.recv_divisionFunciones()
+
+  def send_divisionFunciones(self, f1, f2):
+    self._oprot.writeMessageBegin('divisionFunciones', TMessageType.CALL, self._seqid)
+    args = divisionFunciones_args()
+    args.f1 = f1
+    args.f2 = f2
+    args.write(self._oprot)
+    self._oprot.writeMessageEnd()
+    self._oprot.trans.flush()
+
+  def recv_divisionFunciones(self):
+    (fname, mtype, rseqid) = self._iprot.readMessageBegin()
+    if mtype == TMessageType.EXCEPTION:
+      x = TApplicationException()
+      x.read(self._iprot)
+      self._iprot.readMessageEnd()
+      raise x
+    result = divisionFunciones_result()
+    result.read(self._iprot)
+    self._iprot.readMessageEnd()
+    if result.success is not None:
+      return result.success
+    raise TApplicationException(TApplicationException.MISSING_RESULT, "divisionFunciones failed: unknown result");
+
+  def derivadaFunciones(self, f1):
+    """
+    Parameters:
+     - f1
+    """
+    self.send_derivadaFunciones(f1)
+    return self.recv_derivadaFunciones()
+
+  def send_derivadaFunciones(self, f1):
+    self._oprot.writeMessageBegin('derivadaFunciones', TMessageType.CALL, self._seqid)
+    args = derivadaFunciones_args()
+    args.f1 = f1
+    args.write(self._oprot)
+    self._oprot.writeMessageEnd()
+    self._oprot.trans.flush()
+
+  def recv_derivadaFunciones(self):
+    (fname, mtype, rseqid) = self._iprot.readMessageBegin()
+    if mtype == TMessageType.EXCEPTION:
+      x = TApplicationException()
+      x.read(self._iprot)
+      self._iprot.readMessageEnd()
+      raise x
+    result = derivadaFunciones_result()
+    result.read(self._iprot)
+    self._iprot.readMessageEnd()
+    if result.success is not None:
+      return result.success
+    raise TApplicationException(TApplicationException.MISSING_RESULT, "derivadaFunciones failed: unknown result");
+
 
 class Processor(Iface, TProcessor):
   def __init__(self, handler):
@@ -427,6 +624,11 @@ class Processor(Iface, TProcessor):
     self._processMap["restarVectores"] = Processor.process_restarVectores
     self._processMap["multiplicarVectores"] = Processor.process_multiplicarVectores
     self._processMap["dividirVectores"] = Processor.process_dividirVectores
+    self._processMap["sumaFunciones"] = Processor.process_sumaFunciones
+    self._processMap["restaFunciones"] = Processor.process_restaFunciones
+    self._processMap["multiplicacionFunciones"] = Processor.process_multiplicacionFunciones
+    self._processMap["divisionFunciones"] = Processor.process_divisionFunciones
+    self._processMap["derivadaFunciones"] = Processor.process_derivadaFunciones
 
   def process(self, iprot, oprot):
     (name, type, seqid) = iprot.readMessageBegin()
@@ -549,6 +751,61 @@ class Processor(Iface, TProcessor):
     result = dividirVectores_result()
     result.success = self._handler.dividirVectores(args.v1, args.v2)
     oprot.writeMessageBegin("dividirVectores", TMessageType.REPLY, seqid)
+    result.write(oprot)
+    oprot.writeMessageEnd()
+    oprot.trans.flush()
+
+  def process_sumaFunciones(self, seqid, iprot, oprot):
+    args = sumaFunciones_args()
+    args.read(iprot)
+    iprot.readMessageEnd()
+    result = sumaFunciones_result()
+    result.success = self._handler.sumaFunciones(args.f1, args.f2)
+    oprot.writeMessageBegin("sumaFunciones", TMessageType.REPLY, seqid)
+    result.write(oprot)
+    oprot.writeMessageEnd()
+    oprot.trans.flush()
+
+  def process_restaFunciones(self, seqid, iprot, oprot):
+    args = restaFunciones_args()
+    args.read(iprot)
+    iprot.readMessageEnd()
+    result = restaFunciones_result()
+    result.success = self._handler.restaFunciones(args.f1, args.f2)
+    oprot.writeMessageBegin("restaFunciones", TMessageType.REPLY, seqid)
+    result.write(oprot)
+    oprot.writeMessageEnd()
+    oprot.trans.flush()
+
+  def process_multiplicacionFunciones(self, seqid, iprot, oprot):
+    args = multiplicacionFunciones_args()
+    args.read(iprot)
+    iprot.readMessageEnd()
+    result = multiplicacionFunciones_result()
+    result.success = self._handler.multiplicacionFunciones(args.f1, args.f2)
+    oprot.writeMessageBegin("multiplicacionFunciones", TMessageType.REPLY, seqid)
+    result.write(oprot)
+    oprot.writeMessageEnd()
+    oprot.trans.flush()
+
+  def process_divisionFunciones(self, seqid, iprot, oprot):
+    args = divisionFunciones_args()
+    args.read(iprot)
+    iprot.readMessageEnd()
+    result = divisionFunciones_result()
+    result.success = self._handler.divisionFunciones(args.f1, args.f2)
+    oprot.writeMessageBegin("divisionFunciones", TMessageType.REPLY, seqid)
+    result.write(oprot)
+    oprot.writeMessageEnd()
+    oprot.trans.flush()
+
+  def process_derivadaFunciones(self, seqid, iprot, oprot):
+    args = derivadaFunciones_args()
+    args.read(iprot)
+    iprot.readMessageEnd()
+    result = derivadaFunciones_result()
+    result.success = self._handler.derivadaFunciones(args.f1)
+    oprot.writeMessageBegin("derivadaFunciones", TMessageType.REPLY, seqid)
     result.write(oprot)
     oprot.writeMessageEnd()
     oprot.trans.flush()
@@ -1896,6 +2153,663 @@ class dividirVectores_result:
       for iter83 in self.success:
         oprot.writeDouble(iter83)
       oprot.writeListEnd()
+      oprot.writeFieldEnd()
+    oprot.writeFieldStop()
+    oprot.writeStructEnd()
+
+  def validate(self):
+    return
+
+
+  def __repr__(self):
+    L = ['%s=%r' % (key, value)
+      for key, value in self.__dict__.iteritems()]
+    return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+  def __eq__(self, other):
+    return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+  def __ne__(self, other):
+    return not (self == other)
+
+class sumaFunciones_args:
+  """
+  Attributes:
+   - f1
+   - f2
+  """
+
+  thrift_spec = (
+    None, # 0
+    (1, TType.STRUCT, 'f1', (funcion, funcion.thrift_spec), None, ), # 1
+    (2, TType.STRUCT, 'f2', (funcion, funcion.thrift_spec), None, ), # 2
+  )
+
+  def __init__(self, f1=None, f2=None,):
+    self.f1 = f1
+    self.f2 = f2
+
+  def read(self, iprot):
+    if iprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None and fastbinary is not None:
+      fastbinary.decode_binary(self, iprot.trans, (self.__class__, self.thrift_spec))
+      return
+    iprot.readStructBegin()
+    while True:
+      (fname, ftype, fid) = iprot.readFieldBegin()
+      if ftype == TType.STOP:
+        break
+      if fid == 1:
+        if ftype == TType.STRUCT:
+          self.f1 = funcion()
+          self.f1.read(iprot)
+        else:
+          iprot.skip(ftype)
+      elif fid == 2:
+        if ftype == TType.STRUCT:
+          self.f2 = funcion()
+          self.f2.read(iprot)
+        else:
+          iprot.skip(ftype)
+      else:
+        iprot.skip(ftype)
+      iprot.readFieldEnd()
+    iprot.readStructEnd()
+
+  def write(self, oprot):
+    if oprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and self.thrift_spec is not None and fastbinary is not None:
+      oprot.trans.write(fastbinary.encode_binary(self, (self.__class__, self.thrift_spec)))
+      return
+    oprot.writeStructBegin('sumaFunciones_args')
+    if self.f1 is not None:
+      oprot.writeFieldBegin('f1', TType.STRUCT, 1)
+      self.f1.write(oprot)
+      oprot.writeFieldEnd()
+    if self.f2 is not None:
+      oprot.writeFieldBegin('f2', TType.STRUCT, 2)
+      self.f2.write(oprot)
+      oprot.writeFieldEnd()
+    oprot.writeFieldStop()
+    oprot.writeStructEnd()
+
+  def validate(self):
+    return
+
+
+  def __repr__(self):
+    L = ['%s=%r' % (key, value)
+      for key, value in self.__dict__.iteritems()]
+    return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+  def __eq__(self, other):
+    return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+  def __ne__(self, other):
+    return not (self == other)
+
+class sumaFunciones_result:
+  """
+  Attributes:
+   - success
+  """
+
+  thrift_spec = (
+    (0, TType.STRUCT, 'success', (funcion, funcion.thrift_spec), None, ), # 0
+  )
+
+  def __init__(self, success=None,):
+    self.success = success
+
+  def read(self, iprot):
+    if iprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None and fastbinary is not None:
+      fastbinary.decode_binary(self, iprot.trans, (self.__class__, self.thrift_spec))
+      return
+    iprot.readStructBegin()
+    while True:
+      (fname, ftype, fid) = iprot.readFieldBegin()
+      if ftype == TType.STOP:
+        break
+      if fid == 0:
+        if ftype == TType.STRUCT:
+          self.success = funcion()
+          self.success.read(iprot)
+        else:
+          iprot.skip(ftype)
+      else:
+        iprot.skip(ftype)
+      iprot.readFieldEnd()
+    iprot.readStructEnd()
+
+  def write(self, oprot):
+    if oprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and self.thrift_spec is not None and fastbinary is not None:
+      oprot.trans.write(fastbinary.encode_binary(self, (self.__class__, self.thrift_spec)))
+      return
+    oprot.writeStructBegin('sumaFunciones_result')
+    if self.success is not None:
+      oprot.writeFieldBegin('success', TType.STRUCT, 0)
+      self.success.write(oprot)
+      oprot.writeFieldEnd()
+    oprot.writeFieldStop()
+    oprot.writeStructEnd()
+
+  def validate(self):
+    return
+
+
+  def __repr__(self):
+    L = ['%s=%r' % (key, value)
+      for key, value in self.__dict__.iteritems()]
+    return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+  def __eq__(self, other):
+    return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+  def __ne__(self, other):
+    return not (self == other)
+
+class restaFunciones_args:
+  """
+  Attributes:
+   - f1
+   - f2
+  """
+
+  thrift_spec = (
+    None, # 0
+    (1, TType.STRUCT, 'f1', (funcion, funcion.thrift_spec), None, ), # 1
+    (2, TType.STRUCT, 'f2', (funcion, funcion.thrift_spec), None, ), # 2
+  )
+
+  def __init__(self, f1=None, f2=None,):
+    self.f1 = f1
+    self.f2 = f2
+
+  def read(self, iprot):
+    if iprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None and fastbinary is not None:
+      fastbinary.decode_binary(self, iprot.trans, (self.__class__, self.thrift_spec))
+      return
+    iprot.readStructBegin()
+    while True:
+      (fname, ftype, fid) = iprot.readFieldBegin()
+      if ftype == TType.STOP:
+        break
+      if fid == 1:
+        if ftype == TType.STRUCT:
+          self.f1 = funcion()
+          self.f1.read(iprot)
+        else:
+          iprot.skip(ftype)
+      elif fid == 2:
+        if ftype == TType.STRUCT:
+          self.f2 = funcion()
+          self.f2.read(iprot)
+        else:
+          iprot.skip(ftype)
+      else:
+        iprot.skip(ftype)
+      iprot.readFieldEnd()
+    iprot.readStructEnd()
+
+  def write(self, oprot):
+    if oprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and self.thrift_spec is not None and fastbinary is not None:
+      oprot.trans.write(fastbinary.encode_binary(self, (self.__class__, self.thrift_spec)))
+      return
+    oprot.writeStructBegin('restaFunciones_args')
+    if self.f1 is not None:
+      oprot.writeFieldBegin('f1', TType.STRUCT, 1)
+      self.f1.write(oprot)
+      oprot.writeFieldEnd()
+    if self.f2 is not None:
+      oprot.writeFieldBegin('f2', TType.STRUCT, 2)
+      self.f2.write(oprot)
+      oprot.writeFieldEnd()
+    oprot.writeFieldStop()
+    oprot.writeStructEnd()
+
+  def validate(self):
+    return
+
+
+  def __repr__(self):
+    L = ['%s=%r' % (key, value)
+      for key, value in self.__dict__.iteritems()]
+    return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+  def __eq__(self, other):
+    return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+  def __ne__(self, other):
+    return not (self == other)
+
+class restaFunciones_result:
+  """
+  Attributes:
+   - success
+  """
+
+  thrift_spec = (
+    (0, TType.STRUCT, 'success', (funcion, funcion.thrift_spec), None, ), # 0
+  )
+
+  def __init__(self, success=None,):
+    self.success = success
+
+  def read(self, iprot):
+    if iprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None and fastbinary is not None:
+      fastbinary.decode_binary(self, iprot.trans, (self.__class__, self.thrift_spec))
+      return
+    iprot.readStructBegin()
+    while True:
+      (fname, ftype, fid) = iprot.readFieldBegin()
+      if ftype == TType.STOP:
+        break
+      if fid == 0:
+        if ftype == TType.STRUCT:
+          self.success = funcion()
+          self.success.read(iprot)
+        else:
+          iprot.skip(ftype)
+      else:
+        iprot.skip(ftype)
+      iprot.readFieldEnd()
+    iprot.readStructEnd()
+
+  def write(self, oprot):
+    if oprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and self.thrift_spec is not None and fastbinary is not None:
+      oprot.trans.write(fastbinary.encode_binary(self, (self.__class__, self.thrift_spec)))
+      return
+    oprot.writeStructBegin('restaFunciones_result')
+    if self.success is not None:
+      oprot.writeFieldBegin('success', TType.STRUCT, 0)
+      self.success.write(oprot)
+      oprot.writeFieldEnd()
+    oprot.writeFieldStop()
+    oprot.writeStructEnd()
+
+  def validate(self):
+    return
+
+
+  def __repr__(self):
+    L = ['%s=%r' % (key, value)
+      for key, value in self.__dict__.iteritems()]
+    return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+  def __eq__(self, other):
+    return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+  def __ne__(self, other):
+    return not (self == other)
+
+class multiplicacionFunciones_args:
+  """
+  Attributes:
+   - f1
+   - f2
+  """
+
+  thrift_spec = (
+    None, # 0
+    (1, TType.STRUCT, 'f1', (funcion, funcion.thrift_spec), None, ), # 1
+    (2, TType.STRUCT, 'f2', (funcion, funcion.thrift_spec), None, ), # 2
+  )
+
+  def __init__(self, f1=None, f2=None,):
+    self.f1 = f1
+    self.f2 = f2
+
+  def read(self, iprot):
+    if iprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None and fastbinary is not None:
+      fastbinary.decode_binary(self, iprot.trans, (self.__class__, self.thrift_spec))
+      return
+    iprot.readStructBegin()
+    while True:
+      (fname, ftype, fid) = iprot.readFieldBegin()
+      if ftype == TType.STOP:
+        break
+      if fid == 1:
+        if ftype == TType.STRUCT:
+          self.f1 = funcion()
+          self.f1.read(iprot)
+        else:
+          iprot.skip(ftype)
+      elif fid == 2:
+        if ftype == TType.STRUCT:
+          self.f2 = funcion()
+          self.f2.read(iprot)
+        else:
+          iprot.skip(ftype)
+      else:
+        iprot.skip(ftype)
+      iprot.readFieldEnd()
+    iprot.readStructEnd()
+
+  def write(self, oprot):
+    if oprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and self.thrift_spec is not None and fastbinary is not None:
+      oprot.trans.write(fastbinary.encode_binary(self, (self.__class__, self.thrift_spec)))
+      return
+    oprot.writeStructBegin('multiplicacionFunciones_args')
+    if self.f1 is not None:
+      oprot.writeFieldBegin('f1', TType.STRUCT, 1)
+      self.f1.write(oprot)
+      oprot.writeFieldEnd()
+    if self.f2 is not None:
+      oprot.writeFieldBegin('f2', TType.STRUCT, 2)
+      self.f2.write(oprot)
+      oprot.writeFieldEnd()
+    oprot.writeFieldStop()
+    oprot.writeStructEnd()
+
+  def validate(self):
+    return
+
+
+  def __repr__(self):
+    L = ['%s=%r' % (key, value)
+      for key, value in self.__dict__.iteritems()]
+    return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+  def __eq__(self, other):
+    return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+  def __ne__(self, other):
+    return not (self == other)
+
+class multiplicacionFunciones_result:
+  """
+  Attributes:
+   - success
+  """
+
+  thrift_spec = (
+    (0, TType.STRUCT, 'success', (funcion, funcion.thrift_spec), None, ), # 0
+  )
+
+  def __init__(self, success=None,):
+    self.success = success
+
+  def read(self, iprot):
+    if iprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None and fastbinary is not None:
+      fastbinary.decode_binary(self, iprot.trans, (self.__class__, self.thrift_spec))
+      return
+    iprot.readStructBegin()
+    while True:
+      (fname, ftype, fid) = iprot.readFieldBegin()
+      if ftype == TType.STOP:
+        break
+      if fid == 0:
+        if ftype == TType.STRUCT:
+          self.success = funcion()
+          self.success.read(iprot)
+        else:
+          iprot.skip(ftype)
+      else:
+        iprot.skip(ftype)
+      iprot.readFieldEnd()
+    iprot.readStructEnd()
+
+  def write(self, oprot):
+    if oprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and self.thrift_spec is not None and fastbinary is not None:
+      oprot.trans.write(fastbinary.encode_binary(self, (self.__class__, self.thrift_spec)))
+      return
+    oprot.writeStructBegin('multiplicacionFunciones_result')
+    if self.success is not None:
+      oprot.writeFieldBegin('success', TType.STRUCT, 0)
+      self.success.write(oprot)
+      oprot.writeFieldEnd()
+    oprot.writeFieldStop()
+    oprot.writeStructEnd()
+
+  def validate(self):
+    return
+
+
+  def __repr__(self):
+    L = ['%s=%r' % (key, value)
+      for key, value in self.__dict__.iteritems()]
+    return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+  def __eq__(self, other):
+    return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+  def __ne__(self, other):
+    return not (self == other)
+
+class divisionFunciones_args:
+  """
+  Attributes:
+   - f1
+   - f2
+  """
+
+  thrift_spec = (
+    None, # 0
+    (1, TType.STRUCT, 'f1', (funcion, funcion.thrift_spec), None, ), # 1
+    (2, TType.STRUCT, 'f2', (funcion, funcion.thrift_spec), None, ), # 2
+  )
+
+  def __init__(self, f1=None, f2=None,):
+    self.f1 = f1
+    self.f2 = f2
+
+  def read(self, iprot):
+    if iprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None and fastbinary is not None:
+      fastbinary.decode_binary(self, iprot.trans, (self.__class__, self.thrift_spec))
+      return
+    iprot.readStructBegin()
+    while True:
+      (fname, ftype, fid) = iprot.readFieldBegin()
+      if ftype == TType.STOP:
+        break
+      if fid == 1:
+        if ftype == TType.STRUCT:
+          self.f1 = funcion()
+          self.f1.read(iprot)
+        else:
+          iprot.skip(ftype)
+      elif fid == 2:
+        if ftype == TType.STRUCT:
+          self.f2 = funcion()
+          self.f2.read(iprot)
+        else:
+          iprot.skip(ftype)
+      else:
+        iprot.skip(ftype)
+      iprot.readFieldEnd()
+    iprot.readStructEnd()
+
+  def write(self, oprot):
+    if oprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and self.thrift_spec is not None and fastbinary is not None:
+      oprot.trans.write(fastbinary.encode_binary(self, (self.__class__, self.thrift_spec)))
+      return
+    oprot.writeStructBegin('divisionFunciones_args')
+    if self.f1 is not None:
+      oprot.writeFieldBegin('f1', TType.STRUCT, 1)
+      self.f1.write(oprot)
+      oprot.writeFieldEnd()
+    if self.f2 is not None:
+      oprot.writeFieldBegin('f2', TType.STRUCT, 2)
+      self.f2.write(oprot)
+      oprot.writeFieldEnd()
+    oprot.writeFieldStop()
+    oprot.writeStructEnd()
+
+  def validate(self):
+    return
+
+
+  def __repr__(self):
+    L = ['%s=%r' % (key, value)
+      for key, value in self.__dict__.iteritems()]
+    return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+  def __eq__(self, other):
+    return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+  def __ne__(self, other):
+    return not (self == other)
+
+class divisionFunciones_result:
+  """
+  Attributes:
+   - success
+  """
+
+  thrift_spec = (
+    (0, TType.STRUCT, 'success', (funcion, funcion.thrift_spec), None, ), # 0
+  )
+
+  def __init__(self, success=None,):
+    self.success = success
+
+  def read(self, iprot):
+    if iprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None and fastbinary is not None:
+      fastbinary.decode_binary(self, iprot.trans, (self.__class__, self.thrift_spec))
+      return
+    iprot.readStructBegin()
+    while True:
+      (fname, ftype, fid) = iprot.readFieldBegin()
+      if ftype == TType.STOP:
+        break
+      if fid == 0:
+        if ftype == TType.STRUCT:
+          self.success = funcion()
+          self.success.read(iprot)
+        else:
+          iprot.skip(ftype)
+      else:
+        iprot.skip(ftype)
+      iprot.readFieldEnd()
+    iprot.readStructEnd()
+
+  def write(self, oprot):
+    if oprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and self.thrift_spec is not None and fastbinary is not None:
+      oprot.trans.write(fastbinary.encode_binary(self, (self.__class__, self.thrift_spec)))
+      return
+    oprot.writeStructBegin('divisionFunciones_result')
+    if self.success is not None:
+      oprot.writeFieldBegin('success', TType.STRUCT, 0)
+      self.success.write(oprot)
+      oprot.writeFieldEnd()
+    oprot.writeFieldStop()
+    oprot.writeStructEnd()
+
+  def validate(self):
+    return
+
+
+  def __repr__(self):
+    L = ['%s=%r' % (key, value)
+      for key, value in self.__dict__.iteritems()]
+    return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+  def __eq__(self, other):
+    return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+  def __ne__(self, other):
+    return not (self == other)
+
+class derivadaFunciones_args:
+  """
+  Attributes:
+   - f1
+  """
+
+  thrift_spec = (
+    None, # 0
+    (1, TType.STRUCT, 'f1', (funcion, funcion.thrift_spec), None, ), # 1
+  )
+
+  def __init__(self, f1=None,):
+    self.f1 = f1
+
+  def read(self, iprot):
+    if iprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None and fastbinary is not None:
+      fastbinary.decode_binary(self, iprot.trans, (self.__class__, self.thrift_spec))
+      return
+    iprot.readStructBegin()
+    while True:
+      (fname, ftype, fid) = iprot.readFieldBegin()
+      if ftype == TType.STOP:
+        break
+      if fid == 1:
+        if ftype == TType.STRUCT:
+          self.f1 = funcion()
+          self.f1.read(iprot)
+        else:
+          iprot.skip(ftype)
+      else:
+        iprot.skip(ftype)
+      iprot.readFieldEnd()
+    iprot.readStructEnd()
+
+  def write(self, oprot):
+    if oprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and self.thrift_spec is not None and fastbinary is not None:
+      oprot.trans.write(fastbinary.encode_binary(self, (self.__class__, self.thrift_spec)))
+      return
+    oprot.writeStructBegin('derivadaFunciones_args')
+    if self.f1 is not None:
+      oprot.writeFieldBegin('f1', TType.STRUCT, 1)
+      self.f1.write(oprot)
+      oprot.writeFieldEnd()
+    oprot.writeFieldStop()
+    oprot.writeStructEnd()
+
+  def validate(self):
+    return
+
+
+  def __repr__(self):
+    L = ['%s=%r' % (key, value)
+      for key, value in self.__dict__.iteritems()]
+    return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+  def __eq__(self, other):
+    return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+  def __ne__(self, other):
+    return not (self == other)
+
+class derivadaFunciones_result:
+  """
+  Attributes:
+   - success
+  """
+
+  thrift_spec = (
+    (0, TType.STRUCT, 'success', (funcion, funcion.thrift_spec), None, ), # 0
+  )
+
+  def __init__(self, success=None,):
+    self.success = success
+
+  def read(self, iprot):
+    if iprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None and fastbinary is not None:
+      fastbinary.decode_binary(self, iprot.trans, (self.__class__, self.thrift_spec))
+      return
+    iprot.readStructBegin()
+    while True:
+      (fname, ftype, fid) = iprot.readFieldBegin()
+      if ftype == TType.STOP:
+        break
+      if fid == 0:
+        if ftype == TType.STRUCT:
+          self.success = funcion()
+          self.success.read(iprot)
+        else:
+          iprot.skip(ftype)
+      else:
+        iprot.skip(ftype)
+      iprot.readFieldEnd()
+    iprot.readStructEnd()
+
+  def write(self, oprot):
+    if oprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and self.thrift_spec is not None and fastbinary is not None:
+      oprot.trans.write(fastbinary.encode_binary(self, (self.__class__, self.thrift_spec)))
+      return
+    oprot.writeStructBegin('derivadaFunciones_result')
+    if self.success is not None:
+      oprot.writeFieldBegin('success', TType.STRUCT, 0)
+      self.success.write(oprot)
       oprot.writeFieldEnd()
     oprot.writeFieldStop()
     oprot.writeStructEnd()

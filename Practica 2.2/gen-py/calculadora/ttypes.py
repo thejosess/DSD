@@ -16,3 +16,135 @@ except:
   fastbinary = None
 
 
+
+class funcion:
+  """
+  Attributes:
+   - x
+   - exponente_x
+   - y
+   - exponente_y
+   - z
+   - exponente_z
+  """
+
+  thrift_spec = (
+    None, # 0
+    (1, TType.DOUBLE, 'x', None, None, ), # 1
+    (2, TType.I32, 'exponente_x', None, None, ), # 2
+    (3, TType.DOUBLE, 'y', None, None, ), # 3
+    (4, TType.I32, 'exponente_y', None, None, ), # 4
+    (5, TType.DOUBLE, 'z', None, None, ), # 5
+    (6, TType.I32, 'exponente_z', None, None, ), # 6
+  )
+
+  def __init__(self, x=None, exponente_x=None, y=None, exponente_y=None, z=None, exponente_z=None,):
+    self.x = x
+    self.exponente_x = exponente_x
+    self.y = y
+    self.exponente_y = exponente_y
+    self.z = z
+    self.exponente_z = exponente_z
+
+  def read(self, iprot):
+    if iprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and isinstance(iprot.trans, TTransport.CReadableTransport) and self.thrift_spec is not None and fastbinary is not None:
+      fastbinary.decode_binary(self, iprot.trans, (self.__class__, self.thrift_spec))
+      return
+    iprot.readStructBegin()
+    while True:
+      (fname, ftype, fid) = iprot.readFieldBegin()
+      if ftype == TType.STOP:
+        break
+      if fid == 1:
+        if ftype == TType.DOUBLE:
+          self.x = iprot.readDouble();
+        else:
+          iprot.skip(ftype)
+      elif fid == 2:
+        if ftype == TType.I32:
+          self.exponente_x = iprot.readI32();
+        else:
+          iprot.skip(ftype)
+      elif fid == 3:
+        if ftype == TType.DOUBLE:
+          self.y = iprot.readDouble();
+        else:
+          iprot.skip(ftype)
+      elif fid == 4:
+        if ftype == TType.I32:
+          self.exponente_y = iprot.readI32();
+        else:
+          iprot.skip(ftype)
+      elif fid == 5:
+        if ftype == TType.DOUBLE:
+          self.z = iprot.readDouble();
+        else:
+          iprot.skip(ftype)
+      elif fid == 6:
+        if ftype == TType.I32:
+          self.exponente_z = iprot.readI32();
+        else:
+          iprot.skip(ftype)
+      else:
+        iprot.skip(ftype)
+      iprot.readFieldEnd()
+    iprot.readStructEnd()
+
+  def write(self, oprot):
+    if oprot.__class__ == TBinaryProtocol.TBinaryProtocolAccelerated and self.thrift_spec is not None and fastbinary is not None:
+      oprot.trans.write(fastbinary.encode_binary(self, (self.__class__, self.thrift_spec)))
+      return
+    oprot.writeStructBegin('funcion')
+    if self.x is not None:
+      oprot.writeFieldBegin('x', TType.DOUBLE, 1)
+      oprot.writeDouble(self.x)
+      oprot.writeFieldEnd()
+    if self.exponente_x is not None:
+      oprot.writeFieldBegin('exponente_x', TType.I32, 2)
+      oprot.writeI32(self.exponente_x)
+      oprot.writeFieldEnd()
+    if self.y is not None:
+      oprot.writeFieldBegin('y', TType.DOUBLE, 3)
+      oprot.writeDouble(self.y)
+      oprot.writeFieldEnd()
+    if self.exponente_y is not None:
+      oprot.writeFieldBegin('exponente_y', TType.I32, 4)
+      oprot.writeI32(self.exponente_y)
+      oprot.writeFieldEnd()
+    if self.z is not None:
+      oprot.writeFieldBegin('z', TType.DOUBLE, 5)
+      oprot.writeDouble(self.z)
+      oprot.writeFieldEnd()
+    if self.exponente_z is not None:
+      oprot.writeFieldBegin('exponente_z', TType.I32, 6)
+      oprot.writeI32(self.exponente_z)
+      oprot.writeFieldEnd()
+    oprot.writeFieldStop()
+    oprot.writeStructEnd()
+
+  def validate(self):
+    if self.x is None:
+      raise TProtocol.TProtocolException(message='Required field x is unset!')
+    if self.exponente_x is None:
+      raise TProtocol.TProtocolException(message='Required field exponente_x is unset!')
+    if self.y is None:
+      raise TProtocol.TProtocolException(message='Required field y is unset!')
+    if self.exponente_y is None:
+      raise TProtocol.TProtocolException(message='Required field exponente_y is unset!')
+    if self.z is None:
+      raise TProtocol.TProtocolException(message='Required field z is unset!')
+    if self.exponente_z is None:
+      raise TProtocol.TProtocolException(message='Required field exponente_z is unset!')
+    return
+
+
+  def __repr__(self):
+    L = ['%s=%r' % (key, value)
+      for key, value in self.__dict__.iteritems()]
+    return '%s(%s)' % (self.__class__.__name__, ', '.join(L))
+
+  def __eq__(self, other):
+    return isinstance(other, self.__class__) and self.__dict__ == other.__dict__
+
+  def __ne__(self, other):
+    return not (self == other)
