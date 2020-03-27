@@ -1,4 +1,4 @@
-## Memoria Práctica 2.2: Calculadora Thrift
+## Memoria Práctica 2.2: Calculadora Thrift     ~        José Santos Salvador
 ---   
 ### 1.Calculadora básica 
 La primera parte consistía en una calculadora capaz de realizar unas operaciones básicas (a las que le añadi el módulo). Para ello, primero se crea un archivo calculadora.thrift con las funciones que va a implementar el servidor que implementé en python.     
@@ -90,7 +90,7 @@ En este punto de la práctica y sin tener ningún conocimiento de python, tuve q
 
 
 
-## 3.Implementación servidor/cliente en Java  
+## 3.Implementación cliente y servidor en Java  
 
 Para implementar el servidor en Java me hizo falta usar netbeans y desde ahí cargar dos archivos .jar, libthrift-0.9.1.jar y slf4j-api-1.7.25.jar. Tras generar Calculadora.java con thrift, me dieron errores debido a que usaba un archivo .jar de thrift para una versión distinta a la que tenía de thrift. Tras implementar el servidor en Java(había que cambiar ciertas cosas de lo puesto en el pdf)
 
@@ -113,48 +113,28 @@ Me dio el siguiente error
     SLF4J: Failed to load class "org.slf4j.impl.StaticLoggerBinder".
     SLF4J: Defaulting to no-operation (NOP) logger implementation
 
-Y tras cambiar el archivo .jar a la versión 1.7.25 continuo dandomelo, imposibilitandome seguir la implementación en java. Probé también a utilizar la versión 0.13 de thrift con su respectivo .jar pero seguia dando el mismo error.
-![error](./imagenes/error.jpg "error").   
-Probe a cambiar el código del servidor por si eso era el problema
+Tras eso el profesor, me resolvío el problema y era debido a que no creaba de forma correcta el servidor, teniendo que crearlo como 
+
+          TServer server = new TSimpleServer(new Args(serverTransport).processor(processor));
+
+y también me faltaba importar Args como org.apache.thrift.server.TServer.Args
         
 
-        public class Servidor {
-
-        public static CalculadoraHandler handler;
-
-        public static Calculadora.Processor processor;
-
-        public static void main(String [] args) {
-            try {
-            handler = new CalculadoraHandler();
-            processor = new Calculadora.Processor(handler);
-
-            Runnable simple = new Runnable() {
-                public void run() {
-                simple(processor);
-                }
-            };      
-            
-            new Thread(simple).start();
-            } catch (Exception x) {
-            x.printStackTrace();
-            }
-        }
-
-        public static void simple(Calculadora.Processor processor) {
-            try {
+    class Servidor{
+    public static void main(String args[]){
+        CalculadoraHandler handler = new CalculadoraHandler();
+        Processor processor = new Processor(handler);
+        try{
             TServerTransport serverTransport = new TServerSocket(9090);
             TServer server = new TSimpleServer(new Args(serverTransport).processor(processor));
-
-            System.out.println("Starting the simple server...");
+            
+            System.out.println("Iniciando servidor...");
             server.serve();
-            } catch (Exception e) {
-            e.printStackTrace();
-            }
-        }
-        }
+        }catch (Exception e){e.printStackTrace();}
+    }
+    }
 
-pero el problema persistia y decidí hacer en java unicamente el cliente. 
+También implementé el cliente.
 
     public class Cliente {
         public static void main(String args[]){
@@ -190,7 +170,7 @@ pero el problema persistia y decidí hacer en java unicamente el cliente.
     }
     }
 
-Aunque el error me seguia saliendo por pantalla, se hace de forma correcta el ping al servidor y mostraba de forma correcta el resultado de la suma [1]. Por lo tanto, terminé de implementar todas las llamadas al servidor que tenia en cliente de python pero en java. Todo esto permite realizar las llamdas desde un cliente java al servidor en python de forma correcta.
+Terminé de implementar todas las llamadas al servidor que tenia en cliente de python pero en java. Todo esto permite realizar las llamdas desde un cliente java al servidor en python de forma correcta. Para lanzar el servidor o cliente de forma individual en netbeans es necesario seleccionar el archivo, boton derecho y run file.
 
 
 ![java_cliente](./imagenes/java_client.png "Cliente en java y servidor en python")
@@ -243,29 +223,112 @@ Tuve algún problema a la hora de devolver el vector resultado tras realizar las
 
 ## 5.Implementación operaciones adicionales 
 
-poner lo que he hecho de import en ruby
-los archivos que me ha generado para java
-y los require de ruby
+Añadí la capacidad de realizar operaciones básicas con funciones lineales de grado 2 y derivadas. Par ello primero declaré los métodos en el archivo thrift y el struct de la funcion.
+
+    struct funcion{
+	1: required double x;
+	2: required i32 exponente_x;
+	3: required double y;
+	4: required i32 exponente_y;
+	5: required double z;
+	6: required i32 exponente_z;
+    }
+
+    service Calculadora{
+            ....
+        funcion sumaFunciones(1:funcion f1, 2:funcion f2),
+             ...
+        funcion derivadaFunciones(1:funcion f1),
+    }
+
+Tras esto, tuve que generar otra vez los archivos en los distintos lenguajes (Ruby, Python y Java) e implementarlos. 
+
+        def sumaFunciones(self,f1,f2):
+        print("sumando funciones")
+        result = funcion(0,0,0,0,0,0)
+        result.x = f1.x + f2.x
+        result.y = f1.y + f2.y
+        result.z = f1.z + f2.z
+
+        result.exponente_x = f1.exponente_x
+        result.exponente_y = f1.exponente_y
+        result.exponente_z = f1.exponente_z
+        return result
+                ....
+
+El codigo es similar entre el servidor de Python (fragmento de arriba) y el servidor de Ruby, la diferencia reside en que para declarar una funcion en Python se hace como 
+
+
+    result = funcion(0,0,0,0,0,0)
+
+mientras que en ruby es 
+
+        result = Funcion.new
+
+Cabe destacar que es necesario hacer un import en Python del archivo ttype donde se genera el "struct"
+
+    from calculadora.ttypes import funcion
+
+mientras que en Ruby hay que usar
+ 
+     require 'calculadora_types'
+
+En java se te genera un archivo con funcion y hay que meterlo dentro del paquete en el que estamos trabajando.
+Finalmente implementé las llamadas a los servidores en ruby y python desde los clientes en java y python.
+
+    """ han de ser de grado 2 """
+    f1 = funcion(2,2,2,1,2,0)
+    f2 = funcion(3,2,3,1,3,0)
+    mostrarFuncion(f1)
+    mostrarFuncion(f2)
+
+    print("\nsumando funciones, funcion resultante: ")
+    f3 = client.sumaFunciones(f1,f2)
+    mostrarFuncion(f3)
+
+Arriba en python, abajo en java.
+
+    funcion f1 = new funcion(2,2,2,1,2,0);
+        funcion f2 = new funcion(3,2,3,1,3,0);
+        funcion f3 = new funcion(0,0,0,0,0,0);
+        mostrarFuncion(f1);
+        mostrarFuncion(f2);
+        
+        System.out.println("\nSumando funciones: ");
+        f3 = client.sumaFunciones(f1, f2);
+        mostrarFuncion(f3);
 
 
 
+## 6.Funcionamiento del programa
+El programa consta de un servidor/cliente en python, un cliente en java y un servidor en ruby. Se pueden realizar operaciones básicas sobre números, sobre vectores y funciones (creadas mediante un struct en el archivo thrift). Las posiblidades que ofrece dentro de estas operaciones son:     
+1. Servidor python y cliente python (carpeta gen-py)      
 
+![python](./imagenes/python.png "Cliente y servidor en python")
 
+2. Servidor python (carpeta gen-py) y cliente java (carpeta gen-java)
 
-en esta practica me he querido centrar mas bien en crear distintos servidores y clientes que no tanto funcionalidades de la calculadora
-explicar por algun lado que este mejora los fallos del anterior, no te obliga a C, no te pone punteros por defecto y tu tienes que implementar y crear servidor y cliente, 
-problemas a la hora de usar el .jar de la verdsion dsititnas del thrift
+![java](./imagenes/ruby_java.png "Cliente en java y servidor en python")
 
-enseñar y decir todos los servidore y clientes que tengo y que permito conexiones entre ellos,
-mejor que el otro que al generar nuevos ficheros no se te borran clientes y servidores
+3. Servidor ruby (carpeta gen-rb) y cliente java
 
-hacer un utlimo punto explicando como se lanza todo, uno con netbeans y el otro no
+![java](./imagenes/ruby_java_1.png "Cliente en java y servidor en ruby")
 
-EL PROBLEMA DE VERSIONES ENTRE SI FUE UNA PEJIGUERA CON JAVA, estuve mirando y lo mejor hubiese sido usar maven tal y como dijo el profe
+4. Servidor ruby y cliente en python
 
-problema con ruby por el tema de los array
+![java](./imagenes/python_ruby.png "Cliente en python y servidor en ruby")
 
-captura pantalla problema con s4ltf y servidor java
-tendrí que haber usado maven
+5. Servidor java y cliente en python
 
-[1]: No sé si podría ser entonces un warning.
+![java](./imagenes/servidor_java.png "Cliente en python y servidor en java")
+
+6. Servidor java y cliente en java
+
+![java](./imagenes/java_server_1.png "Cliente en java y servidor en java")
+![java](./imagenes/java_server_2.png "Cliente en java y servidor en java")
+             
+## 7.Conclusiones
+
+En esta práctica se hace uso de Apache Thrift para realizar una calculadora básica, se debe diferencia entre el compilador y las librerias especificas de cada lenguaje. Ha supuesto una mejora respecto a RPC Sun, ya que al añadir nuevas funciones al archivo thrift, no tenia que copiar el código en otra parte, generar el .x y volver a copiar el código. Con Thrift unicamente se genera otra vez calculadora y es en el servidor y cliente donde implementas y llamas a esos nuevos métodos. Sin embargo también me he encontrado con algunos conflictos a la hora de usar las librerias de cada lenguaje, con java tuve que usar Netbeans y cargar los .jar compilados de internet, aún con todo me seguía dando error (estuve buscando sobre Maven y hubiese sido una mejor opción) y con ruby no conseguí instalar thrift desde el gestor de paquetes gem y tuve que hacerlo de forma manual copiando la libreria sobre el proyecto de ruby.  
+En esta práctica me he querido centrar en las comunicaciones entre distintos servidores y clientes en diferentes lenguajes de programación sobre datos mas sencillos como enteros y doubles, hasta estructura algo más complejas como vectores y funciones.    
+Con Thrift he podido realizar practicamente lo mismo que con RPC Sun de una forma mas versatil y ágil, he aprendido a tratar de forma básica con Python y las comunicaciones entre distintos lenguajes mediante cliente y servidor, aunque sigue presentando alguna limitación similar a RPC Sun a la hora de tratar con estrucuturas complejas.  
