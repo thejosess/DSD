@@ -301,7 +301,7 @@ Arriba en python, abajo en java.
 
 
 ## 6.Funcionamiento del programa
-El programa consta de un servidor/cliente en python, un cliente en java y un servidor en ruby. Se pueden realizar operaciones básicas sobre números, sobre vectores y funciones (creadas mediante un struct en el archivo thrift). Las posiblidades que ofrece dentro de estas operaciones son:     
+El programa consta de un servidor/cliente en python, un cliente/servidor en java y un servidor en ruby. Se pueden realizar operaciones básicas sobre números, sobre vectores y funciones (creadas mediante un struct en el archivo thrift). Las posiblidades que ofrece dentro de estas operaciones son:     
 1. Servidor python y cliente python (carpeta gen-py)      
 
 ![python](./imagenes/python.png "Cliente y servidor en python")
