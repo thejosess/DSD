@@ -41,7 +41,7 @@ public class Ejemplo implements Ejemplo_I{
     }
 
     @Override
-    public void escribir_mensaje(String mensaje) throws RemoteException {
+    public synchronized void escribir_mensaje(String mensaje) throws RemoteException {
         System.out.println("Entra hebra: "+mensaje);
         if (mensaje.endsWith("0")){
             try{
