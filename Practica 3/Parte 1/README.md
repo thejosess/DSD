@@ -1,6 +1,8 @@
 # Práctica 3: RMI    ~     José Santos Salvador
 
 ## Parte 1
+En esta práctica usamos la tecnología RMI que se basa en la implementación de una serie de formularios de petición de objetos. Estos objetos se pueden transportar entre cliente y servidor. Esto permite utilizar objetos de cualquier tipo, ofreciendo más versatilidad que las tecnologías usadas en la práctica 1 y la 2.
+
 
 #### Ejemplo 1
 
@@ -87,6 +89,22 @@ En este ejemplo se crea un objeto remoto (contador.java que implementa icontador
             contador micontador = new contador();
             Naming.rebind("micontador",micontador);
 
+                            ... 
+
+        }
+    }
+
+    //objeto contador
+    public class contador extends UnicastRemoteObject implements icontador{
+    private int suma;
+    
+    @Override
+    public int sumar() throws RemoteException {
+        return suma;
+    }
+                    ...
+    }
+
 El cliente por su parte pone un valor inicial al contador del servidor e invoca al método incrementar del contador 1000 veces y por último muestra el valor de contador y el tiempo de respuesta que le ha llevado calculadorlo.
 
 
@@ -115,7 +133,7 @@ El cliente por su parte pone un valor inicial al contador del servidor e invoca 
             System.err.println("Exception del sistema: " + e);
         }
 
-En este ejemplo no es necesario llamar a rmiregistry con el terminal, ya que se encarga el servidor de hacerlo (imágenes abajo).
+En este ejemplo no es necesario llamar a rmiregistry con el terminal, ya que se encarga el servidor de hacerlo (imágenes abajo). Tuve que crear también una compilación para el servidor y el cliente y en este caso, el cliente no tiene ningún parametro.
 
 ![ejemplo2](./imagenes/cliente3.png "ejemplo2")
 
