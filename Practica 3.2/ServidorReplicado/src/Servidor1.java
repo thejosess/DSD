@@ -1,4 +1,9 @@
 
+import java.net.MalformedURLException;
+import java.rmi.Naming;
+import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
+import java.rmi.registry.Registry;
 import java.util.ArrayList;
 
 /*
@@ -12,26 +17,22 @@ import java.util.ArrayList;
  *
  * @author juse
  */
-public class Servidor1 implements Servidor_I{
-    
-    private ArrayList<String> clientes; //hacerlos de array list??
+public class Servidor1{
 
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        // TODO code application logic here
-    }
-
-    @Override
-    public void registrarCliente(String id) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-
-    @Override
-    public void recibirDonaciones(double cantidad) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
-    
+    public static void main(String [] args){
+        if (System.getSecurityManager() == null){
+            System.setSecurityManager(new SecurityManager());
+        }
+        try {
+            String nombre_server = "servidor1", nombre_replica = "servidor2", host = "localhost";
+            Registry reg = LocateRegistry.createRegistry(1099);
+            Donacion midonacion1 = new Donacion(nombre_server,nombre_replica,host);
+            Naming.rebind("midonacion1",midonacion1);
+            
+            System.out.println(nombre_server + " preparado");
+        } catch ( RemoteException | MalformedURLException e){
+            System.out.println("Exception: " + e.getMessage());
+        }
+        
+    }    
 }

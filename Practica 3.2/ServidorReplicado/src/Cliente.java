@@ -7,9 +7,9 @@ import java.rmi.registry.Registry;
  *
  * @author juse
  */
-public class cliente {
+public class Cliente {
     public static void main(String[] args){
-        if (System.getSecurityManager() == null){
+       /* if (System.getSecurityManager() == null){
             System.setSecurityManager(new SecurityManager());
         }
         try {
@@ -31,6 +31,6 @@ public class cliente {
         }catch (NotBoundException | RemoteException e){
             System.err.println("Exception del sistema: " + e);
         }
-        System.exit(0);
+        System.exit(0);*/
     }
 }

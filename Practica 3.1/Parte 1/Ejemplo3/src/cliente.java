@@ -13,7 +13,7 @@ public class cliente {
             System.setSecurityManager(new SecurityManager());
         }
         try {
-            Registry mireg = LocateRegistry.getRegistry("127.0.0.1",1099);
+            Registry mireg = LocateRegistry.getRegistry("localhost",1099);
             icontador micontador = (icontador)mireg.lookup("micontador");
             System.out.println("Poniendo contador a 0");
             micontador.sumar(0);
