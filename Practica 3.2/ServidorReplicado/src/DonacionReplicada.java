@@ -20,21 +20,25 @@ public class DonacionReplicada extends UnicastRemoteObject implements Donacion_I
     
     private ArrayList<Usuario> usuarios;
     private String nombre;
-    private Donacion_I replica;
+    private String host;
+    private String replica;
     
     public DonacionReplicada(String nombre, String replica, String host) throws RemoteException{
-        //this.crearReplica(replica, host);
         this.nombre = nombre;
         this.usuarios = new ArrayList<>();
+        this.host = host;
+        this.replica = replica;
     }
     
-    private void crearReplica(String replica, String host){
+    private Donacion_I buscarReplica(){
+        Donacion_I re = null; //si no hago esto me da error por no inicializar la variable
         try{
-            Registry reg = LocateRegistry.getRegistry(host,1099);
-            this.replica = (Donacion_I)reg.lookup(replica);
+            Registry reg = LocateRegistry.getRegistry(this.host,1099);
+            re =  (Donacion_I)reg.lookup(this.replica);
         } catch(NotBoundException | RemoteException e){
             System.out.println("Exception: " + e.getMessage());
         }
+        return re;
     }
 
     //tiene que ser igual o puedo implementarlo diferente porque es la replica?
