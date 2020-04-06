@@ -2,43 +2,55 @@
 ## Creación servidor replicado y donaciones.
 
 
+# Introducción
+//hablar como hago siempre de RMI y de la práctica de forma teorica, ponerle alguna foto suya del pdf.
 
-opte por usar un objeto para que asi cliente no lo supiera
+# Creación servidor y servidor replicado
 
-https://github.com/AlexRuiz7/UGR-DSD/blob/master/P3/RMI/Donacion.java
-//version cutre de primeras
+En un inicio cree una primera versión algo básica similar al ejemplo 2
 
-//poner en el README que primero hice una version cutre parecida al ejemplo 2 y copiar del github de arriba.
-//poner que primero hice un objeto de donacion
-//luego hice la otra
+    public class Servidor1 implements Servidor_I{
 
-//otro de los fallos es que hacia en ambos servidores este trozo de código:
-Registry reg = LocateRegistry.createRegistry(1099);
-//ME di cuenta de que tenia que crear el servidor replica diferente ya que no es un servidor como tal si no que es un servidor a ojos del cliente pero es un cliente a ojos del servidor. POR ESO IMPLEMENTA LAS DOS INTERFACE
-//tuve otro error con eso porque no implementaba las dos interfaces y entonces me daba error, el servidor tiene que implementar ambas interfaces
+        private ArrayList<Usuario> usuarios;
+        private double totalDonado;
+        private String nombre;
+        private String replica; //creo una instancia del otro servidor
+        private String host;
 
-el dinero total lo tiene El donacion tocho no el replicado
+        public static void main(String[] args) {
+            if (System.getSecurityManager() == null){
+                System.setSecurityManager(new SecurityManager());
+            }
+            try{
+                Servidor_I prueba = new Servidor1();
+                Servidor_I stub = (Servidor_I) UnicastRemoteObject.exportObject(prueba,0);
+                Registry registry = LocateRegistry.getRegistry();
+                String nombre_objeto_remote = "un_nombre_para_obj_remoto";
+                registry.rebind(nombre_objeto_remote, stub);
+                System.out.println("Servidor1 bound");
+            }catch (Exception e){
+                System.err.println("Servidor1 exception:");
+                e.printStackTrace();
+            }
+        }
 
-en vez de hacer como este tio con getReplica, 
-hacer directamente un atributo que sea la replica
-asi el cliente no puede acceder a esta replica porque es privada
+        @Override
+        public synchronized void registrarUsuario(String usuario, String contrasena) throws RemoteException {
+                    ... 
+        }
+    }
 
-en vez de hacerlo con menu hacerlo pasandolo por parametro??
+acabe desechando esta opción, ya que me obligaba a tener una serie de atributos en el servidor y métodos (respecto a las donaciones), mezclando así las responsabilidades de las clases. Decidí hacerlo más similar al ejemplo 3, creando una interfaz Donacion_I y dos clases concretas Donacion y DonacionReplicada donde meter las funcionalidades de registrar usuarios, crear donaciones, etc. La clase Donacion sería un atributo que tendría el servidor "principal" (Servidor1) y DonacionReplicada del servidor secundario (Servidor2).
+//meter la interfaz cuando esté completa
+Uno de los fallos que tuve fué poner en el main de ambos servidores (Servidor1 y Servidor2):
+
+    Registry reg = LocateRegistry.createRegistry(1099);
+
+Esto me produjo un error como es normal y decidí por tanto, dejarlo unicamente en el Servidor1.   
+Uno de los puntos de esta práctica es la comunicación entre ambos servidores. Para ello pensé en crear un atributo Donacion_I en ambos servidores e inicializarla en sus constructores.
 
 
-//almacena el dinero donde se ha registrado
-//permite que los usuarios puedan ver el total donado por su parte, el total donado en general PERO SOLO SI SE HAN REGISTRADO EN ESE SERVIDOR ANTES.
-
-//he hecho que cuando haya mas clientes en uno se le pase al otro servidor? y en caso de empate??
-//el cliente podra acceder al nombre de la replica del otro? -> NOPE porque es un atributo privado ese nombre,
-
-https://github.com/danidiaz1/DSD-Desarrollo-de-Sistemas-Distribuidos-UGR/tree/master/P2_RMI
-//version tocha
-
-
-he intentado crear una instancia dentro de cada servidor de una replica del otro,
-sin embargo tuve problemas ya que al hacer esto en el servidor1
-public class Servidor1{
+    public class Servidor1{
 
     public static void main(String [] args){
         if (System.getSecurityManager() == null){
@@ -55,9 +67,11 @@ public class Servidor1{
             System.out.println("Exception: " + e.getMessage());
         }
         
-    }    
-}
-y en el objeto Donaccion de servidor 1.
+        }    
+    }
+
+y en Donacion de Servidor1
+
     public Donacion(String nombre, String replica, String host) throws RemoteException{
         this.crearReplica(replica, host);
         this.nombre = nombre;
@@ -73,32 +87,29 @@ y en el objeto Donaccion de servidor 1.
             System.out.println("Exception: " + e);
         }//DA ERROR AQUI
     }
-//el objeto que se intenta buscar no se encuentra puesto que primero lanzas el servidor 1 y no está creada la replica,
-al cambiarlo e intentar crear en el objeto Donacion del servidor1 cuando llamas a crearReplica, hacer el Naming.rebind, me daba un error al llamar al constructor de la replica, ya que hace:
-    private void crearReplica(String replica, String host){
+
+entonces al meterse en crearReplica intenta buscar con reg.lookup(replica) un objeto que no ha sido creado, ya que primero se lanza el main de Servidor1. Lo cambié para que al crear el objeto Donacion en el servidor1, en el método crearReplica, se crease el objeto replica(DonacionReplicada) con Naming.rebind pero volvía a dar un error ya que al crear el objeto DonacionReplicada, esta llamaba a crearReplica de Servidor1. Pensé en quitar crearReplica en Servidor2 y luego hacer Servidor2.setReplica() tras haber creado ya Donacion y DonacionReplicada pero me pareció un poco feo hacerlo de esa forma.   
+Al final terminé por crear un método getReplica en Donacion y DonacionReplicada, donde se obtiene la replica, a través de su nombre que es un atributo de dichas clases. Dicho método sería privado para que el Cliente no puediese llamarlo.
+
+        //Donacion.java
+
+    public Donacion(String nombre, String replica, String host) throws RemoteException{
+        this.nombre = nombre;
+        this.totalDonado = 0.0;
+        this.usuarios = new ArrayList<>();
+        this.replica = replica;
+        this.host = host;
+    }
+
+        private Donacion_I buscarReplica(){
+        Donacion_I re = null; //si no hago esto me da error por no inicializar la variable
         try{
-            Registry reg = LocateRegistry.getRegistry(host,1099);
-            this.replica = (Donacion_I)reg.lookup(replica);
+            Registry reg = LocateRegistry.getRegistry(this.host,1099);
+            re =  (Donacion_I)reg.lookup(this.replica);
         } catch(NotBoundException | RemoteException e){
             System.out.println("Exception: " + e.getMessage());
         }
+        return re;
     }
-y tampoco se ha terminado de crear todavia el objeto servidor1
-
-Por tanto descarté ponerlo en el constructor, pensé en llamar luego a construir replica pero me obligaria a poner el método publico y podría acceder desde fuera, además de que se supone que eso se tendría que hacer desde el constrcutor,
-tambien habia pensado escrbir de forma que Servidor1 creara DonacionReplicada (esta sin necesidad de asignar todavia DOnacion), tras crear en Servidor1 Donacion con DOnacionReplicada, llamaria a DonacionReplicada.setReplica o algo así y luego en servidor2 simplemente buscar servidor2
 
 
-AÑADIR MAS COSAS
---------------------
-añadir que puedas elegir a que servidor conectar, entonces
-dependiendo de al servidor que te conectes pues uno es el servidor tocho y el otro es el replicado.
-//es cuuestion de hacer muchos if-else y tal.
-
-hacer que cuando le pida el usuario hacer x cosa, esto haga que el servidor pida ayuda al replicado en hacer esa operacion y cuando le devuelva la ayuda que lo haga.
-mirar video de Pablo en go .ugr.es
-
-bibliografia
-http://chuwiki.chuidiang.org/index.php?title=Conceptos_b%C3%A1sicos_de_rmi
-https://stackoverflow.com/questions/30589760/in-java-rmi-naming-rebindurl-obj-what-is-the-parameter-of-obj
-https://docs.oracle.com/javase/7/docs/api/java/rmi/Naming.html#rebind(java.lang.String,%20java.rmi.Remote)

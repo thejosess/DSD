@@ -56,7 +56,7 @@ public class Donacion extends UnicastRemoteObject implements Donacion_I{
             Usuario usuario = new Usuario(nombre, contrasena);
             this.usuarios.add(usuario);
         }
-    }
+    }//hay que comprobar que no esté ya en el sistema y todo eso, mirar bien guion
 
     @Override
     public ArrayList<Usuario> getUsuarios() throws RemoteException {

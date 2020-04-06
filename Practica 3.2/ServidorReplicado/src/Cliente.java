@@ -14,7 +14,7 @@ public class Cliente {
         }
         try {
             Registry mireg = LocateRegistry.getRegistry("localhost",1099);
-            Donacion_I midonacion = (Donacion_I)mireg.lookup("micontador");
+            Donacion_I midonacion = (Donacion_I)mireg.lookup("servidor1");
 
             midonacion.registrarUsuario("Prueba", "1234");
             
