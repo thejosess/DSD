@@ -9,28 +9,19 @@ import java.rmi.registry.Registry;
  */
 public class Cliente {
     public static void main(String[] args){
-       /* if (System.getSecurityManager() == null){
+        if (System.getSecurityManager() == null){
             System.setSecurityManager(new SecurityManager());
         }
         try {
-            Registry mireg = LocateRegistry.getRegistry("127.0.0.1",1099);
-            //icontador micontador = (icontador)mireg.lookup("micontador");
-            System.out.println("Poniendo contador a 0");
-            micontador.sumar(0);
+            Registry mireg = LocateRegistry.getRegistry("localhost",1099);
+            Donacion_I midonacion = (Donacion_I)mireg.lookup("micontador");
+
+            midonacion.registrarUsuario("Prueba", "1234");
             
-            long horacomienzo = System.currentTimeMillis();
-            
-            System.out.println("Incrementando...");
-            for(int i = 0 ; i < 1000 ; i++){
-                micontador.incrementar();
-            }
-            
-            long horafin = System.currentTimeMillis();
-            System.out.println("Media de las RMI realizadas = " + ((horafin -horacomienzo)/1000f) + "mseg" );
-            System.out.println("RMI realizadas = " + micontador.sumar());
+            System.out.println("Usuario registrado");
         }catch (NotBoundException | RemoteException e){
             System.err.println("Exception del sistema: " + e);
         }
-        System.exit(0);*/
+        System.exit(0);
     }
 }

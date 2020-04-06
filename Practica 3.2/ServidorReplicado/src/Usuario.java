@@ -10,13 +10,13 @@
  */
 public class Usuario {
     private String nombre;
-    private String contraseña;
+    private String contrasena;
     private int donaciones;
     private double cantidad_donada;
 
-    public Usuario(String nombre, String contraseña) {
+    public Usuario(String nombre, String contrasena) {
         this.nombre = nombre;
-        this.contraseña = contraseña;
+        this.contrasena = contrasena;
         this.donaciones = 0;
         this.cantidad_donada = 0.0;
     }
@@ -25,8 +25,8 @@ public class Usuario {
         return nombre;
     }
 
-    public String getContraseña() {
-        return contraseña;
+    public String getContrasena() {
+        return contrasena;
     }
 
     public int getDonaciones() {
@@ -41,8 +41,8 @@ public class Usuario {
         this.nombre = nombre;
     }
 
-    public void setContraseña(String contraseña) {
-        this.contraseña = contraseña;
+    public void setContrasena(String contrasena) {
+        this.contrasena = contrasena;
     }
 
     public void hacerDonacion() {

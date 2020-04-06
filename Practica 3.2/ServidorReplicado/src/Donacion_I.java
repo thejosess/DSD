@@ -1,5 +1,7 @@
 
 import java.rmi.Remote;
+import java.rmi.RemoteException;
+import java.util.ArrayList;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -12,5 +14,7 @@ import java.rmi.Remote;
  * @author juse
  */
 public interface Donacion_I  extends Remote{
-    
+    void registrarUsuario (String nombre, String contrasena) throws RemoteException;
+    ArrayList<Usuario> getUsuarios() throws RemoteException;
+
 }

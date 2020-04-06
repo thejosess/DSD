@@ -26,8 +26,8 @@ public class Servidor2 {
         try {
             //Registry reg = LocateRegistry.createRegistry(1099);
             String nombre_server = "servidor2", nombre_replica = "servidor1", host = "localhost";
-            DonacionReplicada midonacion2 = new DonacionReplicada(nombre_server,nombre_replica,host);
-            Naming.rebind("midonacion2",midonacion2);
+            DonacionReplicada servidor2 = new DonacionReplicada(nombre_server,nombre_replica,host);
+            Naming.rebind("servidor2",servidor2);
             
             System.out.println("Servidor" + nombre_server + " preparado");
         } catch ( RemoteException | MalformedURLException e){

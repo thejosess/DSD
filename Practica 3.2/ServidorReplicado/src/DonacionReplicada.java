@@ -23,7 +23,7 @@ public class DonacionReplicada extends UnicastRemoteObject implements Donacion_I
     private Donacion_I replica;
     
     public DonacionReplicada(String nombre, String replica, String host) throws RemoteException{
-        this.crearReplica(replica, host);
+        //this.crearReplica(replica, host);
         this.nombre = nombre;
         this.usuarios = new ArrayList<>();
     }
@@ -36,4 +36,17 @@ public class DonacionReplicada extends UnicastRemoteObject implements Donacion_I
             System.out.println("Exception: " + e.getMessage());
         }
     }
+
+    //tiene que ser igual o puedo implementarlo diferente porque es la replica?
+    @Override
+    public void registrarUsuario(String nombre, String contrasena)  {
+        Usuario usuario = new Usuario(nombre, contrasena);
+        this.usuarios.add(usuario);
+    }
+
+    @Override
+    public ArrayList<Usuario> getUsuarios() throws RemoteException {
+       return this.usuarios;
+    }
+
 }
