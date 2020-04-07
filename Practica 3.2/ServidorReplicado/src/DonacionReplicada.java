@@ -34,36 +34,62 @@ public class DonacionReplicada extends UnicastRemoteObject implements Donacion_I
         this.totalDonado = 0.0;
     }
     
-    private void buscarReplica(){
+    private boolean buscarReplica(){
+        
+        boolean encontrada = true;
+        //si no la encuentra devuelve false y el servidor1 lo hace sin llamar a la replica
         
         if(this.replica == null){
             try{
                 Registry reg = LocateRegistry.getRegistry(this.host,1099);
-                this.replica =  (Donacion_I)reg.lookup(this.nombre_replica); //no hace falta crearla ya que se crea en el servidor2
+                this.replica =  (Donacion_I)reg.lookup(this.nombre_replica); 
+                
+                encontrada = true;
             } catch(NotBoundException | RemoteException e){
-                System.out.println("Exception: " + e.getMessage());
+                encontrada = false;
             }
         }
+        return encontrada;
     }
 
-    //tiene que ser igual o puedo implementarlo diferente porque es la replica?
-    @Override
+@Override
     public void registrarUsuario(String nombre, String contrasena) throws RemoteException {
-        this.buscarReplica();   //llamo por si no se ha inicializado
-        
-        if(this.replica.sizeUsuarios() < this.usuarios.size()){
-            this.replica.registrarUsuario(nombre, contrasena);
+        if(this.buscarReplica())   //llamo por si no se ha inicializado
+        {
+            if(!this.buscarUsuario(nombre))
+            {
+                if(!this.replica.buscarUsuario(nombre)){
+                    
+                    if(this.replica.sizeUsuarios() < this.usuarios.size())
+                    {
+                        
+                    this.replica.registrarUsuario(nombre, contrasena);
+                    
+                    }
+                    else
+                    {
+                        this.anadirUsuario(nombre, contrasena);
+                    }
+                }
+                else
+                    System.out.println("Usuario ya registrado");
+            }
+            else
+                System.out.println("Usuario ya registrado");
         }
         else
         {
-            Usuario usuario = new Usuario(nombre, contrasena);
-            this.usuarios.add(usuario);
+            if(!this.buscarUsuario(nombre))
+                this.anadirUsuario(nombre, contrasena);
+            else
+                System.out.println("Usuario ya registrado");
         }
-    }//hay que comprobar que no esté ya en el sistema y todo eso, mirar bien guion
+    }
 
     
-    private void anadirUsuario(){
-        
+    private void anadirUsuario(String nombre, String contrasena){
+        Usuario usuario = new Usuario(nombre, contrasena);
+        this.usuarios.add(usuario);
     }
 
     @Override
@@ -73,7 +99,18 @@ public class DonacionReplicada extends UnicastRemoteObject implements Donacion_I
 
     @Override
     public boolean buscarUsuario(String nombre) throws RemoteException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        for(Usuario user : this.usuarios){
+            if(user.getNombre().equals(nombre)){
+                return true;
+            }
+        }
+        return false;
+    }
+    
+    @Override
+    public String getUsuarios() throws RemoteException {
+        //return this.usuarios;
+        return "hola";
     }
 
 }

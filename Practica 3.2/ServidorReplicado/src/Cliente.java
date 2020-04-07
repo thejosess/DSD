@@ -17,6 +17,10 @@ public class Cliente {
             Donacion_I midonacion = (Donacion_I)mireg.lookup("servidor1");
 
             midonacion.registrarUsuario("Prueba", "1234");
+            midonacion.registrarUsuario("Otro", "1234");
+            System.out.println(midonacion.getUsuarios());
+
+
             
             System.out.println("Usuario registrado");
         }catch (NotBoundException | RemoteException e){
