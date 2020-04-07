@@ -120,3 +120,4 @@ Al final opté por crear un método getReplica en Donacion y DonacionReplicada, 
     }
 
 
+Cambiar y decir que con esto lo que provocas es que tengas que buscarlo cada vez
