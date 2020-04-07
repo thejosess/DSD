@@ -88,8 +88,15 @@ y en Donacion de Servidor1
         }//DA ERROR AQUI
     }
 
-entonces al meterse en crearReplica intenta buscar con reg.lookup(replica) un objeto que no ha sido creado, ya que primero se lanza el main de Servidor1. Lo cambié para que al crear el objeto Donacion en el servidor1, en el método crearReplica, se crease el objeto replica(DonacionReplicada) con Naming.rebind pero volvía a dar un error ya que al crear el objeto DonacionReplicada, esta llamaba a crearReplica de Servidor1. Pensé en quitar crearReplica en Servidor2 y luego hacer Servidor2.setReplica() tras haber creado ya Donacion y DonacionReplicada pero me pareció un poco feo hacerlo de esa forma.   
-Al final terminé por crear un método getReplica en Donacion y DonacionReplicada, donde se obtiene la replica, a través de su nombre que es un atributo de dichas clases. Dicho método sería privado para que el Cliente no puediese llamarlo.
+entonces al meterse en crearReplica intenta buscar con reg.lookup(replica) un objeto que no ha sido creado, ya que primero se lanza el main de Servidor1. Lo cambié para que al crear el objeto Donacion en el servidor1, en el método crearReplica, se crease el objeto replica(DonacionReplicada) con Naming.rebind pero volvía a dar un error ya que al crear el objeto DonacionReplicada, esta llamaba a crearReplica de Servidor1. Pensé en quitar crearReplica en Servidor2 y luego hacer Servidor2.setReplica() tras haber creado ya Donacion y DonacionReplicada pero me pareció un poco "feo" hacerlo de esa forma.  
+Otra posibilidad hubiese sido tener el atributo replica que hace referencia al otro servidor y cuando llamases a obtenerReplica, si no estaba creado, crearlo. El problema en este caso sería que haría falta escribir despues de la llamada a obtenerReplica
+
+    if(this.replica == null){
+        this.crearReplica();
+    }
+o hacerlo dentro de obtenerReplica pero eso obligaría a en cada función que llame a obtenerReplica, usar try and catch.
+
+Al final opté por crear un método getReplica en Donacion y DonacionReplicada, donde se obtiene la replica, a través de su nombre que es un atributo de dichas clases. Dicho método sería privado para que el Cliente no puediese llamarlo el cliente.
 
         //Donacion.java
 

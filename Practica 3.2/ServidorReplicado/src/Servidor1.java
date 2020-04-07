@@ -24,12 +24,11 @@ public class Servidor1{
             System.setSecurityManager(new SecurityManager());
         }
         try {
-            String nombre_server = "servidor1", nombre_replica = "servidor2", host = "localhost";
             Registry reg = LocateRegistry.createRegistry(1099);
-            Donacion servidor1 = new Donacion(nombre_server,nombre_replica,host);
+            Donacion servidor1 = new Donacion("servidor1","servidor2","127.0.0.1");
             Naming.rebind("servidor1",servidor1);
             
-            System.out.println(nombre_server + " preparado");
+            System.out.println("servidor1 preparado");
         } catch ( RemoteException | MalformedURLException e){
             System.out.println("Exception: " + e.getMessage());
         }

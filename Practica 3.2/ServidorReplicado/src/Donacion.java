@@ -37,7 +37,7 @@ public class Donacion extends UnicastRemoteObject implements Donacion_I{
         Donacion_I re = null; //si no hago esto me da error por no inicializar la variable
         try{
             Registry reg = LocateRegistry.getRegistry(this.host,1099);
-            re =  (Donacion_I)reg.lookup(this.replica);
+            re =  (Donacion_I)reg.lookup(this.replica); //no hace falta crearla ya que se crea en el servidor2
         } catch(NotBoundException | RemoteException e){
             System.out.println("Exception: " + e.getMessage());
         }
