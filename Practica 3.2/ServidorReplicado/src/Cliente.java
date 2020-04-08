@@ -18,7 +18,11 @@ public class Cliente {
 
             midonacion.registrarUsuario("Prueba", "1234");
             midonacion.registrarUsuario("Otro", "1234");
-            System.out.println(midonacion.getUsuarios());
+            midonacion.realizarDonacion("Prueba", "1234", 5);
+            midonacion.realizarDonacion("Otro", "1234", 5);
+            System.out.println(midonacion.getRecaudado());
+            System.out.println(midonacion.getTotalRecaudado("Prueba"));
+            System.out.println(midonacion.getTotalRecaudado("Otro"));  //esto no ha realizado donacion y entonces caca
 
 
             

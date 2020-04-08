@@ -19,6 +19,8 @@ import java.util.ArrayList;
  */
 public class Donacion extends UnicastRemoteObject implements Donacion_I{
     
+    private static final double NO_PERMITIDO = -1;
+   
     private ArrayList<Usuario> usuarios;    //revisar esto al ahora de buscar
     private double totalDonado;
     private String nombre;
@@ -53,7 +55,8 @@ public class Donacion extends UnicastRemoteObject implements Donacion_I{
 
     
     @Override
-    public void registrarUsuario(String nombre, String contrasena) throws RemoteException {
+    public boolean registrarUsuario(String nombre, String contrasena) throws RemoteException {
+        boolean estado = true;
         if(this.buscarReplica())   //llamo por si no se ha inicializado
         {
             if(!this.buscarUsuario(nombre))
@@ -72,10 +75,16 @@ public class Donacion extends UnicastRemoteObject implements Donacion_I{
                     }
                 }
                 else
+                {
                     System.out.println("Usuario ya registrado");
+                    estado = false;
+                }
             }
             else
+            {
                 System.out.println("Usuario ya registrado");
+                estado = false;
+            }
         }
         else
         {
@@ -83,7 +92,9 @@ public class Donacion extends UnicastRemoteObject implements Donacion_I{
                 this.anadirUsuario(nombre, contrasena);
             else
                 System.out.println("Usuario ya registrado");
+                estado = false;
         }
+        return estado;
     }
 
 
@@ -105,13 +116,65 @@ public class Donacion extends UnicastRemoteObject implements Donacion_I{
             }
         }
         return false;
-    }
+    }    
 
     @Override
     public String getUsuarios() throws RemoteException {
-        return this.usuarios.get(0).getNombre();
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    //QUITAR LUEGO
 
-    
+    @Override
+    public boolean realizarDonacion(String nombre, String contrasena,double cantidad) throws RemoteException {
+        boolean estado = true;
+        
+        if(this.buscarUsuario(nombre)){
+            this.totalDonado += cantidad;
+            this.getUsuario(nombre).hacerDonacion();
+            this.getUsuario(nombre).anadirCantidadDonada(cantidad);
+        }
+        else if(this.buscarReplica()){
+            if(this.replica.buscarUsuario(nombre)){
+                this.replica.realizarDonacion(nombre, contrasena, cantidad);
+            }
+        }
+        else
+            estado = false;
+        
+        return estado;
+    }
+
+    @Override
+    public double getRecaudado() throws RemoteException {
+        return this.totalDonado;
+    }
+
+    @Override
+    public double getTotalRecaudado(String nombre) throws RemoteException {
+        double dinero = this.NO_PERMITIDO;
+        Usuario usuario = this.getUsuario(nombre);
+        
+        if(usuario != null && usuario.getDonaciones() > 0){
+            
+            dinero = this.totalDonado;
+            
+            if(this.buscarReplica()){
+                dinero += this.replica.getRecaudado();
+            }            
+        }
+
+        //devuelve -1 que signifca NO PERMITIDO y luego tratarlo 
+        return dinero;    
+    }
+
+    @Override
+    public Usuario getUsuario(String nombre) throws RemoteException {
+        Usuario usuario = null;
+        for(Usuario user : this.usuarios){
+            if(user.getNombre().equals(nombre)){
+                return user;
+            }
+        }
+        return usuario;
+    }
+
 }

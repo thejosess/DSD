@@ -96,28 +96,91 @@ Otra posibilidad hubiese sido tener el atributo replica que hace referencia al o
     }
 o hacerlo dentro de obtenerReplica pero eso obligaría a en cada función que llame a obtenerReplica, usar try and catch.
 
-Al final opté por crear un método getReplica en Donacion y DonacionReplicada, donde se obtiene la replica, a través de su nombre que es un atributo de dichas clases. Dicho método sería privado para que el Cliente no puediese llamarlo el cliente.
+Al final opté por crear un método buscarReplica en Donacion y DonacionReplicada, donde se busca la replica, a través de su nombre que es un atributo de dichas clases. Si la encuentra, inicializa el atributo y devuelve true y si no la encuentra (porque el servidor no este lanzado) devuelve false. Dicho método sería privado para que el Cliente no puediese llamarlo el cliente.
 
         //Donacion.java
 
-    public Donacion(String nombre, String replica, String host) throws RemoteException{
-        this.nombre = nombre;
-        this.totalDonado = 0.0;
-        this.usuarios = new ArrayList<>();
-        this.replica = replica;
-        this.host = host;
-    }
-
-        private Donacion_I buscarReplica(){
-        Donacion_I re = null; //si no hago esto me da error por no inicializar la variable
-        try{
-            Registry reg = LocateRegistry.getRegistry(this.host,1099);
-            re =  (Donacion_I)reg.lookup(this.replica);
-        } catch(NotBoundException | RemoteException e){
-            System.out.println("Exception: " + e.getMessage());
+    private boolean buscarReplica(){
+        
+        boolean encontrada = true;
+        //si no la encuentra devuelve false y el servidor1 lo hace sin llamar a la replica
+        
+        if(this.replica == null){
+            try{
+                Registry reg = LocateRegistry.getRegistry(this.host,1099);
+                this.replica =  (Donacion_I)reg.lookup(this.nombre_replica); 
+                
+                encontrada = true;
+            } catch(NotBoundException | RemoteException e){
+                encontrada = false;
+            }
         }
-        return re;
+        return encontrada;
+    }
+
+Así de esta forma cuando vas a registrar un usuario, llamar a buscarReplica para ver si puedes usarla o no.
+
+    @Override
+    public void registrarUsuario(String nombre, String contrasena) throws RemoteException {
+        if(this.buscarReplica())   //llamo por si no se ha inicializado
+        {
+            if(!this.buscarUsuario(nombre))
+            {
+                if(!this.replica.buscarUsuario(nombre)){
+                    
+                    if(this.replica.sizeUsuarios() < this.usuarios.size())
+                    {
+                        
+                    this.replica.registrarUsuario(nombre, contrasena);
+                    
+                    }
+                    else
+                    {
+                        this.anadirUsuario(nombre, contrasena);
+                    }
+                }
+                else
+                    System.out.println("Usuario ya registrado");
+            }
+            else
+                System.out.println("Usuario ya registrado");
+        }
+        else
+        {
+            if(!this.buscarUsuario(nombre))
+                this.anadirUsuario(nombre, contrasena);
+            else
+                System.out.println("Usuario ya registrado");
+        }
+    }
+
+Mira que puedas usar la réplica y luego compruebas cual de ellas tiene mas usuario o si está registrado en alguno de los dos servidores.
+
+
+    private void anadirUsuario(String nombre, String contrasena){
+        Usuario usuario = new Usuario(nombre, contrasena);
+        this.usuarios.add(usuario);
+    }
+
+    @Override
+    public int sizeUsuarios() throws RemoteException {
+        return this.usuarios.size();
+    }
+
+    @Override
+    public boolean buscarUsuario(String nombre) throws RemoteException {
+        for(Usuario user : this.usuarios){
+            if(user.getNombre().equals(nombre)){
+                return true;
+            }
+        }
+        return false;
     }
 
 
-Cambiar y decir que con esto lo que provocas es que tengas que buscarlo cada vez
+Cabe destacar que el proceso para comprobar los métodos y su funcionamiento, primero lanzaba el servidor en modo debug con un br y luego lanzaba servidores y se me quedaba en dicho br para poder comprobar las variables, etc (lo comento porque tuve problemas para llegar a esta solución).
+
+para depurar usé:
+    //String getUsuarios() throws RemoteException; //mas seguridad si no devuelvo los clientes ¡¡para depurar
+
+y primero lanzaba el servidor en modo debug y ponia un br donde quería y luiego lanzaba cliente y se paraba al llegar allí
