@@ -22,5 +22,4 @@ public interface Donacion_I  extends Remote{
     double getTotalRecaudado(String nombre) throws RemoteException;
     double getRecaudado() throws RemoteException;
     Usuario getUsuario(String nombre) throws RemoteException;
-
 }

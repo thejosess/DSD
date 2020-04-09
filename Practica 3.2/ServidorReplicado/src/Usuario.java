@@ -44,4 +44,8 @@ public class Usuario {
     public void anadirCantidadDonada(double cantidad_donada) {
         this.cantidad_donada += cantidad_donada;
     }
+    
+    public boolean introducirContraseña(String contrasena){
+        return contrasena == this.contrasena; //revisar esto
+    }
 }

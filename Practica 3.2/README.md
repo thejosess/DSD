@@ -88,14 +88,7 @@ y en Donacion de Servidor1
         }//DA ERROR AQUI
     }
 
-entonces al meterse en crearReplica intenta buscar con reg.lookup(replica) un objeto que no ha sido creado, ya que primero se lanza el main de Servidor1. Lo cambié para que al crear el objeto Donacion en el servidor1, en el método crearReplica, se crease el objeto replica(DonacionReplicada) con Naming.rebind pero volvía a dar un error ya que al crear el objeto DonacionReplicada, esta llamaba a crearReplica de Servidor1. Pensé en quitar crearReplica en Servidor2 y luego hacer Servidor2.setReplica() tras haber creado ya Donacion y DonacionReplicada pero me pareció un poco "feo" hacerlo de esa forma.  
-Otra posibilidad hubiese sido tener el atributo replica que hace referencia al otro servidor y cuando llamases a obtenerReplica, si no estaba creado, crearlo. El problema en este caso sería que haría falta escribir despues de la llamada a obtenerReplica
-
-    if(this.replica == null){
-        this.crearReplica();
-    }
-o hacerlo dentro de obtenerReplica pero eso obligaría a en cada función que llame a obtenerReplica, usar try and catch.
-
+entonces al meterse en crearReplica intenta buscar con reg.lookup(replica) un objeto que no ha sido creado, ya que primero se lanza el main de Servidor1. Lo cambié para que al crear el objeto Donacion en el servidor1, en el método crearReplica, se crease el objeto replica(DonacionReplicada) con Naming.rebind pero volvía a dar un error ya que al crear el objeto DonacionReplicada, esta llamaba a crearReplica de Servidor1. Pensé en quitar crearReplica en Servidor2 y luego hacer Servidor2.setReplica() tras haber creado ya Donacion y DonacionReplicada pero me pareció un poco "feo" hacerlo de esa forma.   
 Al final opté por crear un método buscarReplica en Donacion y DonacionReplicada, donde se busca la replica, a través de su nombre que es un atributo de dichas clases. Si la encuentra, inicializa el atributo y devuelve true y si no la encuentra (porque el servidor no este lanzado) devuelve false. Dicho método sería privado para que el Cliente no puediese llamarlo el cliente.
 
         //Donacion.java
@@ -118,10 +111,11 @@ Al final opté por crear un método buscarReplica en Donacion y DonacionReplicad
         return encontrada;
     }
 
-Así de esta forma cuando vas a registrar un usuario, llamar a buscarReplica para ver si puedes usarla o no.
+Así de esta forma cuando vas a registrar un usuario, llama a buscarReplica para ver si puedes usarla o no, devuelve un bool con el estado de la operación (si se ha realizado de forma correcta el registro o no).
 
-    @Override
-    public void registrarUsuario(String nombre, String contrasena) throws RemoteException {
+        @Override
+    public boolean registrarUsuario(String nombre, String contrasena) throws RemoteException {
+        boolean estado = true;
         if(this.buscarReplica())   //llamo por si no se ha inicializado
         {
             if(!this.buscarUsuario(nombre))
@@ -140,21 +134,31 @@ Así de esta forma cuando vas a registrar un usuario, llamar a buscarReplica par
                     }
                 }
                 else
+                {
                     System.out.println("Usuario ya registrado");
+                    estado = false;
+                }
             }
             else
+            {
                 System.out.println("Usuario ya registrado");
+                estado = false;
+            }
         }
         else
         {
             if(!this.buscarUsuario(nombre))
                 this.anadirUsuario(nombre, contrasena);
             else
+            {
                 System.out.println("Usuario ya registrado");
+                estado = false;
+            }
         }
+        return estado;
     }
 
-Mira que puedas usar la réplica y luego compruebas cual de ellas tiene mas usuario o si está registrado en alguno de los dos servidores.
+Mira que puedas usar la réplica y luego compruebas cual de ellas tiene más usuario o si está registrado en alguno de los dos servidores.
 
 
     private void anadirUsuario(String nombre, String contrasena){
@@ -177,10 +181,75 @@ Mira que puedas usar la réplica y luego compruebas cual de ellas tiene mas usua
         return false;
     }
 
+                ...
 
-Cabe destacar que el proceso para comprobar los métodos y su funcionamiento, primero lanzaba el servidor en modo debug con un br y luego lanzaba servidores y se me quedaba en dicho br para poder comprobar las variables, etc (lo comento porque tuve problemas para llegar a esta solución).
+        @Override
+    public Usuario getUsuario(String nombre) throws RemoteException {
+        Usuario usuario = null;
+        for(Usuario user : this.usuarios){
+            if(user.getNombre().equals(nombre)){
+                return user;
+            }
+        }
+        return usuario;
+    }
 
-para depurar usé:
-    //String getUsuarios() throws RemoteException; //mas seguridad si no devuelvo los clientes ¡¡para depurar
+Cabe destacar que el proceso para comprobar los métodos y su funcionamiento, primero lanzaba el servidor en modo debug con un br y luego lanzaba servidores y se me quedaba en dicho br para poder comprobar las variables, etc (lo comento porque tuve problemas para llegar a esta solución). 
+La función principal del servidor, es permitir al usuario realizar donación bajo previo registro del mismo.   
 
-y primero lanzaba el servidor en modo debug y ponia un br donde quería y luiego lanzaba cliente y se paraba al llegar allí
+    @Override
+    public boolean realizarDonacion(String nombre, String contrasena,double cantidad) throws RemoteException {
+        boolean estado = true;
+        
+        if(this.buscarUsuario(nombre)){
+            this.totalDonado += cantidad;
+            this.getUsuario(nombre).hacerDonacion();
+            this.getUsuario(nombre).anadirCantidadDonada(cantidad);
+        }
+        else if(this.buscarReplica()){
+            if(this.replica.buscarUsuario(nombre)){
+                this.replica.realizarDonacion(nombre, contrasena, cantidad);
+            }
+        }
+        else
+            estado = false;
+        
+        return estado;
+    }
+
+Si el usuario está registrado en la otra réplica, se llama a la función de realizar donación de esa y se devuelve un valor true como estado de la operación realizada.    
+Otra de las funciones que tenía que tener el servidor, era poder mostrar el dinero recaudado de forma total (ambos servidores). Primero cree una función que me devolviese el total recaudado por una instancia de Donacion_I
+
+        @Override
+    public double getRecaudado() throws RemoteException {
+        return this.totalDonado;
+    }
+
+Luego hice otra función que devolviese el total recaudado contando con ambas réplicas y con la identificación del Usuario para poder sabes si ha realizado alguna donación o no (ya que si no ha donado nada, no puede ver el total recaudado)  
+
+        @Override
+    public double getTotalRecaudado(String nombre) throws RemoteException {
+        double dinero = this.NO_PERMITIDO;
+        Usuario usuario = this.getUsuario(nombre);
+        
+        if(usuario != null && usuario.getDonaciones() > 0){
+            
+            dinero = this.totalDonado;
+            
+            if(this.buscarReplica()){
+                dinero += this.replica.getRecaudado();
+            }            
+        }
+        return dinero;    
+    }
+
+Usuario es una clase que almacena la información relativa a cada usuario, luego cada servidor tiene un ArrayList de Usuarios.
+
+    public class Usuario {
+    private String nombre;
+    private String contrasena;
+    private int donaciones;
+    private double cantidad_donada;
+            ...
+            
+NO_PERMITIDO es una constante con valor -1, para poder así saber que el usuario no había relizado ninguna donación o no se encuentra en registrado.

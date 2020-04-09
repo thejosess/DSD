@@ -91,8 +91,10 @@ public class Donacion extends UnicastRemoteObject implements Donacion_I{
             if(!this.buscarUsuario(nombre))
                 this.anadirUsuario(nombre, contrasena);
             else
+            {
                 System.out.println("Usuario ya registrado");
                 estado = false;
+            }
         }
         return estado;
     }
@@ -151,7 +153,7 @@ public class Donacion extends UnicastRemoteObject implements Donacion_I{
     @Override
     public double getTotalRecaudado(String nombre) throws RemoteException {
         double dinero = this.NO_PERMITIDO;
-        Usuario usuario = this.getUsuario(nombre);
+        Usuario usuario = this.getUsuario(nombre); //comprobar que está registrado?? está implicito no??
         
         if(usuario != null && usuario.getDonaciones() > 0){
             
