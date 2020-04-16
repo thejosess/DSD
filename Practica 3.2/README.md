@@ -243,7 +243,7 @@ Luego hice otra función que devolviese el total recaudado contando con ambas r�
         return dinero;    
     }
 
-Usuario es una clase que almacena la información relativa a cada usuario, luego cada servidor tiene un ArrayList de Usuarios.
+Usuario es una clase que almacena la información relativa a cada usuario, cons sus respectivos get, un set anadirCantidadDonada e introducirContraseña (que devuelve true si la contraseña que se le pasa por cabecera es la misma que la del usuario), luego cada servidor tiene un ArrayList de Usuarios.
 
     public class Usuario {
     private String nombre;
@@ -253,3 +253,109 @@ Usuario es una clase que almacena la información relativa a cada usuario, luego
             ...
             
 NO_PERMITIDO es una constante con valor -1, para poder así saber que el usuario no había relizado ninguna donación o no se encuentra en registrado.
+
+## Ejecución de la práctica en ordenadores diferentes
+Para la creación en distintas máquinas, es necesario ejecutar o los servidores (uno de ellos o los dos) en una máquina y en la otra el Cliente, para ello sería necesario cambiar el argumento que se le pasa con netbeans de localhost a la ip del otro equipo.
+
+                    Registry mireg = LocateRegistry.getRegistry(args[0],1099);
+
+Entonces obtendría el registro del otro equipo mendiante la ip y el puerto (han de ser el mismo para poder localizar el registro). Sin embargo no he podido realizarlo ya que mi portatil lleva un par de dias roto y no tenía otro equipo salvo el ordenador fijo en el que estoy haciendo la práctica, para simular su realización, he preguntado a mis compañeros que errores les ha dado hacer esto y el que suele ocurrir siempre es:
+[1] java.net.ConnectException: Connection refused que puede ocurrir por diversos motivos:
+* Cliente o servidor no tienen conexión a internet
+* El servidor no está en ejecución
+* El servidor está funcionando pero el puerto no es el correcto
+* El firewall no permite una conexión host-port (normalmente este ocurre con Windows).
+
+Al final conseguí utilizar un ordenador antiguo (portatil de la junta de andalucia) y al lanzar el cliente, encontraba el registro de forma correcta utilizando la ip, sin embargo a la hora de llamar al método del objeto (midonacion) me devuelve un error de connection refused to host: 127.0.1.1  por lo que se puede deducir que hay algun error con el uso de localhost.
+
+![imagen](/imagenes/1.png)
+![imagen](/imagenes/2.jpg)
+
+## Operaciones adicionales
+
+Añadi de forma adicional el poder ver cuantas donaciones y que cantidad ha donado un usuario concreto.
+
+                        case 4:
+                        System.out.print("\nIntroduzca el usuario que quiere usar: ");
+                        nombre = in.nextLine();
+                        System.out.print("\nIntroduzca la contraseña: ");
+                        contrasena = in.nextLine();
+                        
+                        System.out.print("\n Has donado " +midonacion.getDonacionesUsuario(nombre)+ " veces y un total de " + midonacion.getCantidadDonacionesUsuario(nombre)+"\n");
+       
+                    break;
+
+Y es Donacion quien llama a los respectivos gets del Usuario
+
+        public double getDonacionesUsuario(String nombre) throws RemoteException{
+        Usuario user = this.getUsuario(nombre);
+        return user.getDonaciones();
+    }
+
+    @Override
+    public double getCantidadDonacionesUsuario(String nombre) throws RemoteException {
+        Usuario user = this.getUsuario(nombre);
+        return user.getCantidad_donada();
+    }
+
+
+
+
+
+
+//he permitido el tener dinero en negativo para así obtener mas donaciones y que este en deuda, es un plan maligno
+//de no querer hacerlo así es muy sencillo, en el metodo de hacerDonaciones o enviar dinero hacre un simple if del saldo del usuario y comprobar que tiene suficiente3
+
+pongo lo de la contraseña para el saldo porque es algo mas privado
+lo de las veces donadas y tal pues es un poco menos privado
+
+HACER UN APARTADO CON EL FUNCIONAMIENTO Y COMO CAMBIA DE SERVIDOR Y TAL
+hacerlo con el debugger para que se vea como funciona para la parte en la que lo digo
+
+    public int getDonacionesUsuario(String nombre) throws RemoteException{
+        Usuario user = null;
+        int valor = 0;
+        
+        if(this.buscarUsuario(nombre))
+        {
+            user = this.getUsuario(nombre);
+            valor = user.getDonaciones();
+        }
+        else if(this.buscarReplica()){
+            if(this.replica.buscarUsuario(nombre)){
+                valor = replica.getDonacionesUsuario(nombre);
+            }
+        }
+        
+        return valor;
+    
+haciendo esto hacia getUsuario y me fallaba, tambien se me olvido buscarlo en la rreplica de primera
+
+
+
+
+
+
+
+
+
+
+
+
+- Poner que he usado mi ordenador fijo y mi portatil
+- Revisar añadir mas operaciones respecto al que estoy copiando
+- Añadir mas diagramas y cosas a la memoria para que sea de mayor calidad
+- Si no hago lo de usar el fijo y el portatil simplemente decir que hay que cambiar el host, el tema de puertos??
+- añadir que se puedan hacer donación conjuntas
+- añadir que un cliente le dé dinero a otro cliente
+(revisar todo eso con que siga funcionan las replicas)
+
+añadir: Justo así. O otra opcion sería incluso poner en el portatil el cliente y un servidor, y en el sobremesa el otro servidor. De todas formas lo de probarlo en distintas máquinas no es obligatorio, pero si consigues hacerlo sería genial. A lo mejor tienes algún problema de cortafuegos o cosas así que tendrías que resolver (y explicarlo en la memoria). 
+EXPLICAR LO DEL CORTAFUEGOS Y RMI Y EL MISMO ERROR CONEXION REFUSED 
+
+MOSTRAR MEJOR QUE SE USAN UNA RÉPLICA U OTRA CON FOTOS?
+
+-USAR VISUAL PARADIGM y que me pase el netbeans a diagramas y así añadir a la memoria
+-poner la opción de pedir al usuario la ip o simplemente pasarla como argumento? tanto para servidores como para cliente o solo cilentes?
+
+[1]: https://javarevisited.blogspot.com/2013/02/java-net-ConnectException-Connection-refused.html

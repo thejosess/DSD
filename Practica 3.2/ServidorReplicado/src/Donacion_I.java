@@ -15,11 +15,16 @@ import java.util.ArrayList;
  */
 public interface Donacion_I  extends Remote{
     boolean registrarUsuario (String nombre, String contrasena) throws RemoteException;
-    String getUsuarios() throws RemoteException; //mas seguridad si no devuelvo los clientes ¡¡para depurar
     int sizeUsuarios() throws RemoteException;
     boolean buscarUsuario(String nombre) throws RemoteException;
     boolean realizarDonacion(String nombre, String contrasena,double cantidad) throws RemoteException;
     double getTotalRecaudado(String nombre) throws RemoteException;
     double getRecaudado() throws RemoteException;
     Usuario getUsuario(String nombre) throws RemoteException;
+    int getDonacionesUsuario(String nombre) throws RemoteException;
+    double getCantidadDonacionesUsuario(String nombre) throws RemoteException;
+    double getSaldoUsuario(String nombre, String contrasena) throws RemoteException;
+    boolean transferenciaDinero(String u1, String pass1, String u2, String pass2,double cantidad) throws RemoteException;
+    
+
 }

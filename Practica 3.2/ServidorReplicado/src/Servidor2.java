@@ -25,7 +25,7 @@ public class Servidor2 {
         }
         try {
             //Registry reg = LocateRegistry.createRegistry(1099);
-            DonacionReplicada servidor2 = new DonacionReplicada("servidor2","servidor1","localhost");
+            DonacionReplicada servidor2 = new DonacionReplicada("servidor2","servidor1",args[0]);
             Naming.rebind("servidor2",servidor2);
             
             System.out.println("Servidor2 preparado");

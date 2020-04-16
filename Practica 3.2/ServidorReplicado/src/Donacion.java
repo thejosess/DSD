@@ -120,19 +120,17 @@ public class Donacion extends UnicastRemoteObject implements Donacion_I{
         return false;
     }    
 
-    @Override
-    public String getUsuarios() throws RemoteException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
 
     @Override
     public boolean realizarDonacion(String nombre, String contrasena,double cantidad) throws RemoteException {
         boolean estado = true;
+        Usuario user = null;
         
         if(this.buscarUsuario(nombre)){
             this.totalDonado += cantidad;
-            this.getUsuario(nombre).hacerDonacion();
-            this.getUsuario(nombre).anadirCantidadDonada(cantidad);
+            user = this.getUsuario(nombre);
+            user.hacerDonacion();
+            user.anadirCantidadDonada(cantidad);
         }
         else if(this.buscarReplica()){
             if(this.replica.buscarUsuario(nombre)){
@@ -173,10 +171,99 @@ public class Donacion extends UnicastRemoteObject implements Donacion_I{
         Usuario usuario = null;
         for(Usuario user : this.usuarios){
             if(user.getNombre().equals(nombre)){
-                return user;
+                usuario =  user;
             }
         }
         return usuario;
+    }
+    
+    public int getDonacionesUsuario(String nombre) throws RemoteException{
+        Usuario user = null;
+        int valor = 0;
+        
+        if(this.buscarUsuario(nombre))
+        {
+            user = this.getUsuario(nombre);
+            valor = user.getDonaciones();
+        }
+        else if(this.buscarReplica()){
+            if(this.replica.buscarUsuario(nombre)){
+                valor = replica.getDonacionesUsuario(nombre);
+            }
+        }
+        
+        return valor;
+    }
+
+    @Override
+    public double getCantidadDonacionesUsuario(String nombre) throws RemoteException {
+        Usuario user = null;
+        double valor = 0;
+        
+        if(this.buscarUsuario(nombre))
+        {
+            user = this.getUsuario(nombre);
+            valor = user.getCantidad_donada();
+        }
+        else if(this.buscarReplica()){
+            if(this.replica.buscarUsuario(nombre)){
+                valor = this.replica.getCantidadDonacionesUsuario(nombre);
+            }
+        }
+        
+        return valor;
+    }
+
+    @Override
+    public double getSaldoUsuario(String nombre, String contrasena) throws RemoteException {
+        double valor = this.NO_PERMITIDO;
+        Usuario user = null;
+        
+        if(this.buscarUsuario(nombre))
+        {
+            user = this.getUsuario(nombre);
+            if(user.introducirContraseña(contrasena))
+                valor = user.getSaldo();
+        }   
+        else if(this.buscarReplica()){
+            if(this.replica.buscarUsuario(nombre)){
+                valor = this.replica.getSaldoUsuario(nombre,contrasena);
+            }
+        }
+  
+        return valor;
+    }
+
+    @Override
+    public boolean transferenciaDinero(String u1, String pass1, String u2, String pass2, double cantidad) throws RemoteException {
+        boolean estado = true;
+        
+        if(this.buscarUsuario(u1)){
+            if(this.getUsuario(u1).introducirContraseña(pass1))
+                this.getUsuario(u1).setSaldo(-cantidad);
+        }
+        else if(this.buscarReplica()){
+            if(this.replica.buscarUsuario(u2)){
+                this.replica.transferenciaDinero(u1,pass1,u2,pass2,cantidad);
+            }
+        }
+        else
+            estado = false;
+        
+        if(this.buscarUsuario(u2)){
+            if(this.getUsuario(u2).introducirContraseña(pass2))
+                this.getUsuario(u2).setSaldo(cantidad);
+        }
+        else if(this.buscarReplica()){
+            if(this.replica.buscarUsuario(u2)){
+                this.replica.transferenciaDinero(u1,pass1,u2,pass2,cantidad);
+            }
+        }
+        else
+            estado = false;
+        
+      
+        return estado;
     }
 
 }
