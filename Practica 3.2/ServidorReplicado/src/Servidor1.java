@@ -25,7 +25,7 @@ public class Servidor1{
         }
         try {
             Registry reg = LocateRegistry.createRegistry(1099);
-            Donacion servidor1 = new Donacion("servidor1","servidor2","127.0.0.1");
+            Donacion servidor1 = new Donacion("servidor1","servidor2","locahost");
             Naming.rebind("servidor1",servidor1);
             
             System.out.println("servidor1 preparado");

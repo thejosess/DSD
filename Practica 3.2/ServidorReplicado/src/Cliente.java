@@ -98,7 +98,6 @@ public class Cliente {
                         else{
                             System.out.print("\nIntroduzca el usuario: ");
                             nombre = in.nextLine();
-                            importe = in.nextInt(); in.skip("\n");
                             recaudado = midonacion.getTotalRecaudado(nombre);
                             if(recaudado != -1){
                                 System.out.println("\nActualmente hay recaudados " + recaudado + " de euros \n");
@@ -107,58 +106,13 @@ public class Cliente {
                                 System.out.println("\nNo puede ver el total recaudado\n");
                             }
                         }
+                        break;
                     case 5:
                         seguir = false;
                         break;
                 }
                         
             }
-            
-                /* switch(opcion)
-                {
-                    case 1:
-                        System.out.print("\nIntroduzca el usuario que quiere usar: ");
-                        nombre = in.nextLine();
-                        System.out.print("\nIntroduzca la contraseña: ");
-                        contrasena = in.nextLine();
-                        if(midonacion.registrarUsuario(nombre, contrasena))
-                            System.out.println("\nRegistrado completado con exito");
-                        else
-                            System.out.println("\nUsuario ya registrado, pruebe otro nombre");
-                        break;
-                    case 2:
-                        System.out.print("\nIntroduzca el usuario que quiere usar: ");
-                        nombre = in.nextLine();
-                        System.out.print("\nIntroduzca la contraseña: ");
-                        contrasena = in.nextLine();
-                        Usuario user = midonacion.getUsuario(nombre);
-                        if(user != null && user.introducirContraseña(contrasena)){
-                            System.out.println("\nUsuario identificado con exito\nn");
-                            
-                        }
-                        else{
-                            System.out.println("\nUsuario no identificado");
-                            //hacer loop para que siga introduccion user?
-                        }
-                        //\n3.Realizar donación\n4.Visualizar total recaudado
-                        break;
-                    case 3:
-                        seguir = false;
-                        break;
-
-                }*/
-
-            /*midonacion.registrarUsuario("Prueba", "1234");
-            midonacion.registrarUsuario("Otro", "1234");
-            midonacion.realizarDonacion("Prueba", "1234", 5);
-            midonacion.realizarDonacion("Otro", "1234", 5);
-            System.out.println(midonacion.getRecaudado());
-            System.out.println(midonacion.getTotalRecaudado("Prueba"));
-            System.out.println(midonacion.getTotalRecaudado("Otro"));  //esto no ha realizado donacion y entonces caca*/
-
-
-            
-            System.out.println("Usuario registrado");
         }catch (NotBoundException | RemoteException e){
             System.err.println("Exception del sistema: " + e);
         }
