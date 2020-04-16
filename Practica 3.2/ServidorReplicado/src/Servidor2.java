@@ -17,7 +17,6 @@ import java.util.ArrayList;
  * @author juse
  */
 public class Servidor2 {
-    private ArrayList<Usuario> clientes; 
 
     public static void main(String [] args){
         if (System.getSecurityManager() == null){

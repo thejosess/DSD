@@ -131,6 +131,7 @@ public class Donacion extends UnicastRemoteObject implements Donacion_I{
             user = this.getUsuario(nombre);
             user.hacerDonacion();
             user.anadirCantidadDonada(cantidad);
+            user.setSaldo(-cantidad);
         }
         else if(this.buscarReplica()){
             if(this.replica.buscarUsuario(nombre)){

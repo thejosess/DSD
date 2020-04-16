@@ -194,7 +194,17 @@ Mira que puedas usar la réplica y luego compruebas cual de ellas tiene más usu
         return usuario;
     }
 
-Cabe destacar que el proceso para comprobar los métodos y su funcionamiento, primero lanzaba el servidor en modo debug con un br y luego lanzaba servidores y se me quedaba en dicho br para poder comprobar las variables, etc (lo comento porque tuve problemas para llegar a esta solución). 
+Cabe destacar que el proceso para comprobar los métodos y su funcionamiento, primero lanzaba el servidor en modo debug con un br y luego lanzaba servidores y se me quedaba en dicho br para poder comprobar las variables, etc (lo comento porque tuve problemas para llegar a esta solución). [2]
+
+![imagen](/imagenes/debug2.png)
+![imagen](/imagenes/debug3.png)
+![imagen](/imagenes/debug4.png)
+![imagen](/imagenes/debug_viendo_replica.png)
+
+
+
+
+
 La función principal del servidor, es permitir al usuario realizar donación bajo previo registro del mismo.   
 
     @Override
@@ -287,30 +297,113 @@ Añadi de forma adicional el poder ver cuantas donaciones y que cantidad ha dona
 
 Y es Donacion quien llama a los respectivos gets del Usuario
 
-        public double getDonacionesUsuario(String nombre) throws RemoteException{
-        Usuario user = this.getUsuario(nombre);
-        return user.getDonaciones();
+   public int getDonacionesUsuario(String nombre) throws RemoteException{
+        Usuario user = null;
+        int valor = 0;
+        
+        if(this.buscarUsuario(nombre))
+        {
+            user = this.getUsuario(nombre);
+            valor = user.getDonaciones();
+        }
+        else if(this.buscarReplica()){
+            if(this.replica.buscarUsuario(nombre)){
+                valor = replica.getDonacionesUsuario(nombre);
+            }
+        }
+        
+        return valor;
     }
 
     @Override
     public double getCantidadDonacionesUsuario(String nombre) throws RemoteException {
-        Usuario user = this.getUsuario(nombre);
-        return user.getCantidad_donada();
+        Usuario user = null;
+        double valor = 0;
+        
+        if(this.buscarUsuario(nombre))
+        {
+            user = this.getUsuario(nombre);
+            valor = user.getCantidad_donada();
+        }
+        else if(this.buscarReplica()){
+            if(this.replica.buscarUsuario(nombre)){
+                valor = this.replica.getCantidadDonacionesUsuario(nombre);
+            }
+        }
+        
+        return valor;
     }
 
+Se llama a buscarReplica por si el usuario no está en este servidor.  
+Esta etapa, decidí añadir la opción de hacer transferencias entre usuario, para ello añadí un atributo saldo a los Cliente (empiezan con 200).
 
+    @Override
+    public boolean transferenciaDinero(String u1, String pass1, String u2, String pass2, double cantidad) throws RemoteException {
+        boolean estado = true;
+        
+        if(this.buscarUsuario(u1)){
+            if(this.getUsuario(u1).introducirContraseña(pass1))
+                this.getUsuario(u1).setSaldo(-cantidad);
+        }
+        else if(this.buscarReplica()){
+            if(this.replica.buscarUsuario(u2)){
+                this.replica.transferenciaDinero(u1,pass1,u2,pass2,cantidad);
+            }
+        }
+        else
+            estado = false;
+        
+        if(this.buscarUsuario(u2)){
+            if(this.getUsuario(u2).introducirContraseña(pass2))
+                this.getUsuario(u2).setSaldo(cantidad);
+        }
+        else if(this.buscarReplica()){
+            if(this.replica.buscarUsuario(u2)){
+                this.replica.transferenciaDinero(u1,pass1,u2,pass2,cantidad);
+            }
+        }
+        else
+            estado = false;
+        
+      
+        return estado;
+    }
 
+El saldo lo he dejado que pueda ser negativo para así obtener mas donaciones (es una empresa de donaciones "malvada"), en caso de no querer hacerlo así, es tan sencillo de hacer una comprobación a la hora de hacer el setSaldo o en la transferencia del dinero y si no tiene el valor, devolver false en el estado de la operación.
 
+    public Usuario(String nombre, String contrasena) {
+                ...
 
+        this.saldo = 200;
+    }
 
-//he permitido el tener dinero en negativo para así obtener mas donaciones y que este en deuda, es un plan maligno
-//de no querer hacerlo así es muy sencillo, en el metodo de hacerDonaciones o enviar dinero hacre un simple if del saldo del usuario y comprobar que tiene suficiente3
+    public void setSaldo(double dinero){
+        this.saldo += dinero;
+    }
+    
+    public double getSaldo(){
+        return this.saldo;
+    }
 
-pongo lo de la contraseña para el saldo porque es algo mas privado
-lo de las veces donadas y tal pues es un poco menos privado
+Al realizar la transferencia entre cliente, tuve algunos problemas con el hecho de llamar al getUsuario de la replica
 
-HACER UN APARTADO CON EL FUNCIONAMIENTO Y COMO CAMBIA DE SERVIDOR Y TAL
-hacerlo con el debugger para que se vea como funciona para la parte en la que lo digo
+        public int getDonacionesUsuario(String nombre) throws RemoteException{
+        Usuario user = null;
+        int valor = 0;
+        
+        if(this.buscarUsuario(nombre))
+        {
+            user = this.getUsuario(nombre);
+        }
+        else if(this.buscarReplica()){
+            if(this.replica.buscarUsuario(nombre)){
+                user = this.replica.getUsuario(nombre);
+            }
+        }
+        
+        return user.getDonacionesUsuario();
+
+Esto me daba error y tuve que cambiarlo, realizaba la búsqueda en la réplica del usuario y si está en la réplica, llamo al método con el mismo nombre
 
     public int getDonacionesUsuario(String nombre) throws RemoteException{
         Usuario user = null;
@@ -328,34 +421,17 @@ hacerlo con el debugger para que se vea como funciona para la parte en la que lo
         }
         
         return valor;
-    
-haciendo esto hacia getUsuario y me fallaba, tambien se me olvido buscarlo en la rreplica de primera
+    }
 
 
 
+## Diagrama de clase
+
+![imagen](/imagenes/diagrama.jpg)
 
 
+## Conclusiones
 
-
-
-
-
-
-
-- Poner que he usado mi ordenador fijo y mi portatil
-- Revisar añadir mas operaciones respecto al que estoy copiando
-- Añadir mas diagramas y cosas a la memoria para que sea de mayor calidad
-- Si no hago lo de usar el fijo y el portatil simplemente decir que hay que cambiar el host, el tema de puertos??
-- añadir que se puedan hacer donación conjuntas
-- añadir que un cliente le dé dinero a otro cliente
-(revisar todo eso con que siga funcionan las replicas)
-
-añadir: Justo así. O otra opcion sería incluso poner en el portatil el cliente y un servidor, y en el sobremesa el otro servidor. De todas formas lo de probarlo en distintas máquinas no es obligatorio, pero si consigues hacerlo sería genial. A lo mejor tienes algún problema de cortafuegos o cosas así que tendrías que resolver (y explicarlo en la memoria). 
-EXPLICAR LO DEL CORTAFUEGOS Y RMI Y EL MISMO ERROR CONEXION REFUSED 
-
-MOSTRAR MEJOR QUE SE USAN UNA RÉPLICA U OTRA CON FOTOS?
-
--USAR VISUAL PARADIGM y que me pase el netbeans a diagramas y así añadir a la memoria
--poner la opción de pedir al usuario la ip o simplemente pasarla como argumento? tanto para servidores como para cliente o solo cilentes?
 
 [1]: https://javarevisited.blogspot.com/2013/02/java-net-ConnectException-Connection-refused.html
+[2]: Las imagenes estan en la carpeta imagenes del zip
