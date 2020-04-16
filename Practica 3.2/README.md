@@ -3,7 +3,10 @@
 
 
 # Introducción
-//hablar como hago siempre de RMI y de la práctica de forma teorica, ponerle alguna foto suya del pdf.
+Tras haber realizado la práctica 3.1 y haberme familiarizado con RMI, en este práctica tenemos que implementar un servicio de donaciones mediante dos servidores. Dichos servidores han de ser invisibles para el usuario e intentarmente nos encargaremos de usar un servidor u otro.
+
+![imagen](./imagenes/imagen.png)
+
 
 # Creación servidor y servidor replicado
 
@@ -196,10 +199,10 @@ Mira que puedas usar la réplica y luego compruebas cual de ellas tiene más usu
 
 Cabe destacar que el proceso para comprobar los métodos y su funcionamiento, primero lanzaba el servidor en modo debug con un br y luego lanzaba servidores y se me quedaba en dicho br para poder comprobar las variables, etc (lo comento porque tuve problemas para llegar a esta solución). [2]
 
-![imagen](/imagenes/debug2.png)
-![imagen](/imagenes/debug3.png)
-![imagen](/imagenes/debug4.png)
-![imagen](/imagenes/debug_viendo_replica.png)
+![imagen](./imagenes/debug2.png)
+![imagen](./imagenes/debug3.png)
+![imagen](./imagenes/debug4.png)
+![imagen](./imagenes/debug_viendo_replica.png)
 
 
 
@@ -278,8 +281,8 @@ Entonces obtendría el registro del otro equipo mendiante la ip y el puerto (han
 
 Al final conseguí utilizar un ordenador antiguo (portatil de la junta de andalucia) y al lanzar el cliente, encontraba el registro de forma correcta utilizando la ip, sin embargo a la hora de llamar al método del objeto (midonacion) me devuelve un error de connection refused to host: 127.0.1.1  por lo que se puede deducir que hay algun error con el uso de localhost.
 
-![imagen](/imagenes/1.png)
-![imagen](/imagenes/2.jpg)
+![imagen](./imagenes/1.png)
+![imagen](./imagenes/2.jpg)
 
 ## Operaciones adicionales
 
@@ -403,7 +406,7 @@ Al realizar la transferencia entre cliente, tuve algunos problemas con el hecho 
         
         return user.getDonacionesUsuario();
 
-Esto me daba error y tuve que cambiarlo, realizaba la búsqueda en la réplica del usuario y si está en la réplica, llamo al método con el mismo nombre
+Esto me daba error y tuve que cambiarlo (por la serialización de los parámetros por valor), realizaba la búsqueda en la réplica del usuario y si está en la réplica, llamo al método con el mismo nombre
 
     public int getDonacionesUsuario(String nombre) throws RemoteException{
         Usuario user = null;
@@ -427,11 +430,14 @@ Esto me daba error y tuve que cambiarlo, realizaba la búsqueda en la réplica d
 
 ## Diagrama de clase
 
-![imagen](/imagenes/diagrama.jpg)
+![imagen](./imagenes/diagrama.jpg)
 
+## Funcionamiento
+
+El proyecto tiene tres configuraciones de compilación para Servidor1, Servidor2 y Cliente (con sus opciones). Cliente muestra un menú mediante un bucle infinito hasta que le dices que termine, con las opciones de registro, realizar una donación, visualizar total recaudado, mostrar veces, mostrar saldo de usuario y cantidad donada por usuario y transferencia de dinero entre dos usuarios (no ponga imagenes aqui porque se alargaría inecesariamente la memoria).
 
 ## Conclusiones
-
+Tras haberme familiarizado con esta tecnología en la práctica 3.1 y haber realizado esta práctica de servidores réplicado puedo sacar ciertas conclusiones. El uso de esta tecnología permite distribuir una aplicación de forma transparente y con una gran eficiencia en sus invocaciones remotas. Es cierto que puede ser un incoveniente la serialización de los parámetros por valor. Tal y como he realizado la práctica del servidor replicado, si cae el servidor principal, tendriamos un problema y se perdería la cantidad de dinero donada de ese servidor. Si hubiesemos usado un servidor espejo, además de no perder ese dinero, también tendriamos una especie de copia de seguridad, sin embargo esto no es lo que se pedia.
 
 [1]: https://javarevisited.blogspot.com/2013/02/java-net-ConnectException-Connection-refused.html
 [2]: Las imagenes estan en la carpeta imagenes del zip
