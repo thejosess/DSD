@@ -7,7 +7,6 @@ Tras haber realizado la práctica 3.1 y haberme familiarizado con RMI, en este p
 
 ![imagen](./imagenes/imagen.png)
 
-
 # Creación servidor y servidor replicado
 
 En un inicio cree una primera versión algo básica similar al ejemplo 2
