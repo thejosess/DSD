@@ -24,6 +24,7 @@ var httpServer = http.createServer(
 		else output = "Error: El n&uacute;mero de par&aacute;metros no es v&aacute;lido";
 		
 		response.writeHead(200, {"Content-Type": "text/html"});
+
 		response.write(output);
 		response.end();
 	}
