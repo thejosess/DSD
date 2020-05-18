@@ -44,6 +44,9 @@ var httpServer = http.createServer(
 var estadoPersiana = 'abierta';
 var estadoAC = 'encendido';
 
+/* var temperatura = 20;
+var luminosidad = 20; */
+
 MongoClient.connect("mongodb://localhost:27017/", function(err, db) {
     httpServer.listen(8080);
     var io = socketio.listen(httpServer);
@@ -61,7 +64,7 @@ MongoClient.connect("mongodb://localhost:27017/", function(err, db) {
 
 				//se notifica a todos los clientes
 				io.sockets.emit('actualizar',informacion);
-                //llamar al agente para que controle que no se pase de un valor
+				//llamar al agente para que controle que no se pase de un valor
 			});
 			
 			client.on('getEstadoPersiana', function (data){
@@ -81,21 +84,23 @@ MongoClient.connect("mongodb://localhost:27017/", function(err, db) {
 				io.sockets.emit('estadoPersiana', estadoPersiana);
 				//llamas a todos los usuarios
 
+				io.sockets.emit('actualizarEstadoPersiana', {persiana:estadoPersiana});
+
 				//aqui añadir un mensaje a sensores para cambiar información
 				//tanto de luz como de temperatura
 			});	
 
 			client.on('cambiarEstadoAC', function (data){
-				if (estadoAC == 'ecendido')
+				if (estadoAC == 'encendido')
 					estadoAC = 'apagado';
 				else
-					estadoAC = 'ecendido';
+					estadoAC = 'encendido';
 
 				io.sockets.emit('estadoAC', estadoAC);
 				//llamas a todos los usuarios
 
-				//aqui añadir un mensaje a sensores para cambiar información
-				//solo de temperatura
+				io.sockets.emit('actualizarEstadoAC', {AC:estadoAC});
+
 			});	
             
 		});

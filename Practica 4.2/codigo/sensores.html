@@ -19,17 +19,23 @@
 
     <script src="/socket.io/socket.io.js"></script>
     <script type="text/javascript">
-            var serviceURL = document.URL;
-            var socket = io.connect(serviceURL);
+        var serviceURL = 'localhost:8080';
+		var socket = io.connect(serviceURL);
+        var factor = 5; //se podría cambiar segun sea verano o invierno para sumar o restar
+        //considerando que estamos en verano y al abrir o apagar ac o persiana sube temperatura
+
+        var temperatura = 20;
+        var luminosidad = 20;
+
 
         function enviarInformacion(){
             console.log("enviado información sensores");
-
-		    var serviceURL = 'localhost:8080';
-			var socket = io.connect(serviceURL);
             
             var tempe = document.getElementById("tempe").value;
             var luz = document.getElementById("luz").value;
+
+            temperatura = tempe;
+            luminosidad = luz;
 
             console.log(tempe);
 
@@ -37,7 +43,50 @@
             var fecha = (date.getMonth()+1) + "/" + date.getDate()+ "/" + date.getFullYear() + " a las "+ date.getHours() + ":" + (date.getMinutes()<10?'0':'') + date.getMinutes();
 
             socket.emit('infoSensores', {temperatura:tempe, luminosidad:luz, fecha:fecha});
-	    }
+        }
+
+
+        socket.on('actualizarEstadoPersiana', function(data){
+            console.log("actualizando sensores");
+
+
+            if(data.persiana == 'abierta')
+            {
+                temperatura = temperatura + factor;
+                luminosidad = luminosidad + Math.abs(factor);
+            }
+            else{
+                temperatura = temperatura - factor;
+                luminosidad = luminosidad - Math.abs(factor);
+            }
+            var date =  new Date();
+            var fecha = (date.getMonth()+1) + "/" + date.getDate()+ "/" + date.getFullYear() + " a las "+ date.getHours() + ":" + (date.getMinutes()<10?'0':'') + date.getMinutes();
+
+            socket.emit('infoSensores', {temperatura:temperatura, luminosidad:luminosidad, fecha:fecha});
+        });
+
+        socket.on('actualizarEstadoAC', function(data){
+            luminosidad = luminosidad - factor;
+
+
+            console.log("actualizando sensores");
+
+
+            if(data.AC == 'apagado')
+            {
+                temperatura = temperatura + factor;
+            }
+            else{
+                temperatura = temperatura - factor;
+            }
+            var date =  new Date();
+            var fecha = (date.getMonth()+1) + "/" + date.getDate()+ "/" + date.getFullYear() + " a las "+ date.getHours() + ":" + (date.getMinutes()<10?'0':'') + date.getMinutes();
+
+            socket.emit('infoSensores', {temperatura:temperatura, luminosidad:luminosidad, fecha:fecha});
+        });
+        
+        
+
 	</script>
 
 
