@@ -1,0 +1,76 @@
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Usuario</title>
+	</head>
+
+
+    <body>
+        <div id="informacion">
+            <ul id="list">
+                <p>Historial de informción de los sensores </p>
+            </ul>
+        </div>
+
+        <br><br>
+		<div id="estados">
+            <p>
+                Estado de la persiana: <span id="estadoPersiana"></span>
+            </p>
+            
+            <p> 
+                Estado del A/C: <span id="estadoAC"></span>
+            </p>
+			<button id="cambiarEstadoPersiana" style="background-color: LightGray;" onclick="cambiarEstadoPersiana()">Cambiar estado persiana </button>
+			<button id="cambiarEstadoAC" style="background-color: LightGray;" onclick="cambiarEstadoAC()">Cambiar estado A/C</button>
+        </div>
+
+        <div id="alertasAgente">
+            <p id="peligroTemperatura" style="color: red"></p>
+        </div>
+    </body>
+
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script type="text/javascript">
+    
+        var serviceURL = 'localhost:8080';
+		var socket = io.connect(serviceURL);
+
+		function actualizarInformacion(datos){
+			var listElement = document.getElementById('list');
+			var listItem = document.createElement('li');
+            listItem.innerHTML = datos;
+            //ya son enviado en formato JSON
+	        listElement.appendChild(listItem);
+	    }
+	    
+		socket.on('actualizar', function(data) {
+            actualizarInformacion(data);
+		});
+
+        socket.on('estadoPersiana', function(data){
+            var estadoPersiana = document.getElementById('estadoPersiana');
+            estadoPersiana.innerHTML = data;
+        });
+
+        socket.on('estadoAC', function(data){
+            var estadoAC = document.getElementById('estadoAC');
+            estadoAC.innerHTML = data;
+        });
+
+        socket.emit('getEstadoPersiana');
+        socket.emit('getEstadoAC');
+
+        function cambiarEstadoPersiana(){
+            socket.emit('cambiarEstadoPersiana');
+        }
+
+        function cambiarEstadoAC(){
+            socket.emit('cambiarEstadoAC');
+        }
+
+
+	</script>
+
+</html>
