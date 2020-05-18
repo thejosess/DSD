@@ -8,7 +8,7 @@
     <body>
         <div id="informacion">
             <ul id="list">
-                <p>Historial de informción de los sensores </p>
+                <p>Historial de información de los sensores </p>
             </ul>
         </div>
 
@@ -25,8 +25,18 @@
 			<button id="cambiarEstadoAC" style="background-color: LightGray;" onclick="cambiarEstadoAC()">Cambiar estado A/C</button>
         </div>
 
-        <div id="alertasAgente">
-            <p id="peligroTemperatura" style="color: red"></p>
+        <div id="valores">
+            <p>
+                Luminosidad (lm): <span id="temperatura"></span>
+            </p>
+            
+            <p> 
+                Temperatura (C°): <span id="luminosidad"></span>
+            </p>
+        </div>
+
+        <div id="alertasAgente" style="color: red" style="float: right;">
+            <p id="peligro"></p>
         </div>
     </body>
 
@@ -42,8 +52,16 @@
 			var listItem = document.createElement('li');
             listItem.innerHTML = datos;
             //ya son enviado en formato JSON
-	        listElement.appendChild(listItem);
-	    }
+            listElement.appendChild(listItem);
+        }
+        
+        socket.on('refrescar',function(data){
+            var tem = document.getElementById('temperatura');
+            tem.innerHTML = data.temperatura;
+
+            var lu = document.getElementById('luminosidad');
+            lu.innerHTML = data.luminosidad;
+        });
 	    
 		socket.on('actualizar', function(data) {
             actualizarInformacion(data);
@@ -70,6 +88,12 @@
             socket.emit('cambiarEstadoAC');
         }
 
+		socket.on('alertas', function(data) {
+            console.log("alertado por agente");
+
+            var alerta = document.getElementById('peligro');
+            alerta.innerHTML = data;
+		});
 
 	</script>
 

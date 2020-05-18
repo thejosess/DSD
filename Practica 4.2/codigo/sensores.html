@@ -24,8 +24,15 @@
         var factor = 5; //se podría cambiar segun sea verano o invierno para sumar o restar
         //considerando que estamos en verano y al abrir o apagar ac o persiana sube temperatura
 
+        var factorAC = 2;
+
         var temperatura = 20;
         var luminosidad = 20;
+
+        var date =  new Date();
+        var fecha = (date.getMonth()+1) + "/" + date.getDate()+ "/" + date.getFullYear() + " a las "+ date.getHours() + ":" + (date.getMinutes()<10?'0':'') + date.getMinutes();
+
+        socket.emit('infoSensores', {temperatura:temperatura, luminosidad:luminosidad, fecha:fecha});
 
 
         function enviarInformacion(){
@@ -39,8 +46,8 @@
 
             console.log(tempe);
 
-            var date =  new Date();
-            var fecha = (date.getMonth()+1) + "/" + date.getDate()+ "/" + date.getFullYear() + " a las "+ date.getHours() + ":" + (date.getMinutes()<10?'0':'') + date.getMinutes();
+            date =  new Date();
+            fecha = (date.getMonth()+1) + "/" + date.getDate()+ "/" + date.getFullYear() + " a las "+ date.getHours() + ":" + (date.getMinutes()<10?'0':'') + date.getMinutes();
 
             socket.emit('infoSensores', {temperatura:tempe, luminosidad:luz, fecha:fecha});
         }
@@ -74,10 +81,10 @@
 
             if(data.AC == 'apagado')
             {
-                temperatura = temperatura + factor;
+                temperatura = temperatura + (factorAC*factor);
             }
             else{
-                temperatura = temperatura - factor;
+                temperatura = temperatura - (factorAC*factor);
             }
             var date =  new Date();
             var fecha = (date.getMonth()+1) + "/" + date.getDate()+ "/" + date.getFullYear() + " a las "+ date.getHours() + ":" + (date.getMinutes()<10?'0':'') + date.getMinutes();

@@ -1,5 +1,6 @@
 # Practica 4.2: Sistema domótico ~ José Santos
-En esta práctica vamos a realizar el desarrollo de un sistema domótico básico compuesto de dos sensores (luminosidad y temperatura), dos actuadores (motor persiana y sistema de aire acondicionado), un servidor que sirve páginas para mostrar el estado y actuar sobre los elementos de la vivienda. Dicho servidor tiene también un agente capaz de notificar alarmas y tomar decisiones.
+En esta práctica vamos a realizar el desarrollo de un sistema domótico básico compuesto de dos sensores (luminosidad y temperatura), dos actuadores (motor persiana y sistema de aire acondicionado), un servidor que sirve páginas para mostrar el estado y actuar sobre los elementos de la vivienda. Dicho servidor tiene también un agente capaz de notificar alarmas y tomar decisiones. Importante leer la referencía antes de continuar con el trabajo [5].
+
 
 ![](img/figura1.png)
 
@@ -195,7 +196,7 @@ Aunque en el guión no aparece añadí de forma adicional que tras cambiar el es
 				io.sockets.emit('actualizarEstadoPersiana', {persiana:estadoPersiana, temperatura:temperatura, luminosidad:luminosidad});
 			});	
 
-Los sensores tienen dos variables donde se almacenan la temperatura y la luminosidad, además de un valor factor que intenta simular la estación del año. Esto quiere decir que si fuese invierno factor tendría un valor negativo, ya que si tu abres la ventana en invierno, la temperatura baja y en el casod de la luminosidad, se hace un valor absoluto, independientemente si es verano o invierno, si abres la ventana, aumenta la luminosidad.
+Los sensores tienen dos variables donde se almacenan la temperatura y la luminosidad, además de un valor factor que intenta simular la estación del año. Esto quiere decir que si fuese invierno factor tendría un valor negativo, ya que si tu abres la ventana en invierno, la temperatura baja y en el casod de la luminosidad, se hace un valor absoluto, independientemente si es verano o invierno, si abres la ventana, aumenta la luminosidad. En mi caso, el factor está en verano y si apagas el AC, entonces aumenta la temperatura y si abres la persiana también aumenta la temperatura ya que entra el calor de fuera.
 
 servidor
 
@@ -247,8 +248,37 @@ Para aclarar lo que se realiza aquí, he diseñado un diagrama báscio para ilus
 Primero el usuario pide un cambioEstado tras clickar en el botón, el servidor lo recibe y le envía el cambio de estado para poder mostrar en el html del usuario y además el servidor le dice a sensores que se ha cambiado el estado, entonces este actualiza su información respecto a la temperatura y la luminosidad. Tras actualizar su información, le dice al servidor que ha actualizado su información (infoSensores) y el servidor le envía la información actualizada al usuario. (video probando esto) [4]   
 Añadir también que estos cambios de estados se realizan para todos los usuarios.
 
+## Agente básico
+
+mi agente si enciendes el AC, esto provoca que aumente la temperatura y entonces lanza la alerta o cierra la ventana, sin tener que decirle nada del estado de Ventana o AC.
+
+
+
+explicar que he añadido la información de la temepratura actual 
+y que lo llamo al inicio de servidor o sensores.html
+
+explicar agente y como llama otra vez a sensores
+y lo del intervalo
+
+no me hace falta llamar a agente desde las funcoines de cambio de estado de AC y persiana porque 
+al llamar a los sensores, el sensor vuelve a llamar al servidor con la info actualizada y este es el que vuelve a llamar a agente.
+así si tu enciendes AC y llegas a la temperatura máxima, te lo apaga
+o si estás en unos intervalos pues actua tambíen
+
+servidor tiene los estados pero no las temperaturas, porque al final esas temperaturas son del sensor,
+así estoy separando responsabilidades.
+
+EXPLICAR OTRA VEZ QUE EL AIRE ACONDICIONADO ES EN MODO FRESQUITO CUANDO ESTÁ ENCENDIDO
+
+por ejemplo estas a 35 grados y apagas el AC entonces se te pone en 40 no es el maximo pero el agente
+decidi encedertelo para que estes mas fresquito
+
+explicar lo de los intervalos y esto 
+						io.sockets.emit('alertas', "Se ha cerrado la persiana por agente");
+para que no se asusten las personas que vivan ahi cuando haga cosas y no piensen que es como la peli de una odisea en el espacio ;)
 
 [1]:https://stackoverflow.com/questions/1818249/form-with-no-action-and-where-enter-does-not-reload-page
 [2]:https://stackoverflow.com/questions/8935414/getminutes-0-9-how-to-display-two-digit-numbers
 [3]: el diagrama está en la carpeta de imagenes
 [4]: en esta ruta video/cambioEstados.webm hay un video con su funcionamiento, ha sido grabado con una herramienta de Ubuntu y he de añadir que ha ido muy bien.
+[5]: Es importante tener en cuenta que yo he considerado que estamos en verano y de día, abrir la persiana aumenta la temperatura y la luminosidad. Y también he considerado que el AC es en el modo para bajar la temperatura, por lo tanto encederlo baja la temperatura y apagarlo, aumenta la temperatura.

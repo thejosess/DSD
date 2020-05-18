@@ -49,7 +49,32 @@ var luminosidad = 20; */
 
 MongoClient.connect("mongodb://localhost:27017/", function(err, db) {
     httpServer.listen(8080);
-    var io = socketio.listen(httpServer);
+	var io = socketio.listen(httpServer);
+	
+	//valores de umbral máximo
+	var temperaturaMaxima = 45;
+	var luminosidadMaxima = 35;
+
+	//valores de umbral mínimo
+	var temperaturaMinima = 15;
+	var luminosidadMinima = 10;
+
+	//intervalo de temperatura maximo de seguridad
+	var intervaloTempeSupMaximo = 44;
+	var intervaloTempeInfMaximo = 38;
+
+	//intervalo de temperatura maximo de seguridad
+	var intervaloTempeSupMinimo = 0;
+	var intervaloTempeInfMinimo = 14;
+
+	//intervalo de luminosidad maximo de seguridad
+	var intervaloLumSupMaximo = 34;
+	var intervaloLumInfMaximo = 30;
+
+	//intervalo de luminosidad maximo de seguridad
+	var intervaloLumSupMinimo = 0;
+	var intervaloLumInfMinimo = 8;
+
 
 	var dbo = db.db("sensoresBD");
 	dbo.createCollection("sensores", function(err, collection){
@@ -64,7 +89,9 @@ MongoClient.connect("mongodb://localhost:27017/", function(err, db) {
 
 				//se notifica a todos los clientes
 				io.sockets.emit('actualizar',informacion);
-				//llamar al agente para que controle que no se pase de un valor
+				io.sockets.emit('refrescar',{temperatura:data.temperatura, luminosidad:data.luminosidad});
+				
+				agente(data.temperatura,data.luminosidad);
 			});
 			
 			client.on('getEstadoPersiana', function (data){
@@ -102,6 +129,83 @@ MongoClient.connect("mongodb://localhost:27017/", function(err, db) {
 				io.sockets.emit('actualizarEstadoAC', {AC:estadoAC});
 
 			});	
+
+			function agente(temperatura,luminosidad){
+				console.log("agente trabajando");
+
+				if(temperatura <= temperaturaMinima)
+					io.sockets.emit('alertas', "Peligro!!, temperatura por debajo de la mínima");
+
+				if(luminosidad <= luminosidadMinima)
+					io.sockets.emit('alertas', "Peligro!!, luminosidad por debajo de la mínima");
+
+				if(temperatura >= temperaturaMaxima)
+					io.sockets.emit('alertas', "Peligro!!, temperatura por encima de la maxima");
+
+				if(luminosidad >= luminosidadMaxima)
+					io.sockets.emit('alertas', "Peligro!!, luminosidad por encima de la maxima");
+
+
+				if(temperatura >= temperaturaMaxima || luminosidad >= luminosidadMaxima){
+					console.log("cerrando persiana");
+					if(estadoPersiana != 'cerrada')
+					{
+						io.sockets.emit('estadoPersiana', 'cerrada');
+						io.sockets.emit('actualizarEstadoPersiana', {persiana:'cerrada'});
+					}
+				}
+
+
+				if(temperatura < intervaloTempeSupMaximo && temperatura > intervaloTempeInfMaximo)
+				{
+					if(estadoAC != 'encendido')
+					{
+						io.sockets.emit('estadoAC', 'encendido');
+						io.sockets.emit('actualizarEstadoAC', {AC:'encendido'});
+						io.sockets.emit('alertas', "Se ha encendido AC por agente");
+					}
+
+				}
+
+				if(temperatura < intervaloTempeSupMinimo && temperatura > intervaloTempeInfMinimo)
+				{
+					if(estadoAC != 'apagado')
+					{
+						io.sockets.emit('estadoAC', 'apagado');
+						io.sockets.emit('actualizarEstadoAC', {AC:'apagado'});
+						io.sockets.emit('alertas', "Se ha apagado AC por agente");
+					}
+					else if(estadoPersiana != 'cerrada')
+					{
+						io.sockets.emit('estadoPersiana', 'cerrada');
+						io.sockets.emit('actualizarEstadoPersiana', {persiana:'cerrada'});
+						io.sockets.emit('alertas', "Se ha cerrado la persiana por agente");
+					}
+				}
+
+				if(luminosidad < intervaloLumSupMaximo && luminosidad > intervaloLumInfMaximo)
+				{
+					if(estadoPersiana != 'cerrada')
+					{
+						io.sockets.emit('estadoPersiana', 'cerrada');
+						io.sockets.emit('actualizarEstadoPersiana', {persiana:'cerrada'});
+						io.sockets.emit('alertas', "Se ha cerrado la persiana por agente");
+					}
+
+				}
+
+				if(luminosidad < intervaloLumSupMinimo && luminosidad > intervaloLumInfMinimo)
+				{
+					if(estadoPersiana != 'abierta')
+					{
+						io.sockets.emit('estadoPersiana', 'abierta');
+						io.sockets.emit('actualizarEstadoPersiana', {persiana:'abierta'});
+						io.sockets.emit('alertas', "Se ha abierta la persiana por agente");
+					}
+
+				}
+				
+			}
             
 		});
     });
