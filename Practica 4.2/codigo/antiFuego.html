@@ -1,0 +1,83 @@
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+		<title>Sistema antiFuego</title>
+	</head>
+
+    <body>
+        <p>Sistema anti fuego</p>
+
+        <div id="informacion">
+            <ul id="list" style="color: red;">
+                <p>Historial de información de los sensores </p>
+            </ul>
+        </div>
+
+        <div id="informacionBD">
+            <ul id="listBD">
+                <p>Información de la BD </p>
+            </ul>
+            <button id="infoFuego" style="background-color: LightGray;" onclick="obtenerInfoBD()">Obtener información de la BD </button>
+        </div>
+
+        <button id="apagarAlarma" style="background-color: LightGray;" onclick="apagarAlarma()">Apagar alarma </button>
+
+    </body>
+
+<script src="/socket.io/socket.io.js"></script>
+<script type="text/javascript">
+
+    var serviceURL = 'localhost:8080';
+    var socket = io.connect(serviceURL);
+    var fuego = new Audio('HouseAlarm.mp3');
+
+    var temperatura = -10;
+
+
+
+    socket.on('antiFuego', function(data) {
+        console.log("utilizando aspersores");
+        socket.emit('usandoAntiFuego',temperatura);
+
+        var listElement = document.getElementById('list');
+        var listItem = document.createElement('li');
+
+        date =  new Date();
+        fecha = (date.getMonth()+1) + "/" + date.getDate()+ "/" + date.getFullYear() + " a las "+ date.getHours() + ":" + (date.getMinutes()<10?'0':'') + date.getMinutes();
+
+        var data = {fuego:"hubo un fuego ",fecha:fecha};
+
+        socket.emit('registroFuego',data);
+
+        listItem.innerHTML = "Fuego con fecha: " + fecha;
+        listElement.appendChild(listItem);
+
+        fuego.muted = false;
+		fuego.play();
+    });
+
+    function apagarAlarma(){
+        console.log("apgando alarma");
+        fuego.muted = true;
+    }
+
+    function actualizarInformacionBD(data){
+        var listElement = document.getElementById('listBD');
+        var listItem = document.createElement('li');
+
+        listItem.innerHTML = data;
+        listElement.appendChild(listItem);
+    }
+
+    function obtenerInfoBD(){
+            socket.emit('registroBDFuego');
+            socket.on('actualizarInfoFuego',function(data){
+                actualizarInformacionBD(data);
+            });
+        }
+
+
+</script>
+
+
+</html>

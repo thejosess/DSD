@@ -14,6 +14,9 @@
 
             <input type="submit" value="Enviar información">
           </form> 
+
+          <br>
+          <button id="detectarFuego" style="background-color: red;" onclick="enviarFuego()">Detectar fuego</button>
     </body>
 
 
@@ -28,6 +31,8 @@
 
         var temperatura = 20;
         var luminosidad = 20;
+        
+        var temperaturaFuego = 37;
 
         var date =  new Date();
         var fecha = (date.getMonth()+1) + "/" + date.getDate()+ "/" + date.getFullYear() + " a las "+ date.getHours() + ":" + (date.getMinutes()<10?'0':'') + date.getMinutes();
@@ -50,6 +55,12 @@
             fecha = (date.getMonth()+1) + "/" + date.getDate()+ "/" + date.getFullYear() + " a las "+ date.getHours() + ":" + (date.getMinutes()<10?'0':'') + date.getMinutes();
 
             socket.emit('infoSensores', {temperatura:tempe, luminosidad:luz, fecha:fecha});
+        }
+
+        function enviarFuego(){
+            temperatura = temperaturaFuego;
+            socket.emit('infoSensores', {temperatura:temperatura, luminosidad:luminosidad, fecha:fecha});
+            socket.emit('fuego');
         }
 
 
@@ -89,6 +100,12 @@
             var date =  new Date();
             var fecha = (date.getMonth()+1) + "/" + date.getDate()+ "/" + date.getFullYear() + " a las "+ date.getHours() + ":" + (date.getMinutes()<10?'0':'') + date.getMinutes();
 
+            socket.emit('infoSensores', {temperatura:temperatura, luminosidad:luminosidad, fecha:fecha});
+        });
+
+        socket.on('tempeFuego',function(data){
+            console.log('Usando antifuego y cambiando temperatura');
+            temperatura = temperatura + data;
             socket.emit('infoSensores', {temperatura:temperatura, luminosidad:luminosidad, fecha:fecha});
         });
         

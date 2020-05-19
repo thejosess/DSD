@@ -8,8 +8,15 @@
     <body>
         <div id="informacion">
             <ul id="list">
-                <p>Historial de información de los sensores </p>
+                <p>Historial de información de los sensores (sesión actual) </p>
             </ul>
+        </div>
+
+        <div id="informacionBD">
+            <ul id="listBD">
+                <p>Información de la BD </p>
+            </ul>
+            <button id="infoBD" style="background-color: LightGray;" onclick="obtenerInfoBD()">Obtener información de la BD </button>
         </div>
 
         <br><br>
@@ -25,6 +32,7 @@
 			<button id="cambiarEstadoAC" style="background-color: LightGray;" onclick="cambiarEstadoAC()">Cambiar estado A/C</button>
         </div>
 
+        <br>
         <div id="valores">
             <p>
                 Luminosidad (lm): <span id="temperatura"></span>
@@ -35,8 +43,13 @@
             </p>
         </div>
 
-        <div id="alertasAgente" style="color: red" style="float: right;">
+        <div id="alertasAgente" style="color: red; float:right;" >
+
             <p id="peligro"></p>
+
+            <div id="alertaFuego" style="color: blue">
+                <p id="peligro2"></p>
+            </div>
         </div>
     </body>
 
@@ -65,7 +78,22 @@
 	    
 		socket.on('actualizar', function(data) {
             actualizarInformacion(data);
-		});
+        });
+        
+		function actualizarInformacionBD(datos){
+			var listElement = document.getElementById('listBD');
+			var listItem = document.createElement('li');
+            listItem.innerHTML = datos;
+            //ya son enviado en formato JSON
+            listElement.appendChild(listItem);
+        }
+
+        function obtenerInfoBD(){
+            socket.emit('registro');
+            socket.on('registroBD',function(data){
+                actualizarInformacionBD(data);
+            });
+        }
 
         socket.on('estadoPersiana', function(data){
             var estadoPersiana = document.getElementById('estadoPersiana');
@@ -93,6 +121,13 @@
 
             var alerta = document.getElementById('peligro');
             alerta.innerHTML = data;
+        });
+        
+        socket.on('alertaFuego', function(data) {
+            console.log("alertado por agente");
+
+            var alertaFuego = document.getElementById('peligro2');
+            alertaFuego.innerHTML = data;
 		});
 
 	</script>

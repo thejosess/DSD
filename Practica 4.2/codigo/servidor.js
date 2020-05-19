@@ -47,36 +47,36 @@ var estadoAC = 'encendido';
 /* var temperatura = 20;
 var luminosidad = 20; */
 
+//valores de umbral máximo
+var temperaturaMaxima = 45;
+var luminosidadMaxima = 35;
+
+//valores de umbral mínimo
+var temperaturaMinima = 15;
+var luminosidadMinima = 10;
+
+//intervalo de temperatura maximo de seguridad
+var intervaloTempeSupMaximo = 44;
+var intervaloTempeInfMaximo = 38;
+
+//intervalo de temperatura maximo de seguridad
+var intervaloTempeSupMinimo = 0;
+var intervaloTempeInfMinimo = 14;
+
+//intervalo de luminosidad maximo de seguridad
+var intervaloLumSupMaximo = 34;
+var intervaloLumInfMaximo = 30;
+
+//intervalo de luminosidad maximo de seguridad
+var intervaloLumSupMinimo = 0;
+var intervaloLumInfMinimo = 8;
+
 MongoClient.connect("mongodb://localhost:27017/", function(err, db) {
     httpServer.listen(8080);
 	var io = socketio.listen(httpServer);
-	
-	//valores de umbral máximo
-	var temperaturaMaxima = 45;
-	var luminosidadMaxima = 35;
-
-	//valores de umbral mínimo
-	var temperaturaMinima = 15;
-	var luminosidadMinima = 10;
-
-	//intervalo de temperatura maximo de seguridad
-	var intervaloTempeSupMaximo = 44;
-	var intervaloTempeInfMaximo = 38;
-
-	//intervalo de temperatura maximo de seguridad
-	var intervaloTempeSupMinimo = 0;
-	var intervaloTempeInfMinimo = 14;
-
-	//intervalo de luminosidad maximo de seguridad
-	var intervaloLumSupMaximo = 34;
-	var intervaloLumInfMaximo = 30;
-
-	//intervalo de luminosidad maximo de seguridad
-	var intervaloLumSupMinimo = 0;
-	var intervaloLumInfMinimo = 8;
-
 
 	var dbo = db.db("sensoresBD");
+
 	dbo.createCollection("sensores", function(err, collection){
     	io.sockets.on('connection',
 		function(client) {
@@ -87,12 +87,29 @@ MongoClient.connect("mongodb://localhost:27017/", function(err, db) {
 
                 var informacion = "temperatura: " + data.temperatura + ", luminosidad: " + data.luminosidad + ", fecha: " + data.fecha;
 
-				//se notifica a todos los clientes
+/* 				var informacion = collection.find(informacion);
+ */				//se notifica a todos los clientes
 				io.sockets.emit('actualizar',informacion);
 				io.sockets.emit('refrescar',{temperatura:data.temperatura, luminosidad:data.luminosidad});
 				
 				agente(data.temperatura,data.luminosidad);
 			});
+
+			client.on('registro', function () {
+				collection.find().sort({_id:-1}).limit(3).forEach(function(result){
+					var informacion = "temperatura: " + result.temperatura + ", luminosidad: " + result.luminosidad + ", fecha: " + result.fecha;
+					client.emit('registroBD',informacion);
+				});
+			});
+
+			
+
+/* 			client.on('registroFuego', function(data){
+				console.log("REGISTRO FUEGO");
+
+				var prueba = collection.find( { fuego: { $eq: "hubo un fuego" } } )
+				console.log(prueba.fecha);
+			}); */
 			
 			client.on('getEstadoPersiana', function (data){
 				client.emit('estadoPersiana', estadoPersiana);
@@ -128,7 +145,24 @@ MongoClient.connect("mongodb://localhost:27017/", function(err, db) {
 
 				io.sockets.emit('actualizarEstadoAC', {AC:estadoAC});
 
-			});	
+			});
+			
+			client.on('fuego', function (data){
+				io.sockets.emit('antiFuego');
+				io.sockets.emit('alertaFuego', "Se detectado fuego y se ha usado el sistema de agua");
+
+			});
+
+			client.on('usandoAntiFuego',function(data){
+				if(estadoPersiana != 'abierta')
+				{
+					io.sockets.emit('estadoPersiana', 'abierta');
+					io.sockets.emit('actualizarEstadoPersiana', {persiana:'abierta'});
+					io.sockets.emit('alertas', "Se ha abierta la persiana por el fuego");
+				}
+
+				io.sockets.emit('tempeFuego',data);
+			});
 
 			function agente(temperatura,luminosidad){
 				console.log("agente trabajando");
@@ -140,10 +174,10 @@ MongoClient.connect("mongodb://localhost:27017/", function(err, db) {
 					io.sockets.emit('alertas', "Peligro!!, luminosidad por debajo de la mínima");
 
 				if(temperatura >= temperaturaMaxima)
-					io.sockets.emit('alertas', "Peligro!!, temperatura por encima de la maxima");
+					io.sockets.emit('alertas', "Peligro!!, temperatura por encima de la maxima, agente cierra persiana");
 
 				if(luminosidad >= luminosidadMaxima)
-					io.sockets.emit('alertas', "Peligro!!, luminosidad por encima de la maxima");
+					io.sockets.emit('alertas', "Peligro!!, luminosidad por encima de la maxima, agente cierra persiana");
 
 
 				if(temperatura >= temperaturaMaxima || luminosidad >= luminosidadMaxima){
@@ -208,7 +242,32 @@ MongoClient.connect("mongodb://localhost:27017/", function(err, db) {
 			}
             
 		});
-    });
+	});
+	
+
+	dbo.createCollection("registrosFuego", function(err, collection){
+    	io.sockets.on('connection',
+		function(client) {
+
+		client.on('registroFuego', function(data){
+			collection.insert(data, {safe:true}, function(err, result) {});
+			console.log("guardando registro fuego");
+		});
+
+		client.on('registroBDFuego', function () {
+			collection.find().sort({_id:-1}).limit(4).forEach(function(result){
+				var informacion = "Hubo un fuego en la fecha:  " + result.fecha;
+				console.log("recogiendo datos fuego");
+				client.emit('actualizarInfoFuego',informacion);
+			});
+		});
+
+
+
+	});
+});
+
+
 });
 
 console.log("Servicio MongoDB iniciado");

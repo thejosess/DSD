@@ -249,33 +249,135 @@ Primero el usuario pide un cambioEstado tras clickar en el botón, el servidor l
 Añadir también que estos cambios de estados se realizan para todos los usuarios.
 
 ## Agente básico
+Con el afán de mantener una correcta separación de responsabilidades, servidor tiene los estados de AC y de la persiana y el sensor.html tiene la temperatura y la luminosidad. 
 
-mi agente si enciendes el AC, esto provoca que aumente la temperatura y entonces lanza la alerta o cierra la ventana, sin tener que decirle nada del estado de Ventana o AC.
+
+			function agente(temperatura,luminosidad){
+				console.log("agente trabajando");
+
+				if(temperatura <= temperaturaMinima)
+					io.sockets.emit('alertas', "Peligro!!, temperatura por debajo de la mínima");
+
+                                            ...
+
+				if(temperatura >= temperaturaMaxima || luminosidad >= luminosidadMaxima){
+					console.log("cerrando persiana");
+					if(estadoPersiana != 'cerrada')
+					{
+						io.sockets.emit('estadoPersiana', 'cerrada');
+						io.sockets.emit('actualizarEstadoPersiana', {persiana:'cerrada'});
+					}
+				}
+
+Por lo tanto a la hora de actuar el agente, he implementado una función agente que se le pasa una temperatura y una luminosidad y esta función la que se encarga de decidir si actuar sobre los estados de AC y de la persiana, así como de alertar al usuario. Dicha función agente se llama, cada vez que el sensor le envía información actualizada al servidor.
+
+    			client.on('infoSensores', function (data) {
+
+                collection.insert(data, {safe:true}, function(err, result) {});
+
+                var informacion = "temperatura: " + data.temperatura + ", luminosidad: " + data.luminosidad + ", fecha: " + data.fecha;
+
+                                ...
+				agente(data.temperatura,data.luminosidad);
+			});
+
+Es de interés señalar que mi agente si enciendes el AC y este provoca que aumente la temperatura (o la luminosidad) por encima de la temperatura máxima, entonces este recibe la temperatura cambiada por el sensor gracias al servidor y cierra la persiana (tal y como dice el guión). También hago algunas consideraciones adicionales en el agente y controlo si tanto la temperatura como la luminosidad se encuentran entre unos intervalos (tanto máximos como mínimos) peligrosos y realiza acciones como cerrar persianas o apagar el AC. Esto hace posible que no haga falta llamar al agente desde el cambio de estado, ya que en el cambio de estado se llama a sensores y este llama a servidor (mirar sección del cambio de estado, hablado en el punto anterior) con la nueva información (y aqui llama a agente).
+
+    			if(temperatura < intervaloTempeSupMaximo && temperatura > intervaloTempeInfMaximo)
+				{
+					if(estadoAC != 'encendido')
+					{
+						io.sockets.emit('estadoAC', 'encendido');
+						io.sockets.emit('actualizarEstadoAC', {AC:'encendido'});
+						io.sockets.emit('alertas', "Se ha encendido AC por agente");
+					}
+
+				}
+
+Y aviso a los usuarios de que ha sido el agente quien lo ha realizado, todo ello para no asustarlos (podrían pensar que todo está controlado por Hal 9000 y no queremos eso).   
+Tal y como se ve en el diagrama, cuando se realiza un cambio de estado y sensores.html devuelve la información actualiza (1.2infoSensores), servidor.js llama a la función agente y esta tras recibir una anomalía, realiza un cambio de estado y vuelve a llamar a actualizarEstado (con el cambio correspondiente) de sensores.html y este ya si devuelve la información actualizada que se envía al usuario.html.
+![](img/agente.png).
+He realiza un video mostrando su funcionamiento como en el punto anterior, ya que con imagenes no creo que se ilustre de forma correcta (videos/agente.webm)
+
+## Detector de humo
+
+            socket.emit('fuego');
+            al servidor y este al sistema antifuego
 
 
+es cierto pagina es fea pero la finalidad de esta practica está en la comunicación y hacer uso de otras cosas
+detector de humo lo he hecho con js para cambiar respecto al resto que son html e incrustas el js
 
 explicar que he añadido la información de la temepratura actual 
 y que lo llamo al inicio de servidor o sensores.html
 
-explicar agente y como llama otra vez a sensores
-y lo del intervalo
+problema es que tengo que llamar desde antiFuego a servidor y este a sensores
+    socket.on('antiFuego', function(data) {
+        console.log("utilizando aspersores");
+        socket.emit('usandoAntiFuego');
+    });
 
-no me hace falta llamar a agente desde las funcoines de cambio de estado de AC y persiana porque 
-al llamar a los sensores, el sensor vuelve a llamar al servidor con la info actualizada y este es el que vuelve a llamar a agente.
-así si tu enciendes AC y llegas a la temperatura máxima, te lo apaga
-o si estás en unos intervalos pues actua tambíen
+//es algo lioso tanta comunicaicón pero así separo y aislo funciuounalidades
+es algo inutil pudiendo hacerlo desde servidor pero es una simulación
 
-servidor tiene los estados pero no las temperaturas, porque al final esas temperaturas son del sensor,
-así estoy separando responsabilidades.
+para obtener todos los datos de la bd es 
+db.collectionName.find()
 
-EXPLICAR OTRA VEZ QUE EL AIRE ACONDICIONADO ES EN MODO FRESQUITO CUANDO ESTÁ ENCENDIDO
+esxplicar que los usuarios solo ven la sesión actual, para ver datos de la BD, tienen que pedirlo
+me parecía una burrada tener que estar dandole al usuario todo lo que hay en la BD continuamente
 
-por ejemplo estas a 35 grados y apagas el AC entonces se te pone en 40 no es el maximo pero el agente
-decidi encedertelo para que estes mas fresquito
+añadir lo de la BD que lo he puesto para que se vean tambien como "consultas" aunque no sean así
+y que he podido trabajar con BD
 
-explicar lo de los intervalos y esto 
-						io.sockets.emit('alertas', "Se ha cerrado la persiana por agente");
-para que no se asusten las personas que vivan ahi cuando haga cosas y no piensen que es como la peli de una odisea en el espacio ;)
+al principio lo hacia asi.
+			client.on('registro', function () {
+				collection.find().sort({_id:-1}).limit(3).forEach(function(result){
+					var informacion = "temperatura: " + result.temperatura + ", luminosidad: " + result.luminosidad + ", fecha: " + result.fecha;
+					client.emit('registroBD',informacion);
+				});
+			});
+pero estaba enviando muchos mensajes, mejor hacer un array
+referencia: https://docs.mongodb.com/manual/reference/method/db.collection.find/
+es importante lo de id
+me costaba mucho hacerlo y al final tuve que hacerlo de una forma poco ortodoxa
+hice una array global 	var arrayG = [];
+es que se quedaba en el ambito de la funcion y no quería enviar tantos mensajes a los clientes y no sabía como hacerlo de otra forma, estuve mirando la documentación de mongoDB pero no encontré nada que me satisfaciera.
+
+al final lo dejé enviando tantos maensajes porque no encontré otra fomra
+
+array y recorrerlos tampoco sabia en javascritp
+            datos.array.forEach(element => {
+            var listElement = document.getElementById('listBD');
+			var listItem = document.createElement('li');
+            listItem.innerHTML = element;
+            //ya son enviado en formato JSON
+            listElement.appendChild(listItem);
+            });
+
+y
+
+muchas veces me equivocaba porque accedia al JSON directamente y me mostraba object en vez de los valores
+
+explicar lo de la alarma
+
+probe a hacer         socket.emit('registroFuego',data);
+
+
+			client.on('registroFuego', function(data){
+				console.log("REGISTRO FUEGO");
+
+				var prueba = collection.find( { fuego: { $eq: "hubo un fuego" } } )
+				console.log(prueba.fecha);
+			});
+
+yu liuego esto en server
+			client.on('registroFuego', function(data){
+				collection.insert(data, {safe:true}, function(err, result) {});
+				console.log("guardando registro fuego");
+			});
+pero no terminabas de ir
+
+creando una collections distintas ya que no me permitía hacerlo mas a mocho en una sola collections
 
 [1]:https://stackoverflow.com/questions/1818249/form-with-no-action-and-where-enter-does-not-reload-page
 [2]:https://stackoverflow.com/questions/8935414/getminutes-0-9-how-to-display-two-digit-numbers
