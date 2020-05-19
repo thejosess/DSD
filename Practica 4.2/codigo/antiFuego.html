@@ -29,7 +29,7 @@
 
     var serviceURL = 'localhost:8080';
     var socket = io.connect(serviceURL);
-    var fuego = new Audio('HouseAlarm.mp3');
+    var fuego = new Audio('Alarma.mp3');
 
     var temperatura = -10;
 
@@ -70,11 +70,12 @@
     }
 
     function obtenerInfoBD(){
+
             socket.emit('registroBDFuego');
             socket.on('actualizarInfoFuego',function(data){
                 actualizarInformacionBD(data);
             });
-        }
+    }
 
 
 </script>

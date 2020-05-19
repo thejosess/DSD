@@ -19,6 +19,19 @@
             <button id="infoBD" style="background-color: LightGray;" onclick="obtenerInfoBD()">Obtener información de la BD </button>
         </div>
 
+        <div id="consultas">
+            <form action="javascript:void(0);" onsubmit="javascript:obtenerConsulta();">
+                <label for="lname">Introducir temperatura para la consulta de registros con temperatura superiores a esa(C°):</label>
+                <input type="text" id="tempe" name="tempe"><br><br>
+    
+                <input type="submit" value="Enviar consulta">
+              </form> 
+
+            <ul id="consultaBD">
+                <p>Consultas a la BD</p>
+            </ul>
+        </div>
+
         <br><br>
 		<div id="estados">
             <p>
@@ -51,6 +64,21 @@
                 <p id="peligro2"></p>
             </div>
         </div>
+
+
+        <div id="tiempoCiudad">
+            <form action="javascript:void(0);" onsubmit="javascript:tiempoCiudad();">
+                <label for="lname">Introducir ciudad de la que buscar el tiempo:</label>
+                <input type="text" id="ciudad" name="ciudad"><br><br>
+    
+                <input type="submit" value="Enviar ciudad">
+              </form> 
+
+            <p id="consultaCiudad">Tiempo de la ciudad</p>
+
+        </div>
+
+
     </body>
 
 
@@ -66,6 +94,15 @@
             listItem.innerHTML = datos;
             //ya son enviado en formato JSON
             listElement.appendChild(listItem);
+        }
+
+        function tiempoCiudad(){
+            var ciudad = document.getElementById("ciudad").value;
+            socket.emit('tiempoCiudad',ciudad);
+            socket.on('consultaCiudad',function(data){
+                var consulta = document.getElementById('consultaCiudad');
+                consulta.innerHTML = data;
+            });
         }
         
         socket.on('refrescar',function(data){
@@ -92,6 +129,23 @@
             socket.emit('registro');
             socket.on('registroBD',function(data){
                 actualizarInformacionBD(data);
+            });
+        }
+
+        function actualizarConsulta(datos){
+			var listElement = document.getElementById('consultaBD');
+			var listItem = document.createElement('li');
+            listItem.innerHTML = datos;
+            //ya son enviado en formato JSON
+            listElement.appendChild(listItem);
+        }
+
+        function obtenerConsulta(datos){
+            var tempe = document.getElementById("tempe").value;
+
+            socket.emit('temperaturaValor',tempe);
+            socket.on('consultaTemperatura',function(data){
+                actualizarConsulta(data);
             });
         }
 
