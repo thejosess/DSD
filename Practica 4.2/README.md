@@ -496,7 +496,7 @@ Considero que es de vital importancia, hablar de lo que ha supuesto realizar est
 
 
 
-## Obtener valores por url
+## Detector de atracos (variables por la URL)
 Por curiosidad quise mirar como hacer el GET de php pero con nodejs, utilizando el paquete url que ya habíamos usado en el ejemplo, realice este código
 
     		const url = require('url');
@@ -540,21 +540,76 @@ y finalmente la susodicha llamada a la API (haciendo uso del paquete resquest).
 	  }
 	});
 
-En la llamada usamos nuestra APIKey y la ciudad de la que queremos obtener la información. Tras esto, recibimos la información en un JSON y con JSON.parse, lo convertirmos a un objeto javaScript. El resultado que te devuleve la llamada tiene muchisima más información y es solo cuestión de elegir más información si se desea.
+En la llamada usamos nuestra APIKey y la ciudad de la que queremos obtener la información. Tras esto, recibimos la información en un JSON y con JSON.parse, lo convertirmos a un objeto javaScript. El resultado que te devuleve la llamada tiene muchisima más información y es solo cuestión de elegir más información si se desea.   
 
 ![](img/api2.png)
 
+Para mi sistema domótico, he creado un campo en el que el usuario introduce la ciudad y se le devuelve la información.
 
-tal y como dicen la API debería de estar oculta y no tan expuesta como ahí.
+            <div id="tiempoCiudad">
+            <form action="javascript:void(0);" onsubmit="javascript:tiempoCiudad();">
+                <label for="lname">Introducir ciudad de la que buscar el tiempo:</label>
+                <input type="text" id="ciudad" name="ciudad"><br><br>
+    
+                <input type="submit" value="Enviar ciudad">
+              </form> 
+
+            <p id="consultaCiudad">Tiempo de la ciudad</p>
+
+        </div>
+
+                           ...
+
+            function tiempoCiudad(){
+            var ciudad = document.getElementById("ciudad").value;
+            socket.emit('tiempoCiudad',ciudad);
+            socket.on('consultaCiudad',function(data){
+                var consulta = document.getElementById('consultaCiudad');
+                consulta.innerHTML = data;
+            });
+        }
+
+
+Y es el servidor el que hace la petición a la API y se la devuelve al usuario
+
+        	client.on('tiempoCiudad', function (data){
+				var tiempoAPI;
+
+				var apiKey = '89b2e927d79029343f1fd3e0ce0f8071';
+				var ciudad = data;
+				var url = `http://api.openweathermap.org/data/2.5/weather?q=${ciudad}&appid=${apiKey}`;
+			
+				request(url, function (err, response, data) {
+				  if(err){
+					console.log('error:', error);
+				  } else {
+					console.log(data);
+					var tiempo = JSON.parse(data);
+					tiempoAPI = `Hacen ${tiempo.main.temp/10} grados en ${tiempo.name} y hace una humedad de ${tiempo.main.humidity} !`;
+					console.log('data:', tiempoAPI);
+					client.emit('consultaCiudad',tiempoAPI);
+				  }
+				});
+			});
+
+Hay que añadir que la APIKey está un poco expuesta pero la finalidad de este apartado, era mostrar el uso de APIs en nodejs (hay varias formas de ocultarla e incluso cifrarla). video funcionando (video/tiempo.webm)
 
 
 
-REVISAR QUE LOS CLIENT.EMIT están bien para los que son solo rspuesta a esos clientes y no a todos
 
 ## Conclusiones
-me ha servido para ver para que sirven ciertos paquetes el de request y el de url
-y su importancia
+El desarrollo de esta práctica me ha servidor para darme cuenta de la utilidad y el uso de ciertos paquetes que ya se usaban en Practica 4.1 pero que daba por hecho. Paquetes como request para hacer peticiones http y el paquete URL que simplifica muchisimo el trabajo con las urls.      
+Antes de nodejs unicamente se podía ejecutar javascript desde el navegador, dando estos acceso a una Web API
 
+![](img/nodejs.png)
+
+Con nodejs se provee de una API construida con C++ que es capaz de comunicarse con el SO, permitiendo crear aplicaciones altamente escalables, con grandes entradas y salidas y aplicaciones en tiempo real, ya que tiene una naturaleza asínncrona. (tambíen es muy interesante ver como se ejecutan funciones asíncronas con una única hebra de javascript en node)
+
+![](img/nodejs2.png)    
+
+Tal y como he expuesto, Nodejs supongo un gran cambio en la situación que había y es de vital importancía entender y estudiar una tecnología como esta.
+
+  
 [1]:https://stackoverflow.com/questions/1818249/form-with-no-action-and-where-enter-does-not-reload-page
 [2]:https://stackoverflow.com/questions/8935414/getminutes-0-9-how-to-display-two-digit-numbers
 [3]: el diagrama está en la carpeta de imagenes  

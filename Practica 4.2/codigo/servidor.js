@@ -95,13 +95,7 @@ MongoClient.connect("mongodb://localhost:27017/", function(err, db) {
 	var io = socketio.listen(httpServer);
 
 	var dbo = db.db("sensoresBD");
-	console.log("mirando nombre");
-	console.log(nombre);
-
-
-
-
-
+	
 	dbo.createCollection("sensores", function(err, collection){
     	io.sockets.on('connection',
 		function(client) {
